@@ -1,0 +1,12 @@
+#include <linux/ioctl.h>
+
+#define MY_IOCTL_MAGIC 'k'
+
+#define MY_IOCTL_CMD_ONE	_IO(MY_IOCTL_MAGIC, 1)
+#define MY_IOCTL_CMD_TWO        _IOW(MY_IOCTL_MAGIC, 2, int)
+#define MY_IOCTL_CMD_THREE	_IO(MY_IOCTL_MAGIC, 3)
+#define MY_IOCTL_CMD_LED_ON     _IO(MY_IOCTL_MAGIC, 4)
+#define MY_IOCTL_CMD_LED_OFF    _IO(MY_IOCTL_MAGIC, 5)
+#define MY_IOCTL_CMD_IRQ_EN     _IO(MY_IOCTL_MAGIC, 6)
+#define MY_IOCTL_CMD_IRQ_DIS    _IO(MY_IOCTL_MAGIC, 7)
+
