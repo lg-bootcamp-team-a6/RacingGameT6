@@ -15,6 +15,20 @@ GameScene::GameScene(QObject *parent)
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
 
+    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap);
+    m_bgItem->setTransformationMode(Qt::SmoothTransformation);
+    m_bgItem->setScale(2);
+    addItem(m_bgItem);
+
+    for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
+        QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
+        carItem->setTransformationMode(Qt::SmoothTransformation);
+        carItem->setScale(1);
+        carItem->setTransformOriginPoint(21, 34);
+        addItem(carItem);
+        m_carItems.append(carItem);
+    }
+
     m_timer->start(m_game.ITERATION_VALUE);
     update();
 }
@@ -184,42 +198,20 @@ void GameScene::renderScene()
 
 void GameScene::update()
 {
-    clear();
-    QGraphicsPixmapItem* bgItem = new QGraphicsPixmapItem(m_bgPixmap);
-    bgItem->setTransformationMode(Qt::SmoothTransformation);
-    bgItem->setScale(2);
-    addItem(bgItem);
-
-//    QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap);
-//    carItem->setTransformationMode(Qt::SmoothTransformation);
-//    carItem->setScale(1);
-//    carItem->setPos(200, 200);
-//    addItem(carItem);
-
     carMovement();
     carCollision();
 
-    if (m_game.car[0].x > 320)
-    {
-        m_game.offsetX = m_game.car[0].x-320;
+    if (m_game.car[0].x > 320) {
+        m_game.offsetX = m_game.car[0].x - 320;
     }
-    if ( m_game.car[0].y > 240)
-    {
-        m_game.offsetY = m_game.car[0].y-240;
+    if (m_game.car[0].y > 240) {
+        m_game.offsetY = m_game.car[0].y - 240;
     }
-    bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
+    m_bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
-
-    for(int i=0; i < Game::COUNT_OF_CARS; i++)
-    {
-        QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
-        carItem->setTransformationMode(Qt::SmoothTransformation);
-        carItem->setScale(1);
-        //42x69 average of pixmaps
-        carItem->setTransformOriginPoint(21, 34);
-        carItem->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
-        carItem->setRotation(m_game.car[i].angle * 180/3.141593);
-        addItem(carItem);
+    for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
+        m_carItems[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
+        m_carItems[i]->setRotation(m_game.car[i].angle * 180 / 3.141593);
     }
 }
 

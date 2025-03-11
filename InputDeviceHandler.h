@@ -1,37 +1,30 @@
-#ifndef GAMESCENE_H
-#define GAMESCENE_H
+#ifndef INPUTDEVICEHANDLER_H
+#define INPUTDEVICEHANDLER_H
 
-#include <QGraphicsScene>
-#include <QPixmap>
-#include "game.h"
+#include <QObject>
+#include <QFile>
+#include <QDebug>
+#include <linux/input.h>
+#include <QSocketNotifier> // Add this line
+#include "gamescene.h"
 
-class QTimer;
-class GameScene : public QGraphicsScene
+#define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
+
+class InputDeviceHandler : public QObject
 {
     Q_OBJECT
-public:
-    explicit GameScene(QObject *parent = nullptr);
-    void setUpDirection(bool upDir);
 
-signals:
-private slots:
-    void update();
+public:
+    explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
+    ~InputDeviceHandler();
+
+    void processInputEvents();
+    GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
 
 private:
-    void loadPixmap();
-
-    Game m_game;
-    QTimer* m_timer;
-    QPixmap m_bgPixmap, m_carPixmap[5];
-
-    bool m_upDir, m_rightDir, m_downDir, m_leftDir;
-    // QGraphicsScene interface
-    void carMovement();
-    void carCollision();
-    void renderScene();
-protected:
-    virtual void keyPressEvent(QKeyEvent *event) override;
-    virtual void keyReleaseEvent(QKeyEvent *event) override;
+    QFile *inputDevice;
+    void handleKeyEvent(const struct input_event &ev);
+    QSocketNotifier *notifier; // Add this line
 };
 
-#endif // GAMESCENE_H
+#endif // INPUTDEVICEHANDLER_H
