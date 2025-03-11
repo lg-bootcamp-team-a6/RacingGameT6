@@ -5,28 +5,26 @@
 #include <QFile>
 #include <QDebug>
 #include <linux/input.h>
+#include <QSocketNotifier> // Add this line
+#include "gamescene.h"
 
-#define DEV_NAME "/dev/input/event0"  // 해당 input device 경로
+#define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
 
 class InputDeviceHandler : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit InputDeviceHandler(QObject *parent = nullptr);
+    explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
     ~InputDeviceHandler();
 
     void processInputEvents();
+    GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
 
 private:
     QFile *inputDevice;
     void handleKeyEvent(const struct input_event &ev);
-
-    // 키 입력 상태
-    bool m_upDir = false;
-    bool m_downDir = false;
-    bool m_leftDir = false;
-    bool m_rightDir = false;
+    QSocketNotifier *notifier; // Add this line
 };
 
 #endif // INPUTDEVICEHANDLER_H

@@ -6,21 +6,13 @@
 
 int main(int argc, char** argv)
 {
-    QApplication a(argc,argv);
-
-    InputDeviceHandler inputHandler;
-    
-    // 50ms마다 input events를 처리
-    /*QTimer timer;
-    QObject::connect(&timer, &QTimer::timeout, &inputHandler, &InputDeviceHandler::processInputEvents);
-    timer.start(50);  // 50ms마다 처리
-
-    qDebug() << "TESTESTESTESTTEST";*/
+    QApplication a(argc, argv);
 
     View v;
+
+    InputDeviceHandler inputHandler(v.m_gameScene);
+
     v.show();
 
-    a.exec();
-
-
+    return a.exec();
 }
