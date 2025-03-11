@@ -1,32 +1,37 @@
-#ifndef INPUTDEVICEHANDLER_H
-#define INPUTDEVICEHANDLER_H
+#ifndef GAMESCENE_H
+#define GAMESCENE_H
 
-#include <QObject>
-#include <QFile>
-#include <QDebug>
-#include <linux/input.h>
+#include <QGraphicsScene>
+#include <QPixmap>
+#include "game.h"
 
-#define DEV_NAME "/dev/input/event0"  // 해당 input device 경로
-
-class InputDeviceHandler : public QObject
+class QTimer;
+class GameScene : public QGraphicsScene
 {
     Q_OBJECT
-
 public:
-    explicit InputDeviceHandler(QObject *parent = nullptr);
-    ~InputDeviceHandler();
+    explicit GameScene(QObject *parent = nullptr);
+    void setUpDirection(bool upDir);
 
-    void processInputEvents();
+signals:
+private slots:
+    void update();
 
 private:
-    QFile *inputDevice;
-    void handleKeyEvent(const struct input_event &ev);
+    void loadPixmap();
 
-    // 키 입력 상태
-    bool m_upDir = false;
-    bool m_downDir = false;
-    bool m_leftDir = false;
-    bool m_rightDir = false;
+    Game m_game;
+    QTimer* m_timer;
+    QPixmap m_bgPixmap, m_carPixmap[5];
+
+    bool m_upDir, m_rightDir, m_downDir, m_leftDir;
+    // QGraphicsScene interface
+    void carMovement();
+    void carCollision();
+    void renderScene();
+protected:
+    virtual void keyPressEvent(QKeyEvent *event) override;
+    virtual void keyReleaseEvent(QKeyEvent *event) override;
 };
 
-#endif // INPUTDEVICEHANDLER_H
+#endif // GAMESCENE_H

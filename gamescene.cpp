@@ -289,3 +289,9 @@ void GameScene::keyReleaseEvent(QKeyEvent *event)
     }
     QGraphicsScene::keyReleaseEvent(event);
 }
+
+
+void GameScene::setUpDirection(bool upDir)
+{
+    m_upDir = upDir;
+}
