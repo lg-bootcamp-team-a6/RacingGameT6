@@ -120,11 +120,9 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     }
     else if (ev.code == KEY1_CODE) {
         if (ev.value == 1) {
-            //qDebug() << "[ACTION] SW3 activated";
-            m_gameScene->setRightDirection(true); // Set forward direction
+            m_gameScene->m_mapIdx = m_gameScene->m_mapIdx == 0 ? 1 : 0;
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
-            m_gameScene->setRightDirection(false); // Unset forward direction
         }
     }
 }
