@@ -11,8 +11,6 @@
 #include <QSocketNotifier> // Add this line
 #include "gamescene.h"
 
-#define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
-#define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
 
 class InputDeviceHandler : public QObject
 {
