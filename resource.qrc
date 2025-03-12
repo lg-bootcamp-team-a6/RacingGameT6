@@ -5,6 +5,7 @@
         <file>images/car4.png</file>
         <file>images/car0.png</file>
         <file>images/car3.png</file>
-        <file>images/bg.png</file>
+        <file>images/bg0.png</file>
+        <file>images/bg1.png</file>
     </qresource>
 </RCC>

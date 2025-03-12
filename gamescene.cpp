@@ -13,14 +13,11 @@ GameScene::GameScene(QObject *parent)
       m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false)
 {
     
-    m_myCarPrePosX = m_game.car[0].x;
-    m_myCarPrePosY = m_game.car[0].y;
-    
     loadPixmap();
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
 
-    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap);
+    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
     //m_bgItem->setTransformationMode(Qt::SmoothTransformation);
     m_bgItem->setScale(2);
     addItem(m_bgItem);
@@ -40,59 +37,28 @@ GameScene::GameScene(QObject *parent)
 
 void GameScene::loadPixmap()
 {
-    if(m_bgPixmap.load(m_game.PATH_TO_BACKGROUND_PIXMAP))
+    if(m_bgPixmap[0].load(m_game.PATH_TO_BACKGROUND_PIXMAP[0]))
     {
-        qDebug() << "BgPixmap is loaded successfully HLELLELELELELELELELEL";
+        qDebug() << "BgPixmap0 is loaded successfully";
     }
     else
     {
-        qDebug() << "BgPixmap is not loaded successfully";
+        qDebug() << "BgPixmap0 is not loaded successfully";
+    }
+    
+    if(m_bgPixmap[1].load(m_game.PATH_TO_BACKGROUND_PIXMAP[1]))
+    {
+        qDebug() << "BgPixmap1 is loaded successfully";
+    }
+    else
+    {
+        qDebug() << "BgPixmap1 is not loaded successfully";
     }
 
 
     if(m_carPixmap[0].load(m_game.PATH_TO_CAR_PIXMAP[0]))
     {
         qDebug() << "CarPixmap[0] is loaded successfully";
-    }
-    else
-    {
-        qDebug() << "CarPixmap[0] is loaded successfully";
-    }
-
-    if(m_carPixmap[1].load(m_game.PATH_TO_CAR_PIXMAP[1]))
-    {
-        qDebug() << "CarPixmap[1] is loaded successfully";
-    }
-    else
-    {
-        qDebug() << "CarPixmap[1] is loaded successfully";
-    }
-
-    if(m_carPixmap[2].load(m_game.PATH_TO_CAR_PIXMAP[2]))
-    {
-        qDebug() << "CarPixmap[2] is loaded successfully";
-    }
-    else
-    {
-        qDebug() << "CarPixmap[2] is loaded successfully";
-    }
-
-    if(m_carPixmap[3].load(m_game.PATH_TO_CAR_PIXMAP[3]))
-    {
-        qDebug() << "CarPixmap[3] is loaded successfully";
-    }
-    else
-    {
-        qDebug() << "CarPixmap[3] is loaded successfully";
-    }
-
-    if(m_carPixmap[4].load(m_game.PATH_TO_CAR_PIXMAP[4]))
-    {
-        qDebug() << "CarPixmap[4] is loaded successfully";
-    }
-    else
-    {
-        qDebug() << "CarPixmap[4] is loaded successfully";
     }
 }
 
@@ -151,7 +117,7 @@ void GameScene::carMovement()
     }
 
 
-    QImage bgImage = m_bgPixmap.toImage();
+    QImage bgImage = m_bgPixmap[m_mapIdx].toImage();
 
     m_game.car[0].speed = m_game.speed;
     m_game.car[0].angle = m_game.angle;
@@ -182,7 +148,7 @@ void GameScene::carMovement()
 
     int dx = 0, dy = 0;
 
-    if(red < 200)
+    if(red < 255)
         m_game.car[0].move();
     else
     {
@@ -256,7 +222,7 @@ void GameScene::renderScene()
 void GameScene::update()
 {
     clear();
-    QGraphicsPixmapItem* bgItem = new QGraphicsPixmapItem(m_bgPixmap);
+    QGraphicsPixmapItem* bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
     //bgItem->setTransformationMode(Qt::SmoothTransformation);
     bgItem->setScale(2);
     addItem(bgItem);
@@ -267,8 +233,6 @@ void GameScene::update()
 //    carItem->setPos(200, 200);
 //    addItem(carItem);
 
-    m_myCarPrePosX = m_game.car[0].x;
-    m_myCarPrePosY = m_game.car[0].y; 
 
     carMovement();
     carCollision();
@@ -372,44 +336,6 @@ void GameScene::setRightDirection(bool rightDir)
 }
 
 
-void GameScene::getPixelValueAtCarPosition()
-{
-    // Convert m_bgPixmap to QImage
-    QImage bgImage = m_bgPixmap.toImage();
-
-    // Get the position of the car
-    int carX = static_cast<int>(m_game.car[0].x);
-    int carY = static_cast<int>(m_game.car[0].y);
-
-    // Adjust for the offset
-    carX -= m_game.offsetX;
-    carY -= m_game.offsetY;
-
-    carX = m_game.offsetX/2 + 160;
-    carY = m_game.offsetY/2 + 120;
-
-    // Print the adjusted car position
-    qDebug() << "Adjusted game Offset - X:" << carX << "Y:" << carY;
-
-    // Ensure the position is within the bounds of the image
-    if (carX >= 0 && carX < bgImage.width() && carY >= 0 && carY < bgImage.height())
-    {
-        // Get the pixel value at the car's position
-        QRgb pixelValue = bgImage.pixel(carX, carY);
-
-        // Extract RGB components
-        int red = qRed(pixelValue);
-        int green = qGreen(pixelValue);
-        int blue = qBlue(pixelValue);
-
-        // Print RGB values
-        qDebug() << "Pixel value at car position - Red:" << red << "Green:" << green << "Blue:" << blue;
-    }
-    else
-    {
-        qDebug() << "Car position is out of bounds of the background image.";
-    }
-}
 
 void GameScene::setAngleDirection(double angle)
 {
