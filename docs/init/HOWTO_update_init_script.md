@@ -1,4 +1,4 @@
-### 요약
+# 환경설정) 부팅시 자동 실행
  (리눅스) ~/work/buildroot-2024.02.1/rootfs/etc/init.d/S50local 아래에 추가하고 싶은 스크립트 수정
 참고 : 부팅시 실행되므로 웬만한 커맨드는 & 붙여 백그라운드에서 실행
 (리눅스) ~/work/buildroot-2024.02.1에서 ./mkext2.sh로 RFS 굽굽 && cp ext2img.gz /nfsroot
@@ -28,8 +28,11 @@
     insmod devtest.ko
 
     ./Racing2D &
-    ````
-3. `cd ~/work/buildroot-2024.02.1 && ./mkext2.sh && cp ext2img.gz /nfsroot`
+    ```
+
+[ ] TODO: ++ ALSA 드라이버 추가시 `source /mnt/nfs/alsa.sh` 추가 필요
+3. `sudo` > 비밀번호 입력
+4. `cd ~/work/buildroot-2024.02.1 && sudo ./mkext2.sh && sudo cp ext2img.gz /nfsroot`
 
 ### 2) Target (보드) 에서 실행
 1. Uboot 진입
