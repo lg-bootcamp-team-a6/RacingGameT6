@@ -9,7 +9,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false)
+      m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false)
 {
     loadPixmap();
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
@@ -286,4 +286,20 @@ void GameScene::keyReleaseEvent(QKeyEvent *event)
 void GameScene::setUpDirection(bool upDir)
 {
     m_upDir = upDir;
+}
+
+void GameScene::setAngleDirection(double angle)
+{
+    //right
+    if(angle < 0){
+        qDebug()<<"##########[DIRECTION]#########right";
+        m_leftDir = false;
+        m_rightDir = true;
+    }
+    else{
+        qDebug()<<"##########[DIRECTION]#########left";
+        m_leftDir = true;
+        m_rightDir = false;
+    }
+
 }

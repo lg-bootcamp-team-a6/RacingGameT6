@@ -13,6 +13,7 @@ class GameScene : public QGraphicsScene
 public:
     explicit GameScene(QObject *parent = nullptr);
     void setUpDirection(bool upDir);
+    void setAngleDirection(double angle);
 
 signals:
 
