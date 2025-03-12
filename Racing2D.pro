@@ -20,4 +20,11 @@ HEADERS += \
     InputDeviceHandler.h
 
 RESOURCES += \
-    resource.qrc
+    resource.qrc \
+    module \
+
+# set binary destination
+DESTDIR = /nfsroot
+
+# add module build steps
+QMAKE_POST_LINK = cd $$PWD/module && make clean && make
