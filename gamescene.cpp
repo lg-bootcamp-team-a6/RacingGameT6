@@ -413,14 +413,19 @@ void GameScene::getPixelValueAtCarPosition()
 
 void GameScene::setAngleDirection(double angle)
 {
-    //right
-    if(angle < 0){
-        qDebug()<<"##########[DIRECTION]#########right";
+    if(abs(angle) < 200){
+        qDebug()<<"##########[Staight]###########################";
+        m_leftDir = false;
+        m_rightDir = false;
+
+    }
+    else if(angle < 0){
+        qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
     }
     else{
-        qDebug()<<"##########[DIRECTION]#########left";
+        qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
         m_leftDir = true;
         m_rightDir = false;
     }
