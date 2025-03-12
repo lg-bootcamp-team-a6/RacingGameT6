@@ -27,15 +27,15 @@ const QSize Game::RESOLUTION = QSize(640, 480);
 const int Game::COUNT_OF_CARS = 5;
 
 Game::Game()
-    : PATH_TO_BACKGROUND_PIXMAP(":/images/bg.png"), PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")}, ITERATION_VALUE(1000.0f/60.0f),
-      car_R(22), speed(0), angle(0), maxSpeed(12), acc(0.2f), dec(0.3f), turnSpeed(0.08), offsetX(0), offsetY(0)
+    : PATH_TO_BACKGROUND_PIXMAP(":/images/bg.png"), PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")}, ITERATION_VALUE(1000.0f/200.0f),
+      car_R(22), speed(0), angle(0), maxSpeed(20), acc(2.0f), dec(2.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
 {
     for(int i=0; i < COUNT_OF_CARS;i++)
     {
       car[i] = Car(num_checkpoints, points);
       car[i].x = 400+i*50;
       car[i].y = 3480+i*80;
-      car[i].speed = 7+i;
+      car[i].speed = 20+i;
     }
     /*
      * cars` center

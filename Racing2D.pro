@@ -16,7 +16,6 @@ HEADERS += \
     game.h \
     gamescene.h \
     view.h \
-    my_ioctl.h \
     InputDeviceHandler.h
 
 RESOURCES += \
