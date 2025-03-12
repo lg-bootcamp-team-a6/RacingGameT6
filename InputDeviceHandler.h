@@ -20,13 +20,11 @@ class InputDeviceHandler : public QObject
 
 public:
     explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
-    explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
     ~InputDeviceHandler();
 
     void processInputEvents();
     void processAccEvents();
 
-    GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
     GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
 
 private:
@@ -37,7 +35,6 @@ private:
     QSocketNotifier *notifier; // Add this line
     QSocketNotifier *accNotifier;
     double calculateRotationAngleAxixz(int x, int y);
-    QSocketNotifier *notifier; // Add this line
 };
 
 #endif // INPUTDEVICEHANDLER_H

@@ -15,19 +15,20 @@ public:
     explicit GameScene(QObject *parent = nullptr);
     void setUpDirection(bool upDir);
     void setRightDirection(bool rightDir);
+    void setAngleDirection(double angle)
 
 signals:
 
 
 private slots:
     void update();
-
-private:
     void loadPixmap();
     void carMovement();
     void carCollision();
     void renderScene();
     void getPixelValueAtCarPosition();
+
+private:
 
     Game m_game;
     QTimer* m_timer;

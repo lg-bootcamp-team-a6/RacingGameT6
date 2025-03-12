@@ -10,7 +10,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false)
+      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false)
 {
     
     m_myCarPrePosX = m_game.car[0].x;
@@ -28,20 +28,6 @@ GameScene::GameScene(QObject *parent)
     for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
         QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
-        carItem->setScale(1);
-        carItem->setTransformOriginPoint(21, 34);
-        addItem(carItem);
-        m_carItems.append(carItem);
-    }
-
-    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap);
-    m_bgItem->setTransformationMode(Qt::SmoothTransformation);
-    m_bgItem->setScale(2);
-    addItem(m_bgItem);
-
-    for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
-        QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
-        carItem->setTransformationMode(Qt::SmoothTransformation);
         carItem->setScale(1);
         carItem->setTransformOriginPoint(21, 34);
         addItem(carItem);
@@ -201,14 +187,13 @@ void GameScene::carMovement()
     else
     {
         int dx=0, dy=0;
-        while (dx*dx + dy*dy < m_game.car_R*m_game.car_R /2)
+        while (dx*dx + dy*dy < m_game.car_R*m_game.car_R)
         {
             m_game.car[0].x -= dx/10.0;
             m_game.car[0].y -= dy/10.0;
 
             dx = newX - m_game.car[0].x;
             dy = newY - m_game.car[0].y;
-            qDebug() << dx << " " << dy;
 
             if (!dx && !dy)
             {
@@ -294,17 +279,17 @@ void GameScene::update()
 
     bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
-    if (m_game.car[0].x > 320) {
-        m_game.offsetX = m_game.car[0].x - 320;
-    }
-    if (m_game.car[0].y > 240) {
-        m_game.offsetY = m_game.car[0].y - 240;
-    }
-    m_bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
-    for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
-        m_carItems[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
-        m_carItems[i]->setRotation(m_game.car[i].angle * 180 / 3.141593);
+    for(int i=0; i < Game::COUNT_OF_CARS; i++)
+    {
+        QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
+        carItem->setTransformationMode(Qt::SmoothTransformation);
+        carItem->setScale(1);
+        //42x69 average of pixmaps
+        carItem->setTransformOriginPoint(21, 34);
+        carItem->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
+        carItem->setRotation(m_game.car[i].angle * 180/3.141593);
+        addItem(carItem);
     }
 }
 
@@ -424,12 +409,6 @@ void GameScene::getPixelValueAtCarPosition()
     {
         qDebug() << "Car position is out of bounds of the background image.";
     }
-}
-
-
-void GameScene::setUpDirection(bool upDir)
-{
-    m_upDir = upDir;
 }
 
 void GameScene::setAngleDirection(double angle)

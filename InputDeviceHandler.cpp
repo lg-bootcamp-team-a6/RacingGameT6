@@ -7,12 +7,9 @@
 
 #define DEV_NAME "/dev/input/event1"  // 입력 장치 파일 경로
 #define ACC_NAME "/dev/input/event0"
-#define KEY_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
 #define KEY0_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
-#define KEY1_CODE 103  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
+#define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
 
-InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
-    : QObject(parent), m_gameScene(gameScene)
 InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
     : QObject(parent), m_gameScene(gameScene)
 {
@@ -23,11 +20,9 @@ InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
     } else {
         qDebug() << "Input device opened successfully!";
         qDebug() << "Input device handle:" << inputDevice->handle();
-
         int fd = inputDevice->handle();
         int flags = fcntl(fd, F_GETFL, 0);
         fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-
         notifier = new QSocketNotifier(inputDevice->handle(), QSocketNotifier::Read, this);
         connect(notifier, &QSocketNotifier::activated, this, &InputDeviceHandler::processInputEvents);
         qDebug() << "QSocketNotifier created and connected.";
@@ -38,25 +33,12 @@ InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
     else {
         qDebug() << "Accelerometer device opened successfully!";
         qDebug() << "Accelerometer device handle:" << accDevice->handle();
-
         int acc_fd = accDevice->handle();
         int acc_flags = fcntl(acc_fd, F_GETFL, 0);
         fcntl(acc_fd, F_SETFL, acc_flags | O_NONBLOCK);
-
         accNotifier = new QSocketNotifier(accDevice->handle(), QSocketNotifier::Read, this);
         connect(accNotifier, &QSocketNotifier::activated, this, &InputDeviceHandler::processAccEvents);
         qDebug() << "Accelerometer QSocketNotifier created and connected.";
-    }
-
-        qDebug() << "Input device handle:" << inputDevice->handle();
-
-        int fd = inputDevice->handle();
-        int flags = fcntl(fd, F_GETFL, 0);
-        fcntl(fd, F_SETFL, flags | O_NONBLOCK);
-
-        notifier = new QSocketNotifier(inputDevice->handle(), QSocketNotifier::Read, this);
-        connect(notifier, &QSocketNotifier::activated, this, &InputDeviceHandler::processInputEvents);
-        qDebug() << "QSocketNotifier created and connected.";
     }
 }
 
@@ -74,7 +56,6 @@ void InputDeviceHandler::processInputEvents()
 {
     if (!inputDevice->isOpen()) {
         qWarning() << "Input device is not open!";
-        qWarning() << "Input device is not open!";
         return;
     }
 
@@ -82,15 +63,10 @@ void InputDeviceHandler::processInputEvents()
 
     qDebug() << "Reading input event...";
 
-    qDebug() << "Reading input event...";
-
-    ssize_t bytesRead = inputDevice->read(reinterpret_cast<char*>(&ev), sizeof(ev));
-    if (bytesRead == sizeof(ev)) {
     ssize_t bytesRead = inputDevice->read(reinterpret_cast<char*>(&ev), sizeof(ev));
     if (bytesRead == sizeof(ev)) {
         qDebug() << "[INTERRUPT] Event detected! Type:" << ev.type << ", Code:" << ev.code << ", Value:" << ev.value;
 
-        // EV_KEY 처리
         // EV_KEY 처리
         if (ev.type == EV_KEY) {
             handleKeyEvent(ev);
@@ -100,7 +76,6 @@ void InputDeviceHandler::processInputEvents()
     } else {
         qWarning() << "Failed to read a complete input event. Bytes read:" << bytesRead;
     }
-
 }
 
 void InputDeviceHandler::processAccEvents()
@@ -126,24 +101,13 @@ void InputDeviceHandler::processAccEvents()
         }
     } else {
         qWarning() << "Failed to read a complete accelerometer event. Bytes read:" << bytesRead;
-        } else {
-            qDebug() << "Event type is not EV_KEY, ignoring.";
-        }
-    } else {
-        qWarning() << "Failed to read a complete input event. Bytes read:" << bytesRead;
     }
 }
 
 void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 {
     qDebug() << "[KEY EVENT] Code:" << ev.code << "Value:" << ev.value;
-    qDebug() << "[KEY EVENT] Code:" << ev.code << "Value:" << ev.value;
 
-    // SW2 이벤트 처리
-    if (ev.code == KEY_CODE) {
-        if (ev.value == 1) {
-            qDebug() << "[ACTION] SW2 activated";
-            m_gameScene->setUpDirection(true); // Set forward direction
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
@@ -159,19 +123,10 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
             qDebug() << "[ACTION] SW3 activated";
             m_gameScene->setRightDirection(true); // Set forward direction
         } else {
-            qDebug() << "[ACTION] SW2 deactivated";
-            m_gameScene->setUpDirection(false); // Unset forward direction
+            qDebug() << "[ACTION] SW3 deactivated";
+            m_gameScene->setRightDirection(false); // Unset forward direction
         }
     }
-
-}
-
-double InputDeviceHandler::calculateRotationAngleAxixz(int x, int y)
-{
-    // Z축 회전각을 계산 (3D 공간에서 기울기)
-     // 여기서는 Y와 X의 평면을 기준으로 Z축 회전각을 구함
-     double angle = atan2(y, x) * 180 / M_PI; // 라디안 값을 도로 변환
-     return angle;
 }
 
 void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
@@ -184,23 +139,25 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
         case ABS_X:
             acc_x = ev.value;
             rotation_angle = calculateRotationAngleAxixz(acc_x, acc_y);
-            m_gameScene -> setAngleDirection(rotation_angle);
+            //m_gameScene->setAngleDirection(rotation_angle);
             qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         case ABS_Y:
             acc_y = ev.value;
             rotation_angle = calculateRotationAngleAxixz(acc_x, acc_y);
-            m_gameScene -> setAngleDirection(rotation_angle);
+            //m_gameScene->setAngleDirection(rotation_angle);
             qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:
             qDebug() << "Unknown accelerometer event code:" << ev.code;
             break;
-            qDebug() << "[ACTION] SW3 deactivated";
-            m_gameScene->setRightDirection(false); // Unset forward direction
-        }
     }
-    else {
-        qDebug() << "Unknown key event, ignoring.";
-    }
+}
+
+double InputDeviceHandler::calculateRotationAngleAxixz(int x, int y)
+{
+    // Z축 회전각을 계산 (3D 공간에서 기울기)
+    // 여기서는 Y와 X의 평면을 기준으로 Z축 회전각을 구함
+    double angle = atan2(y, x) * 180 / M_PI; // 라디안 값을 도로 변환
+    return angle;
 }
