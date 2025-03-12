@@ -5,20 +5,27 @@
 #include <linux/input.h>
 #include <QSocketNotifier>
 
-#define DEV_NAME "/dev/input/event0"  // 입력 장치 파일 경로
+#define KEY0_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
+#define KEY1_CODE 103  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
 
-InputDeviceHandler::InputDeviceHandler(QObject *parent)
-    : QObject(parent), m_upDir(false), m_downDir(false), m_leftDir(false), m_rightDir(false)
+InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
+    : QObject(parent), m_gameScene(gameScene)
 {
     inputDevice = new QFile(DEV_NAME, this);
     if (!inputDevice->open(QIODevice::ReadOnly)) {
         qWarning() << "Failed to open input device!";
     } else {
         qDebug() << "Input device opened successfully!";
-    }
+        qDebug() << "Input device handle:" << inputDevice->handle();
 
-    QSocketNotifier *notifier = new QSocketNotifier(inputDevice->handle(), QSocketNotifier::Read, this);
-    connect(notifier, &QSocketNotifier::activated, this, &InputDeviceHandler::processInputEvents);
+        int fd = inputDevice->handle();
+        int flags = fcntl(fd, F_GETFL, 0);
+        fcntl(fd, F_SETFL, flags | O_NONBLOCK);
+
+        notifier = new QSocketNotifier(inputDevice->handle(), QSocketNotifier::Read, this);
+        connect(notifier, &QSocketNotifier::activated, this, &InputDeviceHandler::processInputEvents);
+        qDebug() << "QSocketNotifier created and connected.";
+    }
 }
 
 InputDeviceHandler::~InputDeviceHandler()
@@ -31,36 +38,53 @@ InputDeviceHandler::~InputDeviceHandler()
 void InputDeviceHandler::processInputEvents()
 {
     if (!inputDevice->isOpen()) {
+        qWarning() << "Input device is not open!";
         return;
     }
 
     struct input_event ev;
-    qDebug() << "[INFO] Listening for input events...";
 
-    while (inputDevice->read(reinterpret_cast<char*>(&ev), sizeof(ev)) == sizeof(ev)) {
+    qDebug() << "Reading input event...";
+
+    ssize_t bytesRead = inputDevice->read(reinterpret_cast<char*>(&ev), sizeof(ev));
+    if (bytesRead == sizeof(ev)) {
         qDebug() << "[INTERRUPT] Event detected! Type:" << ev.type << ", Code:" << ev.code << ", Value:" << ev.value;
 
-        // EV_KEY만 처리
+        // EV_KEY 처리
         if (ev.type == EV_KEY) {
             handleKeyEvent(ev);
+        } else {
+            qDebug() << "Event type is not EV_KEY, ignoring.";
         }
+    } else {
+        qWarning() << "Failed to read a complete input event. Bytes read:" << bytesRead;
     }
 }
 
 void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 {
-    bool isPressed = (ev.value == 1);
+    qDebug() << "[KEY EVENT] Code:" << ev.code << "Value:" << ev.value;
 
-    qDebug() << "[KEY EVENT] Code:" << ev.code << (isPressed ? "pressed" : "released");
-
-    // GPIO_KEY_UP에만 반응
-    if (ev.code == KEY_UP) {  // KEY_UP은 GPIO_KEY_UP에 대응하는 키 코드입니다.
-        if (isPressed) {
-            m_upDir = true;
-            qDebug() << "[ACTION] Up key pressed";
+    // SW2 이벤트 처리
+    if (ev.code == KEY0_CODE) {
+        if (ev.value == 1) {
+            qDebug() << "[ACTION] SW2 activated";
+            m_gameScene->setUpDirection(true); // Set forward direction
         } else {
-            m_upDir = false;
-            qDebug() << "[ACTION] Up key released";
+            qDebug() << "[ACTION] SW2 deactivated";
+            m_gameScene->setUpDirection(false); // Unset forward direction
         }
+    }
+    else if (ev.code == KEY1_CODE) {
+        if (ev.value == 1) {
+            qDebug() << "[ACTION] SW3 activated";
+            m_gameScene->setRightDirection(true); // Set forward direction
+        } else {
+            qDebug() << "[ACTION] SW3 deactivated";
+            m_gameScene->setRightDirection(false); // Unset forward direction
+        }
+    }
+    else {
+        qDebug() << "Unknown key event, ignoring.";
     }
 }

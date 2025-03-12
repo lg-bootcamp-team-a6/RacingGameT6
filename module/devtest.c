@@ -5,8 +5,8 @@
 #include <linux/input.h>
 #include <linux/irq.h>
 
-#define GPIO_KEY_UP     17  // BCM2837에서 사용할 GPIO 핀 (예: GPIO 17)
-#define GPIO_KEY_DOWN   27  // BCM2837에서 사용할 GPIO 핀 (예: GPIO 27)
+#define GPIO_KEY_UP     18  // BCM2837에서 사용할 GPIO 핀 (예: GPIO 17)
+#define GPIO_KEY_DOWN   17  // BCM2837에서 사용할 GPIO 핀 (예: GPIO 27)
 
 static struct input_dev *key_input_dev;
 static int irq_key_up;
@@ -16,6 +16,8 @@ static int irq_key_down;
 static irqreturn_t key_isr(int irq, void *dev_id)
 {
     int key_value;
+
+    printk("Interrupt received: %d\n", irq); // 디버그 메시지 추가
 
     if (irq == irq_key_up) {
         key_value = gpio_get_value(GPIO_KEY_UP);
