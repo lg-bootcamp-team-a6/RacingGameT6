@@ -120,7 +120,13 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     }
     else if (ev.code == KEY1_CODE) {
         if (ev.value == 1) {
-            m_gameScene->m_mapIdx = m_gameScene->m_mapIdx == 0 ? 1 : 0;
+            int idx = m_gameScene->m_mapIdx;
+            
+            idx++;
+
+            idx = idx > m_gameScene->m_mapCnt ? 0 : idx;
+
+            m_gameScene->setMapIdx(idx);
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
         }

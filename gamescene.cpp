@@ -357,3 +357,8 @@ void GameScene::setAngleDirection(double angle)
     }
 
 }
+
+void GameScene::setMapIdx(int mapIdx)
+{
+    m_mapIdx = mapIdx;
+}

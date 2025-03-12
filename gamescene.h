@@ -15,6 +15,10 @@ public:
     explicit GameScene(QObject *parent = nullptr);
     void setUpDirection(bool upDir);
     void setRightDirection(bool rightDir);
+    void setAngleDirection(double angle);
+    void setMapIdx(int mapIdx);
+
+    int m_mapCnt = 2;
 
 signals:
 
