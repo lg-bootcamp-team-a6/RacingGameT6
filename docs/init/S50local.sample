@@ -1,0 +1,21 @@
+for count in 1 2 3 4 5
+do
+        link=`cat /sys/class/net/eth0/carrier`
+        if [ "$link" = "1" ]; then break; fi
+        echo "Wait for ethernet device to link - $count"
+        sleep 1
+done
+
+mknod /dev/mydev c 120 0
+mount -t nfs -o nolock 192.168.10.2:/nfsroot /mnt/nfs
+
+# Racing2D Setting
+export QT_QPA_PLATFORM=linuxfb
+
+cd /mnt/nfs
+insmod devtest.ko
+
+./Racing2D &
+
+# ALSA Setting
+source /mnt/nfs/alsa.sh

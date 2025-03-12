@@ -7,7 +7,11 @@
 #include <linux/input.h>
 #include <QSocketNotifier> // Add this line
 #include "gamescene.h"
+#include <math.h>
+#include <QSocketNotifier> // Add this line
+#include "gamescene.h"
 
+#define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
 #define DEV_NAME "/dev/input/event1"  // 해당 input device 경로
 
 class InputDeviceHandler : public QObject
@@ -16,14 +20,23 @@ class InputDeviceHandler : public QObject
 
 public:
     explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
+    explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
     ~InputDeviceHandler();
 
     void processInputEvents();
+    void processAccEvents();
+
+    GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
     GameScene *m_gameScene; // m_gameScene 멤버 변수 선언
 
 private:
     QFile *inputDevice;
+    QFile *accDevice;
     void handleKeyEvent(const struct input_event &ev);
+    void handleAccEvent(const struct input_event &ev);
+    QSocketNotifier *notifier; // Add this line
+    QSocketNotifier *accNotifier;
+    double calculateRotationAngleAxixz(int x, int y);
     QSocketNotifier *notifier; // Add this line
 };
 

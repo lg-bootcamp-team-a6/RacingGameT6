@@ -7,6 +7,7 @@
 
 class QTimer;
 
+
 class GameScene : public QGraphicsScene
 {
     Q_OBJECT
@@ -16,6 +17,7 @@ public:
     void setRightDirection(bool rightDir);
 
 signals:
+
 
 private slots:
     void update();
@@ -36,6 +38,7 @@ private:
     int m_myCarPrePosY=0;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir;
+
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

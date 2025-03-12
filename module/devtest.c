@@ -19,6 +19,8 @@ static irqreturn_t key_isr(int irq, void *dev_id)
 
     printk("Interrupt received: %d\n", irq); // 디버그 메시지 추가
 
+    printk("Interrupt received: %d\n", irq); // 디버그 메시지 추가
+
     if (irq == irq_key_up) {
         key_value = gpio_get_value(GPIO_KEY_UP);
         printk("Up\n");
