@@ -26,7 +26,7 @@ GameScene::GameScene(QObject *parent)
         QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
         starItem->setScale(1);
-        starItem->setPos(Game::m_checkpoint[0][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[0][i][1] * m_game.gamescale - m_game.offsetY);
+        starItem->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
         addItem(starItem);
         m_starItems.append(starItem);
     }
@@ -275,7 +275,7 @@ void GameScene::update()
         QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
         starItem->setScale(1);
-        starItem->setPos(Game::m_checkpoint[0][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[0][i][1] * m_game.gamescale - m_game.offsetY);
+        starItem->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
         addItem(starItem);
         m_starItems.append(starItem);
     }
@@ -418,8 +418,8 @@ bool GameScene::checkStarCollision()
         if(m_game.m_starScore >= Game::COUNTING_STARS)
             break;
 
-        int i32StarX = Game::m_checkpoint[0][m_game.m_starScore][0]* m_game.gamescale;
-        int i32StarY = Game::m_checkpoint[0][m_game.m_starScore][1]* m_game.gamescale;
+        int i32StarX = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][0]* m_game.gamescale;
+        int i32StarY = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][1]* m_game.gamescale;
 
         if(i32CarX > i32StarX - i32Range && i32CarY < i32StarY + i32Range)
         {
