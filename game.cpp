@@ -100,7 +100,7 @@ void Game::resetGameData(int mapIdx)
         offsetY = 0;
         car[0].x = 300 * gamescale;
         car[0].y = 600 * gamescale;
-        qDebug() << "Game data reset for map 1";
+        qDebug() << "Game data reset for map 2";
     }
     else
     {
