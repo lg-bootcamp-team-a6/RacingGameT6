@@ -70,6 +70,11 @@ void GameScene::loadPixmap()
     {
         qDebug() << "CarPixmap[0] is loaded successfully";
     }
+
+    if(m_starPixmap[0].load(m_game.PATH_TO_STAR_PIXMAP[0]))
+    {
+        qDebug() << "StarPixmap[0] is loaded successfully";
+    }
 }
 
 void GameScene::carMovement()

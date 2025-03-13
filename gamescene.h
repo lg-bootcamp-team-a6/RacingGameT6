@@ -35,7 +35,7 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[3], m_carPixmap[5];
+    QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3];
     QGraphicsPixmapItem* m_bgItem;
     QList<QGraphicsPixmapItem*> m_carItems;
 
