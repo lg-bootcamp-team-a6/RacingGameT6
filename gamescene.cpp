@@ -266,8 +266,6 @@ void GameScene::update()
         Goal();
     //getPixelValueAtCarPosition();
 
-    if(m_game.m_starScore == Game::COUNTING_STARS)
-
     m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
     m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
 
