@@ -41,8 +41,8 @@ Game::Game()
     turnSpeed = 0.08;
     offsetX = 0;
     offsetY = 0;
-    car[0].x =420;
-    car[0].y = 4680;
+    car[0].x = 350 * gamescale;
+    car[0].y = 1500 * gamescale;
     /*
      * cars` center
      *  0) 41x65
