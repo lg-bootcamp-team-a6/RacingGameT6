@@ -9,6 +9,8 @@ class Game
 {
 public:
     Game();
+
+    void resetGameData(int mapIdx);
     static const int num_checkpoints;
     static const int points[8][2];
     static const QSize RESOLUTION;

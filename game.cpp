@@ -47,3 +47,41 @@ Game::Game()
         avg: 42x69
      */
 }
+
+void Game::resetGameData(int mapIdx)
+{
+    if(mapIdx == 0)
+    {
+        car_R = 22;
+        speed = 0;
+        angle = 0;
+        maxSpeed = 20; 
+        acc = 2.0f;
+        dec = 2.0f;
+        turnSpeed = 0.08;
+        offsetX = 0;
+        offsetY = 0;
+        car[0].x =280;
+        car[0].y = 3120;
+        qDebug() << "Game data reset for map 0";
+    }
+    else if (mapIdx == 1)
+    {
+        car_R = 22;
+        speed = 0;
+        angle = 0;
+        maxSpeed = 20; 
+        acc = 2.0f;
+        dec = 2.0f;
+        turnSpeed = 0.08;
+        offsetX = 0;
+        offsetY = 0;
+        car[0].x = 500;
+        car[0].y = 2600;
+        qDebug() << "Game data reset for map 1";
+    }
+    else
+    {
+        qDebug() << "Invalid map index";
+    }
+}
