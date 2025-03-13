@@ -29,7 +29,7 @@ const QSize Game::RESOLUTION = QSize(640, 480);
 const int Game::COUNT_OF_CARS = 1;
 
 Game::Game()
-    : PATH_TO_BACKGROUND_PIXMAP{QString(":/images/bg0.png"), QString(":/images/bg1.png")}, PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")}, ITERATION_VALUE(1000.0f/200.0f),
+    : PATH_TO_BACKGROUND_PIXMAP{QString(":/images/bg0.png"), QString(":/images/bg1.png"), QString(":/images/bg2.png")}, PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")}, ITERATION_VALUE(1000.0f/200.0f),
       car_R(22), speed(0), angle(0), maxSpeed(20), acc(2.0f), dec(2.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
 {
     car_R = 22;
@@ -84,6 +84,21 @@ void Game::resetGameData(int mapIdx)
         offsetY = 0;
         car[0].x = 250 * gamescale;
         car[0].y = 1300 * gamescale;
+        qDebug() << "Game data reset for map 1";
+    }
+    else if (mapIdx == 3)
+    {
+        car_R = 22;
+        speed = 0;
+        angle = 0;
+        maxSpeed = 20; 
+        acc = 2.0f;
+        dec = 2.0f;
+        turnSpeed = 0.08;
+        offsetX = 0;
+        offsetY = 0;
+        car[0].x = 290 * gamescale;
+        car[0].y = 620 * gamescale;
         qDebug() << "Game data reset for map 1";
     }
     else
