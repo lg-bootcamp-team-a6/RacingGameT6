@@ -143,6 +143,7 @@ Game::Game()
     offsetY = 0;
     car[0].x = 350 * gamescale;
     car[0].y = 1500 * gamescale;
+    m_starScore = 0;
 
     /*
      * cars` center
@@ -157,47 +158,31 @@ Game::Game()
 
 void Game::resetGameData(int mapIdx)
 {
+    car_R = 22;
+    speed = 0;
+    angle = 0;
+    maxSpeed = 20; 
+    acc = 2.0f;
+    dec = 2.0f;
+    turnSpeed = 0.08;
+    offsetX = 0;
+    offsetY = 0;
+    m_starScore = 0;
+
     if(mapIdx == 0)
     {
-        car_R = 22;
-        speed = 0;
-        angle = 0;
-        maxSpeed = 20; 
-        acc = 2.0f;
-        dec = 2.0f;
-        turnSpeed = 0.08;
-        offsetX = 0;
-        offsetY = 0;
         car[0].x = 370 * gamescale;
         car[0].y = 1300 * gamescale;
         qDebug() << "Game data reset for map 0";
     }
     else if (mapIdx == 1)
     {
-        car_R = 22;
-        speed = 0;
-        angle = 0;
-        maxSpeed = 20; 
-        acc = 2.0f;
-        dec = 2.0f;
-        turnSpeed = 0.08;
-        offsetX = 0;
-        offsetY = 0;
         car[0].x = 370 * gamescale;
         car[0].y = 1300 * gamescale;
         qDebug() << "Game data reset for map 1";
     }
     else if (mapIdx == 2)
     {
-        car_R = 22;
-        speed = 0;
-        angle = 0;
-        maxSpeed = 20; 
-        acc = 2.0f;
-        dec = 2.0f;
-        turnSpeed = 0.08;
-        offsetX = 0;
-        offsetY = 0;
         car[0].x = 300 * gamescale;
         car[0].y = 600 * gamescale;
         qDebug() << "Game data reset for map 2";

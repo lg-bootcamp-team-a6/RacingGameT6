@@ -260,14 +260,20 @@ void GameScene::update()
 
     carMovement();
     carCollision();
+    checkStarCollision();
+
+    if(m_game.m_starScore == Game::COUNTING_STARS)
+        Goal();
     //getPixelValueAtCarPosition();
+
+    if(m_game.m_starScore == Game::COUNTING_STARS)
 
     m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
     m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
 
     bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
-    for (int i = 0; i < Game::COUNTING_STARS; ++i) {
+    for (int i = m_game.m_starScore; i < Game::COUNTING_STARS; ++i) {
         QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
         starItem->setScale(1);
@@ -395,4 +401,45 @@ void GameScene::setMapIdx(int mapIdx)
     m_mapIdx = mapIdx;
 
     m_game.resetGameData(mapIdx);
+}
+
+bool GameScene::checkStarCollision()
+{
+    bool bReturn = false;
+    int i32Range = 3;
+    int i32CarX = m_game.car[0].x * m_game.gamescale;
+    int i32CarY = m_game.car[0].y * m_game.gamescale;
+
+    do
+    {
+        if(m_game.m_starScore >= Game::COUNTING_STARS)
+            break;
+
+        int i32StarX = Game::m_checkpoint[0][m_game.m_starScore][0];
+        int i32StarY = Game::m_checkpoint[0][m_game.m_starScore][1];
+
+        if(i32CarX > i32StarX - i32Range && i32CarY < i32StarY + i32Range)
+        {
+            if(i32CarY > i32StarY - i32Range && i32CarY < i32StarY + i32Range)
+            {
+                bReturn = true;
+                m_game.m_starScore++;
+                break;
+            }
+        }
+    } while (false);
+    
+
+    return bReturn;
+}
+
+void GameScene::Goal()
+{
+    int idx = m_mapIdx;
+    
+    idx++;
+
+    idx = idx == m_mapCnt ? 0 : idx;
+
+    setMapIdx(idx);
 }

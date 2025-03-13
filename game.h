@@ -35,6 +35,7 @@ public:
    int m_pixelRed = 173;
    int m_pixelGreen = 173;
    int m_pixelBlue = 173;
+   int m_starScore = 0;
 
    int offsetX,offsetY;
 };

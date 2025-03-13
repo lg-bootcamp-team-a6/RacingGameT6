@@ -17,6 +17,8 @@ public:
     void setRightDirection(bool rightDir);
     void setAngleDirection(double angle);
     void setMapIdx(int mapIdx);
+    bool checkStarCollision();
+    void Goal();
 
     int m_mapCnt = 3;
     int m_mapIdx = 0;
