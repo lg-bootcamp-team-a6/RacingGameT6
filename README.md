@@ -6,15 +6,15 @@
 1. Enable SPI0
 
 
-   ```$cp device_tree/bcm283x.dtsi ~/work/linux/arch/arm/boot/dtc/bcm283x.dtsi```
+   ```$cp device_tree/bcm283x.dtsi ~/work/linux/arch/arm/boot/dts/bcm283x.dtsi```
    
 2. Implement device tree for lis302
 
 
-   ```$cp device_tree/wt2837.dts ~/work/linux/arch/arm/boot/dtc/wt2837.dts```
+   ```$cp device_tree/wt2837.dts ~/work/linux/arch/arm/boot/dts/wt2837.dts```
    
 3. Set kernel config
-
+ -> Make config status "*" : included in kernel
    
    ```$make menuconfig```
    
