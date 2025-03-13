@@ -1,5 +1,7 @@
 #include "game.h"
 
+#include <QDebug>
+
 const int Game::num_checkpoints = 8;
 //orginal point bg.png 1x1
 /*
@@ -30,13 +32,17 @@ Game::Game()
     : PATH_TO_BACKGROUND_PIXMAP{QString(":/images/bg0.png"), QString(":/images/bg1.png")}, PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")}, ITERATION_VALUE(1000.0f/200.0f),
       car_R(22), speed(0), angle(0), maxSpeed(20), acc(2.0f), dec(2.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
 {
-    for(int i=0; i < COUNT_OF_CARS;i++)
-    {
-      car[i] = Car(num_checkpoints, points);
-      car[i].x = 400+i*50;
-      car[i].y = 3480+i*80;
-      car[i].speed = 20+i;
-    }
+    car_R = 22;
+    speed = 0;
+    angle = 0;
+    maxSpeed = 20; 
+    acc = 2.0f;
+    dec = 2.0f;
+    turnSpeed = 0.08;
+    offsetX = 0;
+    offsetY = 0;
+    car[0].x =420;
+    car[0].y = 4680;
     /*
      * cars` center
      *  0) 41x65
@@ -61,8 +67,8 @@ void Game::resetGameData(int mapIdx)
         turnSpeed = 0.08;
         offsetX = 0;
         offsetY = 0;
-        car[0].x =280;
-        car[0].y = 3120;
+        car[0].x = 220 * gamescale;
+        car[0].y = 1500 * gamescale;
         qDebug() << "Game data reset for map 0";
     }
     else if (mapIdx == 1)
@@ -76,8 +82,8 @@ void Game::resetGameData(int mapIdx)
         turnSpeed = 0.08;
         offsetX = 0;
         offsetY = 0;
-        car[0].x = 500;
-        car[0].y = 2600;
+        car[0].x = 250 * gamescale;
+        car[0].y = 1300 * gamescale;
         qDebug() << "Game data reset for map 1";
     }
     else

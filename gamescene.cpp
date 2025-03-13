@@ -19,7 +19,7 @@ GameScene::GameScene(QObject *parent)
 
     m_bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
     //m_bgItem->setTransformationMode(Qt::SmoothTransformation);
-    m_bgItem->setScale(2);
+    m_bgItem->setScale(m_game.gamescale);
     addItem(m_bgItem);
 
     for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
@@ -124,7 +124,7 @@ void GameScene::carMovement()
 
 
     // Get the pixel value at the car's position
-    QRgb pixelValue = bgImage.pixel(m_game.car[0].x/2, m_game.car[0].y/2);
+    QRgb pixelValue = bgImage.pixel(m_game.car[0].x/m_game.gamescale, m_game.car[0].y/m_game.gamescale);
 
     // Extract RGB components
      int red = qRed(pixelValue);
@@ -134,8 +134,8 @@ void GameScene::carMovement()
     int newX = m_game.car[0].x + sin(m_game.car[0].angle) * m_game.car[0].speed;
     int newY = m_game.car[0].y - cos(m_game.car[0].angle) * m_game.car[0].speed;
 
-    int pixelX = newX / 2;
-    int pixelY = newY / 2;
+    int pixelX = newX / m_game.gamescale;
+    int pixelY = newY / m_game.gamescale;
 
 
     // Get the pixel value at the car's position
@@ -219,12 +219,13 @@ void GameScene::renderScene()
     qDebug() << "saved " << fileName;
 }
 
+
 void GameScene::update()
 {
     clear();
     QGraphicsPixmapItem* bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
     //bgItem->setTransformationMode(Qt::SmoothTransformation);
-    bgItem->setScale(2);
+    bgItem->setScale(m_game.gamescale);
     addItem(bgItem);
 
 //    QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap);
@@ -238,8 +239,8 @@ void GameScene::update()
     carCollision();
     //getPixelValueAtCarPosition();
 
-    m_game.offsetX = m_game.car[0].x-320;
-    m_game.offsetY = m_game.car[0].y-240;
+    m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
+    m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
 
     bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
@@ -361,4 +362,6 @@ void GameScene::setAngleDirection(double angle)
 void GameScene::setMapIdx(int mapIdx)
 {
     m_mapIdx = mapIdx;
+
+    m_game.resetGameData(mapIdx);
 }
