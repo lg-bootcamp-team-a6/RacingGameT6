@@ -404,17 +404,17 @@ void GameScene::setMapIdx(int mapIdx)
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
-    int i32Range = 3;
-    int i32CarX = m_game.car[0].x * m_game.gamescale;
-    int i32CarY = m_game.car[0].y * m_game.gamescale;
+    int i32Range = 20;
+    int i32CarX = m_game.car[0].x;
+    int i32CarY = m_game.car[0].y;
 
     do
     {
         if(m_game.m_starScore >= Game::COUNTING_STARS)
             break;
 
-        int i32StarX = Game::m_checkpoint[0][m_game.m_starScore][0];
-        int i32StarY = Game::m_checkpoint[0][m_game.m_starScore][1];
+        int i32StarX = Game::m_checkpoint[0][m_game.m_starScore][0]* m_game.gamescale;
+        int i32StarY = Game::m_checkpoint[0][m_game.m_starScore][1]* m_game.gamescale;
 
         if(i32CarX > i32StarX - i32Range && i32CarY < i32StarY + i32Range)
         {
@@ -426,7 +426,6 @@ bool GameScene::checkStarCollision()
             }
         }
     } while (false);
-    
 
     return bReturn;
 }
