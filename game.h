@@ -28,7 +28,7 @@ public:
    float maxSpeed;
    float acc, dec;
    float turnSpeed;
-   float gamescale;
+   float gamescale = 2;
 
    int offsetX,offsetY;
 };
