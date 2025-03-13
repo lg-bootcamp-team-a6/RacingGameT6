@@ -52,6 +52,8 @@ void View::setupOverlay()
     // 기존 스타일 적용 (원형 버튼)
     m_brakeButton->setStyleSheet("border-radius: 50px; left-padding : 25px; background-color: black;");
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
+    m_accelButton->setAutoRepeat(false);
+    m_brakeButton->setAutoRepeat(false);
 
     // 좌측에 accel 버튼, 우측에 brake 버튼 배치 (중간에 addStretch() 사용)
     layout->addWidget(m_accelButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
@@ -64,8 +66,20 @@ void View::setupOverlay()
     m_overlay->raise();
     m_overlay->show();
 
-    connect(m_accelButton, &QPushButton::clicked, this, &View::onAccelButtonClicked);
-    connect(m_brakeButton, &QPushButton::clicked, this, &View::onBrakeButtonClicked);
+    connect(m_accelButton, &QPushButton::pressed, this, [this]() {
+        qDebug()<<"UP pressed";
+        m_gameScene->setUpDirection(true);
+    });
+    connect(m_accelButton, &QPushButton::released, this, [this]() {
+        qDebug()<<"UP released";
+        m_gameScene->setUpDirection(false);
+    });
+    connect(m_brakeButton, &QPushButton::pressed, this, [this]() {
+        m_gameScene->setDownDirection(true);
+    });
+    connect(m_brakeButton, &QPushButton::released, this, [this]() {
+        m_gameScene->setDownDirection(false);
+    });
 }
 
 

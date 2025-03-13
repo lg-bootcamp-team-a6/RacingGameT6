@@ -15,6 +15,7 @@ public:
     explicit GameScene(QObject *parent = nullptr);
     void setUpDirection(bool upDir);
     void setRightDirection(bool rightDir);
+    void setDownDirection(bool downDir);
     void setAngleDirection(double angle);
     void setMapIdx(int mapIdx);
     bool checkStarCollision();
