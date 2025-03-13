@@ -5,7 +5,7 @@
 #include <linux/input.h>
 #include <QSocketNotifier>
 
-#define DEV_NAME "/dev/input/event3"  // 입력 장치 파일 경로
+#define DEV_NAME "/dev/input/event2"  // 입력 장치 파일 경로
 #define ACC_NAME "/dev/input/event0"
 #define KEY0_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)

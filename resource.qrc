@@ -8,5 +8,7 @@
         <file>images/bg0.png</file>
         <file>images/bg1.png</file>
         <file>images/bg2.png</file>
+	<file>images/brake_pedal.png</file>
+        <file>images/accel_pedal.png</file>
     </qresource>
 </RCC>
