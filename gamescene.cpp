@@ -6,16 +6,26 @@
 #include <QDir>
 #include <QPainter>
 #include <cmath>
+#include <QGraphicsView>
+#include <QUdpSocket>
+#include <unistd.h>
+
 #define DEV_NAME "/dev/mydev"
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false)
+      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false),
+      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
 {
     
     loadPixmap();
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
+    // sh fix
+    m_timer->setInterval(m_game.ITERATION_VALUE);
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
+    // sh fix
+    m_pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
+    addItem(m_pauseItem);
 
     m_bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
     //m_bgItem->setTransformationMode(Qt::SmoothTransformation);
@@ -40,8 +50,40 @@ GameScene::GameScene(QObject *parent)
         m_carItems.append(carItem);
     }
 
+    for (int i = 0; i < 3; i++) {
+        QGraphicsPixmapItem *cntItem = new QGraphicsPixmapItem(m_cntPixmap[i]);
+        cntItem->setScale(1);
+        cntItem->setTransformOriginPoint(21, 34);
+        addItem(cntItem);
+        m_cntItems.append(cntItem);
+    }
+
     m_timer->start(m_game.ITERATION_VALUE);
     update();
+}
+
+/* sh) pause function */
+void GameScene::togglePause(bool IsResume)
+{
+    QGraphicsPixmapItem *pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
+    pauseItem->setScale(1);
+    pauseItem->setPos(-190, -130);
+    addItem(pauseItem);
+
+    if (!IsResume) {
+        m_timer->stop();
+        qDebug() << "stop timer success";
+        if (nullptr != pauseItem) {
+            pauseItem->setVisible(true);
+            qDebug() << "[GAME] Paused by an interrupt.";
+            SocketUDP();
+        }
+    } else {
+        m_timer->start(m_game.ITERATION_VALUE);
+        pauseItem->setVisible(false);
+        qDebug() << "[GAME] Resumed by an interrupt.";
+        m_bIsResume = true;
+    }
 }
 
 void GameScene::loadPixmap()
@@ -242,6 +284,88 @@ void GameScene::renderScene()
     qDebug() << "saved " << fileName;
 }
 
+void GameScene::showText() {
+    m_elapsedTime += m_timer->interval() % 100;
+    int seconds = m_elapsedTime / 100;
+    int mseconds = m_elapsedTime % 100;
+    QString timeText = QString("Time: %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0'));
+    // QGraphicsTextItem을 사용하여 주행 시간 표시
+    QGraphicsTextItem* textItem = new QGraphicsTextItem();
+    textItem->setPlainText(timeText);  // Time format: "seconds.miliseconds"
+    textItem->setDefaultTextColor(Qt::black);
+    textItem->setFont(QFont("Arial", 20));
+    textItem->setPos(-350, -170); // hard coding..
+    addItem(textItem);
+
+    QGraphicsTextItem* textItem2 = new QGraphicsTextItem();
+    textItem2->setPlainText(QString("Speed: %1 | Angle: %2").arg(m_game.speed).arg(m_game.angle));
+    textItem2->setDefaultTextColor(Qt::black);
+    textItem2->setFont(QFont("Arial", 20));
+    textItem2->setPos(-350, -200); // col * row 
+    addItem(textItem2);
+}
+
+void GameScene::SocketUDP() {
+    QUdpSocket *udpSocket = new QUdpSocket(this);
+    QHostAddress hostAddress("192.168.10.2");  // Host PC IP address
+    quint16 hostPort = 12345;  // Port number
+
+    QString message = "PAUSED";
+    QByteArray datagram = message.toUtf8();
+    qint64 bytesWritten = udpSocket->writeDatagram(datagram, hostAddress, hostPort);
+    
+    if (bytesWritten == datagram.size()) {
+        qDebug() << "---------------Message successfully sent: PAUSED" << bytesWritten << "Expected:" << datagram.size();
+    } else {
+        qDebug() << "---------------Error sending message. Bytes written:" << bytesWritten << "Expected:" << datagram.size();
+    }
+}
+
+void GameScene::Wait3Seconds() {
+    QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_cntPixmap[0]);
+    QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_cntPixmap[1]);
+    QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_cntPixmap[2]);
+    m_timer->stop();
+
+    if (nullptr != three && nullptr != two && nullptr != one) {
+        qDebug() << "print 321...";
+        three->setScale(1);
+        three->setPos(-160, -80);
+        three->setVisible(true);
+        two->setScale(1);
+        two->setPos(-160, -80);
+        two->setVisible(false);
+        one->setScale(1);
+        one->setPos(-160, -80);
+        one->setVisible(false);
+        addItem(three);
+        addItem(two);
+        addItem(one);
+
+        QTimer::singleShot(1000, this, [=]() {
+            three->setVisible(false);
+            removeItem(three);
+            delete three;
+            two->setVisible(true);
+        });
+
+        m_timer->stop();
+        QTimer::singleShot(2000, this, [=]() {
+            two->setVisible(false);
+            removeItem(two);
+            delete two;
+            one->setVisible(true);
+        });
+
+        m_timer->stop();
+        QTimer::singleShot(3000, this, [=]() {
+            m_timer->start(m_game.ITERATION_VALUE);  // timer restart
+            one->setVisible(false);
+            removeItem(one);
+            delete one;
+        });
+    }
+}
 
 void GameScene::update()
 {
@@ -261,6 +385,9 @@ void GameScene::update()
     carMovement();
     carCollision();
     checkStarCollision();
+
+    /* sh) compute racing time */
+    showText();
 
     if(m_game.m_starScore == Game::COUNTING_STARS)
          Goal();
@@ -290,6 +417,11 @@ void GameScene::update()
         carItem->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         carItem->setRotation(m_game.car[i].angle * 180/3.141593);
         addItem(carItem);
+    }
+
+    if (m_bIsResume) {
+        m_bIsResume = false;
+        Wait3Seconds();
     }
 }
 

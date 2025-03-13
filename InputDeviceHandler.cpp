@@ -11,7 +11,7 @@
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
 
 InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
-    : QObject(parent), m_gameScene(gameScene)
+    : QObject(parent), m_gameScene(gameScene), m_bIsResume(false)
 {
     inputDevice = new QFile(DEV_NAME, this);
     accDevice = new QFile(ACC_NAME, this);
@@ -111,11 +111,15 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
-            //qDebug() << "[ACTION] SW2 activated";
-            m_gameScene->setUpDirection(true); // Set forward direction
-        } else {
-            //qDebug() << "[ACTION] SW2 deactivated";
-            m_gameScene->setUpDirection(false); // Unset forward direction
+            if (!m_bIsResume) {
+                qDebug() << "[ACTION] Toggle Pause";
+                m_gameScene->togglePause(m_bIsResume);
+                m_bIsResume = true;
+            } else {
+                // m_gameScene->setUpDirection(false); // Unset forward direction
+                m_gameScene->togglePause(m_bIsResume);
+                m_bIsResume = false;
+            }
         }
     }
     else if (ev.code == KEY1_CODE) {

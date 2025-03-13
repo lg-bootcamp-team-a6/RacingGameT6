@@ -18,6 +18,8 @@ public:
     const QString PATH_TO_BACKGROUND_PIXMAP[10];
     const QString PATH_TO_CAR_PIXMAP[5];
     const QString PATH_TO_STAR_PIXMAP[5];
+    QString PATH_TO_COUNT_PIXMAP[3];
+    const QString PATH_TO_PAUSE_PIXMAP;
     const float ITERATION_VALUE;
 
     float car_R;

@@ -33,6 +33,9 @@ private:
     QSocketNotifier *notifier; // Add this line
     QSocketNotifier *accNotifier;
     double calculateRotationAngleAxixz(int x, int y);
+
+    /* sh add */
+    bool m_bIsResume;
 };
 
 #endif // INPUTDEVICEHANDLER_H

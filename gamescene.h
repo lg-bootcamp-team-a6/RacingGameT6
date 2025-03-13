@@ -4,6 +4,11 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include "game.h"
+#include <QLabel>
+#include <QTimer>
+#include <QFont>
+#include <QTime>
+#include <QGraphicsTextItem>
 
 class QTimer;
 
@@ -45,6 +50,18 @@ private:
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir;
 
+public:
+    void togglePause(bool IsResume);
+    void showText();
+    void SocketUDP();
+    void Wait3Seconds();
+    QGraphicsPixmapItem *m_pauseItem;
+    QPixmap m_pausePixmap;
+    qint64 m_elapsedTime;
+    int m_computeTime;
+    bool m_bIsResume;
+    QPixmap m_cntPixmap[3];
+    QList<QGraphicsPixmapItem*> m_cntItems;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
