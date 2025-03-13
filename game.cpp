@@ -177,7 +177,7 @@ void Game::resetGameData(int mapIdx)
     }
     else if (mapIdx == 1)
     {
-        car[0].x = 370 * gamescale;
+        car[0].x = 350 * gamescale;
         car[0].y = 1300 * gamescale;
         qDebug() << "Game data reset for map 1";
     }
