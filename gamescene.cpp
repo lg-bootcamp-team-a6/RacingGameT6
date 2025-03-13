@@ -146,7 +146,6 @@ void GameScene::carMovement()
      green = qGreen(pixelValue);
      blue = qBlue(pixelValue);
 
-    int dx = 0, dy = 0;
 
     if(red == m_game.m_pixelRed && green == m_game.m_pixelGreen && blue == m_game.m_pixelBlue)
         m_game.car[0].move();
