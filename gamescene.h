@@ -18,7 +18,7 @@ public:
     void setAngleDirection(double angle);
     void setMapIdx(int mapIdx);
 
-    int m_mapCnt = 2;
+    int m_mapCnt = 3;
 
 signals:
 
