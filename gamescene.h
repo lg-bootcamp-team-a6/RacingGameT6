@@ -37,6 +37,7 @@ private:
     QTimer* m_timer;
     QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3];
     QGraphicsPixmapItem* m_bgItem;
+    QList<QGraphicsPixmapItem*> m_starItems;
     QList<QGraphicsPixmapItem*> m_carItems;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir;

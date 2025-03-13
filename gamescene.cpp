@@ -22,6 +22,15 @@ GameScene::GameScene(QObject *parent)
     m_bgItem->setScale(m_game.gamescale);
     addItem(m_bgItem);
 
+    for (int i = 0; i < Game::COUNTING_STARS; ++i) {
+        QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
+        //carItem->setTransformationMode(Qt::SmoothTransformation);
+        starItem->setScale(1);
+        starItem->setPos(Game::m_checkpoint[0][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[0][i][1] * m_game.gamescale - m_game.offsetY);
+        addItem(starItem);
+        m_starItems.append(starItem);
+    }
+
     for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
         QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
@@ -258,6 +267,14 @@ void GameScene::update()
 
     bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
+    for (int i = 0; i < Game::COUNTING_STARS; ++i) {
+        QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
+        //carItem->setTransformationMode(Qt::SmoothTransformation);
+        starItem->setScale(1);
+        starItem->setPos(Game::m_checkpoint[0][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[0][i][1] * m_game.gamescale - m_game.offsetY);
+        addItem(starItem);
+        m_starItems.append(starItem);
+    }
 
     for(int i=0; i < Game::COUNT_OF_CARS; i++)
     {

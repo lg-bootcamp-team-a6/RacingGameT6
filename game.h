@@ -13,6 +13,7 @@ public:
     void resetGameData(int mapIdx);
     static const int num_checkpoints;
     static const int points[8][2];
+    static const int m_checkpoint[3][30][2];
     static const QSize RESOLUTION;
     const QString PATH_TO_BACKGROUND_PIXMAP[10];
     const QString PATH_TO_CAR_PIXMAP[5];
@@ -22,6 +23,7 @@ public:
     float car_R;
 
     static const int COUNT_OF_CARS;
+    static const int COUNTING_STARS;
     Car car[5];
 
 
