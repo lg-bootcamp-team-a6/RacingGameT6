@@ -29,6 +29,9 @@ public:
    float acc, dec;
    float turnSpeed;
    float gamescale = 2;
+   int m_pixelRed = 200;
+   int m_pixelGreen = 255;
+   int m_pixelBlue = 255;
 
    int offsetX,offsetY;
 };

@@ -43,6 +43,10 @@ Game::Game()
     offsetY = 0;
     car[0].x = 350 * gamescale;
     car[0].y = 1500 * gamescale;
+    m_pixelRed = 200;
+    m_pixelGreen = 300;
+    m_pixelGreen = 300;
+
     /*
      * cars` center
      *  0) 41x65
@@ -69,6 +73,9 @@ void Game::resetGameData(int mapIdx)
         offsetY = 0;
         car[0].x = 220 * gamescale;
         car[0].y = 1500 * gamescale;
+        m_pixelRed = 200;
+        m_pixelGreen = 300;
+        m_pixelGreen = 300;
         qDebug() << "Game data reset for map 0";
     }
     else if (mapIdx == 1)
@@ -84,9 +91,12 @@ void Game::resetGameData(int mapIdx)
         offsetY = 0;
         car[0].x = 250 * gamescale;
         car[0].y = 1300 * gamescale;
+        m_pixelRed = 200;
+        m_pixelGreen = 300;
+        m_pixelGreen = 300;
         qDebug() << "Game data reset for map 1";
     }
-    else if (mapIdx == 3)
+    else if (mapIdx == 2)
     {
         car_R = 22;
         speed = 0;
@@ -99,6 +109,9 @@ void Game::resetGameData(int mapIdx)
         offsetY = 0;
         car[0].x = 290 * gamescale;
         car[0].y = 620 * gamescale;
+        m_pixelRed = 200;
+        m_pixelGreen = 300;
+        m_pixelGreen = 300;
         qDebug() << "Game data reset for map 1";
     }
     else
