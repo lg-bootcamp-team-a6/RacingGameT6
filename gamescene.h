@@ -19,6 +19,7 @@ public:
     void setMapIdx(int mapIdx);
 
     int m_mapCnt = 3;
+    int m_mapIdx = 0;
 
 signals:
 
@@ -37,7 +38,6 @@ private:
     QPixmap m_bgPixmap[2], m_carPixmap[5];
     QGraphicsPixmapItem* m_bgItem;
     QList<QGraphicsPixmapItem*> m_carItems;
-    int m_mapIdx = 0;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir;
 
