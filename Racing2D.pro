@@ -33,6 +33,6 @@ DESTDIR = /nfsroot
 
 # add module build steps
 QMAKE_POST_LINK = make clean \
-                && cd $$PWD/module 
-                && make clean 
+                && cd $$PWD/module \
+                && make clean \
                 && make

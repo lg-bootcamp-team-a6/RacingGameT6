@@ -37,3 +37,8 @@ apptest
 *.ko
 *.mod.c
 *.order
+
+# qmake stash
+*.stash
+Makefile
+qmake_qmake_immediate.qrc

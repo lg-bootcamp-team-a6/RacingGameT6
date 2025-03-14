@@ -35,6 +35,7 @@ private:
     QSocketNotifier *accNotifier;
     double calculateRotationAngleAxixz(int x, int y);
     
+
     /* sh add */
     bool m_bIsResume;
     View * m_View;

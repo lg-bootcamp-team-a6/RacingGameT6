@@ -1,5 +1,6 @@
 #include "view.h"
 #include "gamescene.h"
+#include "AudioHandler.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QResizeEvent>
@@ -86,6 +87,17 @@ void View::setupOverlay()
     buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     mainLayout->addLayout(buttonLayout);
 
+    // Add Audio button
+    m_audioButton = new QPushButton("", m_overlay);
+    m_audioButton->setFixedSize(100, 100);
+    m_audioButton->setIcon(QIcon(":/images/off.png"));  // default: on 상태
+    m_audioButton->setIconSize(QSize(100, 100));
+    m_audioButton->setStyleSheet("border-radius: 50px; left-padding : 25px; background-color: green;");
+    m_audioButton->setFocusPolicy(Qt::NoFocus);
+    m_audioButton->setAutoRepeat(false);
+    mainLayout->addWidget(m_audioButton, 0, Qt::AlignHCenter | Qt::AlignBottom);  // m_brakeButton 밑에 배치
+
+    // set layout
     m_overlay->setLayout(mainLayout);
     repositionOverlay();
     m_overlay->raise();
@@ -123,6 +135,19 @@ void View::setupOverlay()
          m_timerLabel->setText(infoText);
     });
     m_displayTimer->start(100);
+    // 음량 버튼 클릭 시 상태 변경
+    connect(m_audioButton, &QPushButton::clicked, this, [this]() {
+        if (m_isAudioOn) {
+            // 음악 정지
+            AudioHandler::getInstance()->stopAudio("magicjuly.wav");
+            m_audioButton->setIcon(QIcon(":/images/on.png"));  // 아이콘 변경
+        } else {
+            // 음악 재생
+            AudioHandler::getInstance()->playAudio("magicjuly.wav", true);
+            m_audioButton->setIcon(QIcon(":/images/off.png"));  // 아이콘 변경
+        }
+        m_isAudioOn = !m_isAudioOn;  // 상태 반전
+    });
 }
 
 void View::resizeEvent(QResizeEvent *event)
