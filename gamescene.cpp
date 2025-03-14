@@ -104,7 +104,7 @@ void GameScene::loadPixmap()
         qDebug() << "ReadyPixmap[1] is loaded successfully";
     }
 
-    if(m_readyPixmap[2].load(m_game.PATH_TO_COUNT_PIXMAP[1]))
+    if(m_readyPixmap[2].load(m_game.PATH_TO_COUNT_PIXMAP[0]))
     {
         qDebug() << "ReadyPixmap[2] is loaded successfully";
     }
