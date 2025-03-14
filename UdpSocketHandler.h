@@ -12,11 +12,12 @@ class UdpSocketHandler : public QObject {
 
 public:
     explicit UdpSocketHandler(QObject *parent = nullptr);
-    void sendMessage(const QString &message, const QHostAddress &hostAddress, quint16 hostPort);
+    void sendMessage(const QString &message);
 
 private:
-    QUdpSocket *udpSocket;
-    UdpSocketHandler *m_pUdpSocketHandler;
+    QUdpSocket *m_pUdpSocket;
+    QHostAddress m_hostAddress;  // Host PC IP address
+    quint16 m_hostPort;  // Port number
 };
 
 #endif // UDPSOCKETHANDLER_H

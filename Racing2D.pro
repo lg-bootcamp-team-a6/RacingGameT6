@@ -12,7 +12,7 @@ SOURCES += \
     main.cpp \
     view.cpp \
     InputDeviceHandler.cpp \
-    UdpSokcetHandler.cpp
+    UdpSocketHandler.cpp
 
 HEADERS += \
     car.h \

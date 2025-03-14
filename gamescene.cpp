@@ -307,11 +307,9 @@ void GameScene::showText() {
 }
 
 void GameScene::SocketUDP() {
-    QHostAddress hostAddress("192.168.10.2");  // Host PC IP address
-    quint16 hostPort = 12345;  // Port number
     QString message = "PAUSED";
 
-    m_pUdpSocketHandler->sendMessage(message, hostAddress, hostPort);
+    m_pUdpSocketHandler->sendMessage(message);
 }
 
 void GameScene::Wait3Seconds() {
