@@ -13,10 +13,7 @@
 View::View()
     : QGraphicsView{},
       m_gameScene(new GameScene(this)),
-      m_directionArrow(nullptr),
-      m_timerLabel(nullptr),
-      m_displayTimer(nullptr),
-      m_elapsedTime(0)
+      m_directionArrow(nullptr)
 {
     setScene(m_gameScene);
     resize(m_gameScene->sceneRect().width() + 2, m_gameScene->sceneRect().height() + 2);
@@ -50,14 +47,6 @@ void View::setupOverlay()
     m_directionArrow->setFixedSize(50, 50);
     m_directionArrow->setStyleSheet("background-color: transparent;");
     topLayout->addWidget(m_directionArrow, 0, Qt::AlignLeft | Qt::AlignVCenter);
-
-    // 타이머 및 정보 라벨 (오른쪽)
-    m_timerLabel = new QLabel(m_overlay);
-    m_timerLabel->setStyleSheet("color: black; font-size: 20px; background-color: transparent;");
-    m_timerLabel->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
-    topLayout->addStretch();
-    topLayout->addWidget(m_timerLabel, 0, Qt::AlignRight | Qt::AlignVCenter);
-    mainLayout->addLayout(topLayout);
 
     // 중간에 스트레치 (상단과 하단 사이 공간 확보)
     mainLayout->addStretch();
@@ -119,22 +108,6 @@ void View::setupOverlay()
         m_gameScene->setDownDirection(false);
     });
 
-    // 타이머 업데이트: 100ms 간격으로 타이머 및 (옵션) 속도/각도 정보 갱신
-    m_elapsedTime = 0;
-    m_displayTimer = new QTimer(this);
-    connect(m_displayTimer, &QTimer::timeout, this, [this]() {
-         m_elapsedTime += m_displayTimer->interval();
-         int seconds = m_elapsedTime / 1000;
-         int centiseconds = (m_elapsedTime % 1000) / 10;
-         // 예시: 시간만 표시 (필요 시 속도와 각도 정보를 추가할 수 있음)
-         QString infoText = QString("Time: %1.%2")
-                              .arg(seconds, 2, 10, QChar('0'))
-                              .arg(centiseconds, 2, 10, QChar('0'));
-         // 예시로 m_gameScene에서 속도와 각도를 얻을 수 있다면:
-         // infoText += QString("\nSpeed: %1 | Angle: %2").arg(m_gameScene->m_game.speed).arg(m_gameScene->m_game.angle);
-         m_timerLabel->setText(infoText);
-    });
-    m_displayTimer->start(100);
     // 음량 버튼 클릭 시 상태 변경
     connect(m_audioButton, &QPushButton::clicked, this, [this]() {
         if (m_isAudioOn) {

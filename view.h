@@ -32,9 +32,6 @@ private:
     QPushButton *m_audioButton;  // 추가된 음량 버튼
     QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
 
-    QLabel *m_timerLabel;     // 타이머 및 추가 정보 표시용 QLabel
-    QTimer *m_displayTimer;   // 타이머 업데이트용 QTimer
-    qint64 m_elapsedTime;        // 경과 시간 (밀리초 단위)
     bool m_isAudioOn = true;  // 음량 상태 (기본값: on)
 };
 
