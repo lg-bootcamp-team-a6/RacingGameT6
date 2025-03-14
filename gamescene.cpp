@@ -306,21 +306,22 @@ void GameScene::showText() {
     addItem(textItem2);
     textItem->setVisible(true);
 
-    QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-    textItem3->setPlainText(QString("First : ").arg(m_game.m_rankRecord[m_mapIdx]));
-    textItem3->setDefaultTextColor(Qt::black);
-    textItem3->setFont(QFont("Arial", 15));
-    textItem3->setPos(600, 10); // col * row 
-    addItem(textItem3);
-    textItem->setVisible(true);
+    for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size(); i++)
+    {
+        QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
+        textItem3->setPlainText(QString("First : ").arg(m_game.m_rankRecord[m_mapIdx][i]));
+        textItem3->setDefaultTextColor(Qt::black);
+        textItem3->setFont(QFont("Arial", 15));
+        textItem3->setPos(600, 10 + 30* i); // col * row
+        addItem(textItem3);
+        textItem->setVisible(true);
+    }
 }
 
 void GameScene::SocketUDP() {
     QString message = "PAUSED";
 
-    char* data = "data";
-
-    m_pUdpSocketHandler -> BtHsendMessage(1, data);
+    m_pUdpSocketHandler->sendMessage(message);
 }
 
 void GameScene::Wait3Seconds() {
