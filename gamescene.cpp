@@ -375,12 +375,10 @@ void GameScene::Wait3Seconds() {
             m_timer->start(m_game.ITERATION_VALUE);  // timer restart
             one->setVisible(false);
             removeItem(one);
+            m_bReady = false;
             delete one;
         });
     }
-
-    m_bReady = false;
-    qDebug() << "after 3 sec .."<< m_bReady;
 }
 
 void GameScene::update()
