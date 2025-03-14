@@ -47,6 +47,7 @@ private:
     QGraphicsPixmapItem* m_bgItem;
     QList<QGraphicsPixmapItem*> m_starItems;
     QList<QGraphicsPixmapItem*> m_carItems;
+    UdpSocketHandler *m_pUdpSocketHandler;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir;
 
