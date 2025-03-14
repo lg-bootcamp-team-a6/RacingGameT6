@@ -127,6 +127,26 @@ void GameScene::loadPixmap()
     {
         qDebug() << "StarPixmap[0] is loaded successfully";
     }
+    
+    if(m_readyPixmap[0].load(m_game.PATH_TO_COUNT_PIXMAP[0]))
+    {
+        qDebug() << "ReadyPixmap[0] is loaded successfully";
+    }
+
+    if(m_readyPixmap[1].load(m_game.PATH_TO_COUNT_PIXMAP[1]))
+    {
+        qDebug() << "ReadyPixmap[1] is loaded successfully";
+    }
+
+    if(m_readyPixmap[2].load(m_game.PATH_TO_COUNT_PIXMAP[2]))
+    {
+        qDebug() << "ReadyPixmap[2] is loaded successfully";
+    }
+    
+    if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP[0]))
+    {
+        qDebug() << "ReadyPixmap[0] is loaded successfully";
+    }
 }
 
 void GameScene::carMovement()
@@ -358,7 +378,7 @@ void GameScene::Wait3Seconds() {
             delete one;
         });
     }
-    
+
     m_bReady = false;
 }
 

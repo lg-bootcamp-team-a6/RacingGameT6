@@ -6,6 +6,8 @@
         "type_traits": "cpp",
         "xtr1common": "cpp",
         "xutility": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "atomic": "cpp",
+        "memory": "cpp"
     }
 }
