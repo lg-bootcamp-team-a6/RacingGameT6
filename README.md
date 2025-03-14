@@ -35,7 +35,7 @@
    $make dtbs
 
    Porting in board
-   U-boot> run IMAGE
+   U-boot> run Image
    U-boot> run DTB
    U-boot> boot
 ```
