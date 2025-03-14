@@ -550,12 +550,6 @@ void GameScene::setMapIdx(int mapIdx)
     m_mapIdx = mapIdx;
 
     m_game.resetGameData(mapIdx);
-
-    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
-
-    m_bgItem->setScale(m_game.gamescale);
-
-    addItem(m_bgItem);
     Wait3Seconds();
 }
 
