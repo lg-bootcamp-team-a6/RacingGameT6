@@ -112,7 +112,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
             
-            qDebug() << m_bReady;
+            qDebug() << m_gameScene->m_bReady;
 
             if(!m_gameScene->m_bReady)
                 m_gameScene->togglePause(m_bIsResume);
