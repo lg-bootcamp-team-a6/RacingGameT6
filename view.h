@@ -25,13 +25,15 @@ private:
     void setupOverlay();
     void repositionOverlay();
     void resizeEvent(QResizeEvent *event) override;
-    void onAccelButtonClicked();
-    void onBrakeButtonClicked();
 
     QWidget *m_overlay;
     QPushButton *m_accelButton;
     QPushButton *m_brakeButton;
     QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
+
+    QLabel *m_timerLabel;     // 타이머 및 추가 정보 표시용 QLabel
+    QTimer *m_displayTimer;   // 타이머 업데이트용 QTimer
+    qint64 m_elapsedTime;        // 경과 시간 (밀리초 단위)
 };
 
 #endif // VIEW_H

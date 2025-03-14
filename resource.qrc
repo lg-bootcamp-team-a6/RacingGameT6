@@ -14,5 +14,6 @@
 	    <file>images/brake_pedal.png</file>
         <file>images/accel_pedal.png</file>
         <file>images/arrow.png</file>
+        <file>images/pause.png</file>
     </qresource>
 </RCC>
