@@ -11,14 +11,16 @@ SOURCES += \
     gamescene.cpp \
     main.cpp \
     view.cpp \
-    InputDeviceHandler.cpp
+    InputDeviceHandler.cpp \
+    UdpSokcetHandler.cpp
 
 HEADERS += \
     car.h \
     game.h \
     gamescene.h \
     view.h \
-    InputDeviceHandler.h
+    InputDeviceHandler.h \
+    UdpSocketHandler.h
 
 RESOURCES += \
     resource.qrc \

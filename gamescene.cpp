@@ -311,7 +311,7 @@ void GameScene::SocketUDP() {
     quint16 hostPort = 12345;  // Port number
     QString message = "PAUSED";
 
-    udpSocketHandler->sendMessage(message, hostAddress, hostPort);
+    m_pUdpSocketHandler->sendMessage(message, hostAddress, hostPort);
 }
 
 void GameScene::Wait3Seconds() {

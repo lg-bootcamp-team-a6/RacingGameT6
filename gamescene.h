@@ -9,6 +9,7 @@
 #include <QFont>
 #include <QTime>
 #include <QGraphicsTextItem>
+#include "UdpSocketHandler.h"
 
 class QTimer;
 
