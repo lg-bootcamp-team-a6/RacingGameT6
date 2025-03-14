@@ -333,7 +333,7 @@ void GameScene::SocketUDP() {
 }
 
 void GameScene::Wait3Seconds() {
-
+    qDebug() << m_bReady;
     m_bReady = true;
     QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_readyPixmap[0]);
     QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_readyPixmap[1]);
