@@ -326,7 +326,6 @@ void GameScene::SocketUDP() {
 =======
     char* data = "data";
     m_pUdpSocketHandler -> BtHsendMessage(1, data);
->>>>>>> Stashed changes
 }
 
 void GameScene::Wait3Seconds() {
