@@ -22,10 +22,12 @@
 
    
    >Device Drivers > Misc devices > STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (SPI)
+   
+
    (SPI)를 꼭 확인할 것!
    
 
-4. Build
+5. Build
 
   ```
    Linux kernel build
