@@ -33,6 +33,7 @@
    Linux kernel build
    $make Image
    $make dtbs
+   $./copy_images.sh
 
    Porting in board
    U-boot> run Image
