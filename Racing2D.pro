@@ -12,7 +12,7 @@ SOURCES += \
     main.cpp \
     view.cpp \
     InputDeviceHandler.cpp \
-    UdpSocketHandler.cpp
+    UdpSocketHandler.cpp \
     AudioHandler.cpp \
 
 HEADERS += \
@@ -21,7 +21,7 @@ HEADERS += \
     gamescene.h \
     view.h \
     InputDeviceHandler.h \
-    UdpSocketHandler.h
+    UdpSocketHandler.h \
     AudioHandler.h 
 
 RESOURCES += \
