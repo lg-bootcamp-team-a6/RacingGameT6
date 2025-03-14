@@ -313,6 +313,8 @@ void GameScene::SocketUDP() {
 }
 
 void GameScene::Wait3Seconds() {
+
+    m_bReady = true;
     QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_readyPixmap[0]);
     QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_readyPixmap[1]);
     QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_readyPixmap[2]);
@@ -356,6 +358,8 @@ void GameScene::Wait3Seconds() {
             delete one;
         });
     }
+    
+    m_bReady = false;
 }
 
 void GameScene::update()
