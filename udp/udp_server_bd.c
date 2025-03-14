@@ -79,6 +79,11 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     }
 }
 
+void statusRegister()
+{
+	
+}
+
 
 int main(int argc, char **argv) {
     int ret;

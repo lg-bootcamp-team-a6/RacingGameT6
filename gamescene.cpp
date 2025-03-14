@@ -321,7 +321,12 @@ void GameScene::showText() {
 void GameScene::SocketUDP() {
     QString message = "PAUSED";
 
+<<<<<<< Updated upstream
     m_pUdpSocketHandler->sendMessage(message);
+=======
+    char* data = "data";
+    m_pUdpSocketHandler -> BtHsendMessage(1, data);
+>>>>>>> Stashed changes
 }
 
 void GameScene::Wait3Seconds() {
