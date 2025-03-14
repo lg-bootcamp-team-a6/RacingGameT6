@@ -16,7 +16,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
+      m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false)
 {
     m_mapIdx =3;
@@ -305,6 +305,14 @@ void GameScene::showText() {
     textItem2->setPos(600, -50); // col * row 
     addItem(textItem2);
     textItem->setVisible(true);
+
+    QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
+    textItem3->setPlainText(QString("First : ").arg(m_game.m_rankRecord[m_mapIdx]));
+    textItem3->setDefaultTextColor(Qt::black);
+    textItem3->setFont(QFont("Arial", 15));
+    textItem3->setPos(600, 10); // col * row 
+    addItem(textItem3);
+    textItem->setVisible(true);
 }
 
 void GameScene::SocketUDP() {
@@ -539,7 +547,7 @@ void GameScene::setMapIdx(int mapIdx)
 {
     m_mapIdx = mapIdx;
     m_game.resetGameData(mapIdx);
-
+    m_elapsedTime = 0;
     update();
     Wait3Seconds();
 }
@@ -581,6 +589,8 @@ void GameScene::Goal()
     idx++;
 
     idx = idx == m_mapCnt ? 0 : idx;
+
+    m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
 
     setMapIdx(idx);
 }
