@@ -34,10 +34,7 @@ private:
     QSocketNotifier *notifier; // Add this line
     QSocketNotifier *accNotifier;
     double calculateRotationAngleAxixz(int x, int y);
-<<<<<<< Updated upstream
-
-=======
->>>>>>> Stashed changes
+    
     /* sh add */
     bool m_bIsResume;
     View * m_View;
