@@ -3,7 +3,7 @@
 UdpSocketHandler::UdpSocketHandler(QObject *parent) : QObject(parent) {
     m_pUdpSocket = new QUdpSocket(this);
 
-    m_hostAddress = QString("192.168.10.2");  // Host PC IP address
+    m_hostAddress = QHostAddress("192.168.10.2");  // Host PC IP address
     m_hostPort = 12345;  // Port number
 }
 
