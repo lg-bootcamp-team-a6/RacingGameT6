@@ -143,9 +143,9 @@ void GameScene::loadPixmap()
         qDebug() << "ReadyPixmap[2] is loaded successfully";
     }
     
-    if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP[0]))
+    if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP))
     {
-        qDebug() << "ReadyPixmap[0] is loaded successfully";
+        qDebug() << "PausePixmap is loaded successfully";
     }
 }
 
