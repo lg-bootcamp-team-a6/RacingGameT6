@@ -2,6 +2,7 @@
 #define GAME_H
 #include "car.h"
 #include <QSize>
+#include <QList>
 #include <QString>
 #include "car.h"
 
