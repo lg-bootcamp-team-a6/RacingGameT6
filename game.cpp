@@ -25,7 +25,7 @@ const int Game::points[8][2]=
                                {2380,3300},
                                {1290, 3430}
 };
-const int Game::m_checkpoint[3][30][2]=
+const int Game::m_checkpoint[4][30][2]=
 {
     {
                                {350,1300},
@@ -122,6 +122,39 @@ const int Game::m_checkpoint[3][30][2]=
                                {750,1570},
                                {650,1570},
                                {550,1570}
+    },
+
+    {
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600},
+                               {233,2600}
     }
 };
 const QSize Game::RESOLUTION = QSize(640, 480);
@@ -138,14 +171,14 @@ Game::Game()
 { car_R = 22;
     speed = 0;
     angle = 0;
-    maxSpeed = 20; 
+    maxSpeed = 20;
     acc = 2.0f;
     dec = 2.0f;
     turnSpeed = 0.08;
     offsetX = 0;
     offsetY = 0;
-    car[0].x = 350 * gamescale;
-    car[0].y = 1500 * gamescale;
+    car[0].x = 240 * gamescale;
+    car[0].y = 2400 * gamescale;
     m_starScore = 0;
 
     /*
@@ -164,7 +197,7 @@ void Game::resetGameData(int mapIdx)
     car_R = 22;
     speed = 0;
     angle = 0;
-    maxSpeed = 20; 
+    maxSpeed = 20;
     acc = 2.0f;
     dec = 2.0f;
     turnSpeed = 0.08;
@@ -192,9 +225,9 @@ void Game::resetGameData(int mapIdx)
     }
     else if (mapIdx == 3)
     {
-        car[0].x = 260 * gamescale;
-        car[0].y = 2600 * gamescale;
-        qDebug() << "Game data reset for map 2";
+        car[0].x = 240 * gamescale;
+        car[0].y = 2400 * gamescale;
+        qDebug() << "Game data reset for map 3";
     }
     else
     {

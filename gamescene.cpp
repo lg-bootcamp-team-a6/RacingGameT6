@@ -9,15 +9,15 @@
 #include <QGraphicsView>
 #include <QUdpSocket>
 #include <unistd.h>
-#include "InputDeviceHandler.h"
 
 #define DEV_NAME "/dev/mydev"
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
       m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
-      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false)
+      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
 {
+    m_mapIdx =3;
     m_pUdpSocketHandler = new UdpSocketHandler(this);
     loadPixmap();
 
@@ -77,20 +77,20 @@ void GameScene::loadPixmap()
 
     if(m_bgPixmap[2].load(m_game.PATH_TO_BACKGROUND_PIXMAP[2]))
     {
-        qDebug() << "BgPixmap1 is loaded successfully";
+        qDebug() << "BgPixmap2 is loaded successfully";
     }
     else
     {
-        qDebug() << "BgPixmap1 is not loaded successfully";
+        qDebug() << "BgPixmap2 is not loaded successfully";
     }
     
     if(m_bgPixmap[3].load(m_game.PATH_TO_BACKGROUND_PIXMAP[3]))
     {
-        qDebug() << "BgPixmap1 is loaded successfully";
+        qDebug() << "BgPixmap3 is loaded successfully";
     }
     else
     {
-        qDebug() << "BgPixmap1 is not loaded successfully";
+        qDebug() << "BgPixmap3 is not loaded successfully";
     }
 
 
@@ -282,7 +282,7 @@ void GameScene::renderScene()
 }
 
 void GameScene::showText() {
-    m_elapsedTime += 9;
+    m_elapsedTime += m_timer->interval() % 100;
     int seconds = m_elapsedTime / 100;
     int mseconds = m_elapsedTime % 100;
     QString timeText = QString("Time: %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0'));
@@ -290,18 +290,16 @@ void GameScene::showText() {
     QGraphicsTextItem* textItem = new QGraphicsTextItem();
     textItem->setPlainText(timeText);  // Time format: "seconds.miliseconds"
     textItem->setDefaultTextColor(Qt::black);
-    textItem->setFont(QFont("Arial", 15));
-    textItem->setPos(600, -20); // hard coding..
+    textItem->setFont(QFont("Arial", 20));
+    textItem->setPos(-350, -170); // hard coding..
     addItem(textItem);
-    textItem->setVisible(true);
 
     QGraphicsTextItem* textItem2 = new QGraphicsTextItem();
     textItem2->setPlainText(QString("Speed: %1 | Angle: %2").arg(m_game.speed).arg(m_game.angle));
     textItem2->setDefaultTextColor(Qt::black);
-    textItem2->setFont(QFont("Arial", 15));
-    textItem2->setPos(600, -50); // col * row 
+    textItem2->setFont(QFont("Arial", 20));
+    textItem2->setPos(-350, -200); // col * row 
     addItem(textItem2);
-    textItem->setVisible(true);
 }
 
 void GameScene::SocketUDP() {
@@ -354,7 +352,6 @@ void GameScene::Wait3Seconds() {
             one->setVisible(false);
             removeItem(one);
             m_bReady = false;
-            InputDeviceHandler::m_sbIsResume = false;
             delete one;
         });
     }
@@ -377,11 +374,14 @@ void GameScene::update()
     m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
     m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
     m_bgItem[m_mapIdx]->setPos(-m_game.offsetX, -m_game.offsetY);
+
+    qDebug() << m_mapIdx << " " << m_game.car[0].x << " " << m_game.car[0].y;
     addItem(m_bgItem[m_mapIdx]);
 
     carMovement();
     carCollision();
     checkStarCollision();
+    showText();
 
     if(m_game.m_starScore == Game::COUNTING_STARS)
          Goal();
@@ -398,15 +398,13 @@ void GameScene::update()
         m_carItem[i]->setTransformOriginPoint(21, 34);
         m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
-        addItem(m_carItem[i]);
+        //addItem(m_carItem[i]);
     }
 
     if (m_bIsResume) {
         m_bIsResume = false;
         Wait3Seconds();
     }
-
-    showText();
 }
 
 void GameScene::keyPressEvent(QKeyEvent *event)

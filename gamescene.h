@@ -45,8 +45,8 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[3], m_readyPixmap[3], m_pausePixmap;
-    QGraphicsPixmapItem* m_bgItem[3], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
+    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap;
+    QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged;
@@ -61,7 +61,7 @@ public:
     int m_computeTime;
     bool m_bIsResume;
     QList<QGraphicsPixmapItem*> m_cntItems;
-    bool m_bReady;
+    bool m_bReady = false;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
