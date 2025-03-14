@@ -10,6 +10,7 @@
 #include <math.h>
 #include <QSocketNotifier> // Add this line
 #include "gamescene.h"
+#include "view.h"
 
 
 class InputDeviceHandler : public QObject
@@ -17,7 +18,7 @@ class InputDeviceHandler : public QObject
     Q_OBJECT
 
 public:
-    explicit InputDeviceHandler(GameScene* gameScene, QObject *parent = nullptr);
+    explicit InputDeviceHandler(GameScene* gameScene, View* view, QObject *parent = nullptr);
     ~InputDeviceHandler();
 
     void processInputEvents();
@@ -33,9 +34,13 @@ private:
     QSocketNotifier *notifier; // Add this line
     QSocketNotifier *accNotifier;
     double calculateRotationAngleAxixz(int x, int y);
+<<<<<<< Updated upstream
 
     /* sh add */
     bool m_bIsResume;
+=======
+    View * m_View;
+>>>>>>> Stashed changes
 };
 
 #endif // INPUTDEVICEHANDLER_H

@@ -1,8 +1,12 @@
 #include "view.h"
 #include "gamescene.h"
 #include <QHBoxLayout>
+#include <QVBoxLayout>
 #include <QResizeEvent>
 #include <QDebug>
+#include <QLabel>
+#include <QPixmap>
+#include <QTransform>
 
 View::View()
     : QGraphicsView{},
@@ -21,57 +25,65 @@ void View::setupOverlay()
     // viewport()의 자식으로 오버레이 위젯 생성
     m_overlay = new QWidget(viewport());
     m_overlay->setAttribute(Qt::WA_TransparentForMouseEvents, false);
+    // 오버레이 배경은 완전 투명으로 설정
+    m_overlay->setStyleSheet("background-color: transparent;");
 
-    // 디버그용 배경색 (나중에 필요 없으면 제거)
-    //m_overlay->setStyleSheet("background-color: rgba(255, 0, 0, 100);");
+    // 오버레이 전체를 QVBoxLayout으로 구성 (상단: 화살표, 하단: 버튼)
+    QVBoxLayout *mainLayout = new QVBoxLayout(m_overlay);
+    mainLayout->setContentsMargins(20, 20, 20, 20);
 
-    // 오버레이에 버튼 배치를 위한 QHBoxLayout 생성
-    QHBoxLayout *layout = new QHBoxLayout(m_overlay);
-    // 여백: 좌우 20, 상하 20 (버튼이 오버레이 내부에서 너무 붙지 않게)
-    layout->setContentsMargins(20, 20, 20, 20);
+    // 상단 왼쪽에 고정할 차량 방향 화살표 (QLabel)
+    m_directionArrow = new QLabel(m_overlay);
+    QPixmap arrowPixmap(":/images/arrow.png");  // 화살표 이미지 리소스 경로
+    // 화살표 크기를 50×50으로 조정
+    m_directionArrow->setPixmap(arrowPixmap.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    m_directionArrow->setFixedSize(50, 50);
+    m_directionArrow->setStyleSheet("background-color: transparent;");
+    // 화살표는 상단 왼쪽에 배치
+    mainLayout->addWidget(m_directionArrow, 0, Qt::AlignLeft | Qt::AlignTop);
 
-    // 왼쪽 버튼: Accel (100×100, 동그란 형태)
+    // 중간에 스트레치 추가 (화살표와 버튼 사이 공간 확보)
+    mainLayout->addStretch();
+
+    // 하단 버튼 영역: 버튼들을 포함하는 수평 레이아웃 생성
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    // 왼쪽 버튼: Accel
     m_accelButton = new QPushButton("", m_overlay);
     m_accelButton->setFixedSize(100, 100);
-
     m_accelButton->setIcon(QIcon(":/images/accel_pedal.png"));
-    // 아이콘 크기를 버튼 크기에 맞게 지정
     m_accelButton->setIconSize(QSize(100, 100));
-    // 기존 스타일 적용 (원형 버튼)
     m_accelButton->setStyleSheet("border-radius: 50px; left-padding : 25px; background-color: rgba(255, 255, 255, 150);");
     m_accelButton->setFocusPolicy(Qt::NoFocus);
+    m_accelButton->setAutoRepeat(false);
 
-
-
-    // 오른쪽 버튼: Brake (100×100, 동그란 형태)
+    // 오른쪽 버튼: Brake
     m_brakeButton = new QPushButton("", m_overlay);
     m_brakeButton->setFixedSize(100, 100);
     m_brakeButton->setIcon(QIcon(":/images/accel_pedal.png"));
-    // 아이콘 크기를 버튼 크기에 맞게 지정
-    m_brakeButton->setIconSize(QSize(100,100));
-    // 기존 스타일 적용 (원형 버튼)
+    m_brakeButton->setIconSize(QSize(100, 100));
     m_brakeButton->setStyleSheet("border-radius: 50px; left-padding : 25px; background-color: black;");
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
-    m_accelButton->setAutoRepeat(false);
     m_brakeButton->setAutoRepeat(false);
 
-    // 좌측에 accel 버튼, 우측에 brake 버튼 배치 (중간에 addStretch() 사용)
-    layout->addWidget(m_accelButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    layout->addStretch();
-    layout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
+    // 버튼들을 수평으로 배치 (좌측: Accel, 우측: Brake)
+    buttonLayout->addWidget(m_accelButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    buttonLayout->addStretch();
+    buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
 
-    m_overlay->setLayout(layout);
+    // 하단 버튼 레이아웃 추가
+    mainLayout->addLayout(buttonLayout);
 
+    m_overlay->setLayout(mainLayout);
     repositionOverlay();
     m_overlay->raise();
     m_overlay->show();
 
     connect(m_accelButton, &QPushButton::pressed, this, [this]() {
-        qDebug()<<"UP pressed";
+        qDebug() << "UP pressed";
         m_gameScene->setUpDirection(true);
     });
     connect(m_accelButton, &QPushButton::released, this, [this]() {
-        qDebug()<<"UP released";
+        qDebug() << "UP released";
         m_gameScene->setUpDirection(false);
     });
     connect(m_brakeButton, &QPushButton::pressed, this, [this]() {
@@ -82,7 +94,6 @@ void View::setupOverlay()
     });
 }
 
-
 void View::resizeEvent(QResizeEvent *event)
 {
     QGraphicsView::resizeEvent(event);
@@ -92,28 +103,23 @@ void View::resizeEvent(QResizeEvent *event)
 void View::repositionOverlay()
 {
     if (viewport()) {
-        // 오버레이 높이를 140px로 설정 (버튼 크기 100 + 내부 여백)
-        int overlayHeight = 140;
-        // 바닥에서 20px 위에 위치하도록 함
-        int bottomMargin = 150;
-        QRect viewportRect = viewport()->rect();
-        m_overlay->setGeometry(0,
-                               viewportRect.height() - overlayHeight - bottomMargin,
-                               viewportRect.width(),
-                               overlayHeight);
+        QRect rect = viewport()->rect();
+        // 하단에서 150px을 제외한 영역으로 설정 (즉, bottom margin 150px)
+        rect.setBottom(rect.bottom() - 150);
+        m_overlay->setGeometry(rect);
         qDebug() << "Overlay geometry:" << m_overlay->geometry();
     }
 }
 
-void View::onAccelButtonClicked()
+// 차량의 진행 방향(각도, 도 단위)을 받아 화살표를 회전시킵니다.
+void View::updateDirectionArrow(double angle)
 {
-    qDebug() << "Accel Button Clicked";
-
-    m_gameScene->setUpDirection(true);
-}
-
-void View::onBrakeButtonClicked()
-{
-    qDebug() << "brake Button Clicked";
-    m_gameScene->setUpDirection(false);
+    if (!m_directionArrow)
+        return;
+    
+    QPixmap arrowPixmap(":/images/arrow.png");
+    QTransform transform;
+    transform.rotate(angle + 90);
+    QPixmap rotated = arrowPixmap.transformed(transform, Qt::SmoothTransformation);
+    m_directionArrow->setPixmap(rotated.scaled(m_directionArrow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

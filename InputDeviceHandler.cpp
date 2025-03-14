@@ -10,8 +10,8 @@
 #define KEY0_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
 
-InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, QObject *parent)
-    : QObject(parent), m_gameScene(gameScene), m_bIsResume(false)
+InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, View* view, QObject *parent)
+    : QObject(parent), m_gameScene(gameScene), m_View(view), m_bIsResume(false)
 {
     inputDevice = new QFile(DEV_NAME, this);
     accDevice = new QFile(ACC_NAME, this);
@@ -151,6 +151,7 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
         case ABS_Y:
             acc_y = ev.value;
             m_gameScene -> setAngleDirection(acc_y);
+            m_View -> updateDirectionArrow(calculateRotationAngleAxixz(acc_x, acc_y));
             qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:

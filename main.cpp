@@ -10,7 +10,7 @@ int main(int argc, char** argv)
 
     View v;
 
-    InputDeviceHandler inputHandler(v.m_gameScene);
+    InputDeviceHandler inputHandler(v.m_gameScene, &v);
 
     v.show();
 
