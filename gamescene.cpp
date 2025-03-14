@@ -18,48 +18,14 @@ GameScene::GameScene(QObject *parent)
       m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
 {
     m_pUdpSocketHandler = new UdpSocketHandler(this);
-
     loadPixmap();
+
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
-    // sh fix
+
     m_timer->setInterval(m_game.ITERATION_VALUE);
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
-    // sh fix
-    m_pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
-    addItem(m_pauseItem);
-
-    m_bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
-    //m_bgItem->setTransformationMode(Qt::SmoothTransformation);
-    m_bgItem->setScale(m_game.gamescale);
-    addItem(m_bgItem);
-
-    for (int i = 0; i < Game::COUNTING_STARS; ++i) {
-        QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
-        //carItem->setTransformationMode(Qt::SmoothTransformation);
-        starItem->setScale(1);
-        starItem->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
-        addItem(starItem);
-        m_starItems.append(starItem);
-    }
-
-    for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
-        QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_readyPixmap[i]);
-        //carItem->setTransformationMode(Qt::SmoothTransformation);
-        carItem->setScale(1);
-        carItem->setTransformOriginPoint(21, 34);
-        addItem(carItem);
-        m_carItems.append(carItem);
-    }
-
-    for (int i = 0; i < 3; i++) {
-        QGraphicsPixmapItem *cntItem = new QGraphicsPixmapItem(m_readyPixmap[i]);
-        cntItem->setScale(1);
-        cntItem->setTransformOriginPoint(21, 34);
-        addItem(cntItem);
-        m_cntItems.append(cntItem);
-    }
-
     m_timer->start(m_game.ITERATION_VALUE);
+
     update();
 }
 
@@ -128,7 +94,7 @@ void GameScene::loadPixmap()
         qDebug() << "StarPixmap[0] is loaded successfully";
     }
     
-    if(m_readyPixmap[0].load(m_game.PATH_TO_COUNT_PIXMAP[0]))
+    if(m_readyPixmap[0].load(m_game.PATH_TO_COUNT_PIXMAP[2]))
     {
         qDebug() << "ReadyPixmap[0] is loaded successfully";
     }
@@ -138,7 +104,7 @@ void GameScene::loadPixmap()
         qDebug() << "ReadyPixmap[1] is loaded successfully";
     }
 
-    if(m_readyPixmap[2].load(m_game.PATH_TO_COUNT_PIXMAP[2]))
+    if(m_readyPixmap[2].load(m_game.PATH_TO_COUNT_PIXMAP[1]))
     {
         qDebug() << "ReadyPixmap[2] is loaded successfully";
     }
@@ -384,53 +350,43 @@ void GameScene::Wait3Seconds() {
 void GameScene::update()
 {
     clear();
-    QGraphicsPixmapItem* bgItem = new QGraphicsPixmapItem(m_bgPixmap[m_mapIdx]);
-    //bgItem->setTransformationMode(Qt::SmoothTransformation);
-    bgItem->setScale(m_game.gamescale);
-    addItem(bgItem);
 
-//    QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap);
-//    carItem->setTransformationMode(Qt::SmoothTransformation);
-//    carItem->setScale(1);
-//    carItem->setPos(200, 200);
-//    addItem(carItem);
+    for(int i = 0; i < m_mapCnt; i ++)
+        m_bgItem[i] = new QGraphicsPixmapItem(m_bgPixmap[i]);
 
+    for(int i = 0; i < Game::COUNTING_STARS; i ++)
+        m_starItem[i] = new QGraphicsPixmapItem(m_starPixmap[0]);
+
+    for (int i = 0; i < Game::COUNT_OF_CARS; ++i)
+        m_carItem[i] = new QGraphicsPixmapItem(m_carPixmap[i]);
+
+    m_bgItem[m_mapIdx]->setScale(m_game.gamescale);
+    m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
+    m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
+    m_bgItem[m_mapIdx]->setPos(-m_game.offsetX, -m_game.offsetY);
+    addItem(m_bgItem[m_mapIdx]);
 
     carMovement();
     carCollision();
     checkStarCollision();
-
-    /* sh) compute racing time */
     showText();
 
     if(m_game.m_starScore == Game::COUNTING_STARS)
          Goal();
-    //getPixelValueAtCarPosition();
-
-    m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
-    m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
-
-    bgItem->setPos(-m_game.offsetX, -m_game.offsetY);
 
     for (int i = m_game.m_starScore; i < Game::COUNTING_STARS; ++i) {
-        QGraphicsPixmapItem *starItem = new QGraphicsPixmapItem(m_starPixmap[0]);
-        //carItem->setTransformationMode(Qt::SmoothTransformation);
-        starItem->setScale(1);
-        starItem->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
-        addItem(starItem);
-        m_starItems.append(starItem);
+        m_starItem[i]->setScale(1);
+        m_starItem[i]->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
+        addItem(m_starItem[i]);
     }
 
     for(int i=0; i < Game::COUNT_OF_CARS; i++)
     {
-        QGraphicsPixmapItem* carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
-        carItem->setTransformationMode(Qt::SmoothTransformation);
-        carItem->setScale(1);
-        //42x69 average of pixmaps
-        carItem->setTransformOriginPoint(21, 34);
-        carItem->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
-        carItem->setRotation(m_game.car[i].angle * 180/3.141593);
-        addItem(carItem);
+        m_carItem[i]->setScale(1);
+        m_carItem[i]->setTransformOriginPoint(21, 34);
+        m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
+        m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
+        addItem(m_carItem[i]);
     }
 
     if (m_bIsResume) {
@@ -564,8 +520,9 @@ void GameScene::setAngleDirection(double angle)
 void GameScene::setMapIdx(int mapIdx)
 {
     m_mapIdx = mapIdx;
-
     m_game.resetGameData(mapIdx);
+
+    update();
     Wait3Seconds();
 }
 

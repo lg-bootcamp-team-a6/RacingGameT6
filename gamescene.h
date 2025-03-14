@@ -46,9 +46,7 @@ private:
     Game m_game;
     QTimer* m_timer;
     QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3], m_readyPixmap[3], m_pausePixmap;
-    QGraphicsPixmapItem* m_bgItem;
-    QList<QGraphicsPixmapItem*> m_starItems;
-    QList<QGraphicsPixmapItem*> m_carItems;
+    QGraphicsPixmapItem* m_bgItem[3], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged;
