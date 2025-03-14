@@ -1,6 +1,8 @@
 #include "AudioHandler.h"
 #include <QDebug>
 #include <QTimer>
+#include <QObject>
+
 
 AudioHandler::~AudioHandler() {
     stopAllAudio();  // 소멸자에서 모든 오디오 중지
@@ -16,12 +18,11 @@ void AudioHandler::playAudio(const std::string& filePath, bool loop) {
     QProcess* process = new QProcess();
     QString qFilePath = QString::fromStdString(filePath);  // std::string -> QString 변환
     QStringList arguments;
-    arguments << "-Dhw:0,0" << qFilePath;  // -Dhw:0,0 옵션과 오디오 파일 경로
+    arguments << "-Dhw:0,0";
 
     // 오디오 파일을 반복 재생하려면 추가 인자 설정
-    // if (loop) {
-    //     arguments << "--loop";
-    // }
+
+    arguments << qFilePath;
 
     // 디버깅용 출력: 실행할 커맨드와 인자 출력
     qDebug() << "Executing command: ./aplay with arguments:" << arguments;

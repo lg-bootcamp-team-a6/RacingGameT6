@@ -25,6 +25,7 @@ private:
     void setupOverlay();
     void repositionOverlay();
     void resizeEvent(QResizeEvent *event) override;
+    void toggleBgSound(const std::string& audioFile);
 
     QWidget *m_overlay;
     QPushButton *m_accelButton;
