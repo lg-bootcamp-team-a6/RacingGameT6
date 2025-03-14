@@ -43,7 +43,7 @@ GameScene::GameScene(QObject *parent)
     }
 
     for (int i = 0; i < Game::COUNT_OF_CARS; ++i) {
-        QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_carPixmap[i]);
+        QGraphicsPixmapItem *carItem = new QGraphicsPixmapItem(m_readyPixmap[i]);
         //carItem->setTransformationMode(Qt::SmoothTransformation);
         carItem->setScale(1);
         carItem->setTransformOriginPoint(21, 34);
@@ -52,7 +52,7 @@ GameScene::GameScene(QObject *parent)
     }
 
     for (int i = 0; i < 3; i++) {
-        QGraphicsPixmapItem *cntItem = new QGraphicsPixmapItem(m_cntPixmap[i]);
+        QGraphicsPixmapItem *cntItem = new QGraphicsPixmapItem(m_readyPixmap[i]);
         cntItem->setScale(1);
         cntItem->setTransformOriginPoint(21, 34);
         addItem(cntItem);
@@ -313,9 +313,9 @@ void GameScene::SocketUDP() {
 }
 
 void GameScene::Wait3Seconds() {
-    QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_cntPixmap[0]);
-    QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_cntPixmap[1]);
-    QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_cntPixmap[2]);
+    QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_readyPixmap[0]);
+    QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_readyPixmap[1]);
+    QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_readyPixmap[2]);
     m_timer->stop();
 
     if (nullptr != three && nullptr != two && nullptr != one) {
