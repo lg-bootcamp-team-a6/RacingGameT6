@@ -68,7 +68,7 @@ void GameScene::togglePause(bool IsResume)
 {
     QGraphicsPixmapItem *pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
     pauseItem->setScale(1);
-    pauseItem->setPos(-190, -130);
+    pauseItem->setPos(0, 0);
     addItem(pauseItem);
 
     if (!IsResume) {
@@ -343,13 +343,13 @@ void GameScene::Wait3Seconds() {
     if (nullptr != three && nullptr != two && nullptr != one) {
         qDebug() << "print 321...";
         three->setScale(1);
-        three->setPos(-160, -80);
+        three->setPos(15, 30);
         three->setVisible(true);
         two->setScale(1);
-        two->setPos(-160, -80);
+        two->setPos(15, 30);
         two->setVisible(false);
         one->setScale(1);
-        one->setPos(-160, -80);
+        one->setPos(15, 30);
         one->setVisible(false);
         addItem(three);
         addItem(two);

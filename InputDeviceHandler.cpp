@@ -111,6 +111,9 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
+            
+            qDebug() << m_bReady;
+
             if(!m_gameScene->m_bReady)
                 m_gameScene->togglePause(m_bIsResume);
 
