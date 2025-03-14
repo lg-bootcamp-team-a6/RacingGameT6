@@ -129,7 +129,7 @@ const int Game::COUNT_OF_CARS = 1;
 const int Game::COUNTING_STARS = 30;
 
 Game::Game()
-    : PATH_TO_BACKGROUND_PIXMAP{QString(":/images/bg0.png"), QString(":/images/bg1.png"), QString(":/images/bg2.png")},
+    : PATH_TO_BACKGROUND_PIXMAP{QString(":/images/bg0.png"), QString(":/images/bg1.png"), QString(":/images/bg2.png"), QString(":/images/bg3.png")},
       PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")},
       PATH_TO_STAR_PIXMAP{QString(":/images/star0.png"), QString(":/images/star1.png"), QString(":/images/star2.png")},
       PATH_TO_COUNT_PIXMAP{QString(":/images/Ready_1.png"), QString(":/images/Ready_2.png"), QString(":/images/Ready_3.png")},
@@ -188,6 +188,12 @@ void Game::resetGameData(int mapIdx)
     {
         car[0].x = 300 * gamescale;
         car[0].y = 600 * gamescale;
+        qDebug() << "Game data reset for map 2";
+    }
+    else if (mapIdx == 3)
+    {
+        car[0].x = 350 * gamescale;
+        car[0].y = 1500 * gamescale;
         qDebug() << "Game data reset for map 2";
     }
     else

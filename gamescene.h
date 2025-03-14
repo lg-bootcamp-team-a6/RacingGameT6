@@ -28,7 +28,7 @@ public:
     bool checkStarCollision();
     void Goal();
 
-    int m_mapCnt = 3;
+    int m_mapCnt = 4;
     int m_mapIdx = 0;
 
 signals:
@@ -45,7 +45,7 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3], m_readyPixmap[3], m_pausePixmap;
+    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[3], m_readyPixmap[3], m_pausePixmap;
     QGraphicsPixmapItem* m_bgItem[3], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
 

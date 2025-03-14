@@ -82,6 +82,15 @@ void GameScene::loadPixmap()
     {
         qDebug() << "BgPixmap1 is not loaded successfully";
     }
+    
+    if(m_bgPixmap[3].load(m_game.PATH_TO_BACKGROUND_PIXMAP[3]))
+    {
+        qDebug() << "BgPixmap1 is loaded successfully";
+    }
+    else
+    {
+        qDebug() << "BgPixmap1 is not loaded successfully";
+    }
 
 
     if(m_carPixmap[0].load(m_game.PATH_TO_CAR_PIXMAP[0]))
