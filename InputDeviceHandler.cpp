@@ -5,7 +5,7 @@
 #include <linux/input.h>
 #include <QSocketNotifier>
 
-#define DEV_NAME "/dev/input/event2"  // 입력 장치 파일 경로
+#define DEV_NAME "/dev/input/event1"  // 입력 장치 파일 경로
 #define ACC_NAME "/dev/input/event0"
 #define KEY0_CODE 108  // SW2 이벤트 코드 (적절한 코드로 변경하세요)
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
@@ -111,21 +111,19 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
-            if (!m_bIsResume) {
-                qDebug() << "[ACTION] Toggle Pause";
+            if(!m_gameScene->m_bReady)
                 m_gameScene->togglePause(m_bIsResume);
+
+            if (!m_bIsResume)
                 m_bIsResume = true;
-            } else {
-                // m_gameScene->setUpDirection(false); // Unset forward direction
-                m_gameScene->togglePause(m_bIsResume);
+            else
                 m_bIsResume = false;
-            }
         }
     }
     else if (ev.code == KEY1_CODE) {
         if (ev.value == 1) {
             int idx = m_gameScene->m_mapIdx;
-            
+
             idx++;
 
             idx = idx == m_gameScene->m_mapCnt ? 0 : idx;

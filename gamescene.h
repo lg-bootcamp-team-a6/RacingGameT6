@@ -44,7 +44,7 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3];
+    QPixmap m_bgPixmap[3], m_carPixmap[5], m_starPixmap[3], m_readyPixmap[3], m_pausePixmap;
     QGraphicsPixmapItem* m_bgItem;
     QList<QGraphicsPixmapItem*> m_starItems;
     QList<QGraphicsPixmapItem*> m_carItems;
@@ -58,12 +58,11 @@ public:
     void SocketUDP();
     void Wait3Seconds();
     QGraphicsPixmapItem *m_pauseItem;
-    QPixmap m_pausePixmap;
     qint64 m_elapsedTime;
     int m_computeTime;
     bool m_bIsResume;
-    QPixmap m_cntPixmap[3];
     QList<QGraphicsPixmapItem*> m_cntItems;
+    bool m_bReady = false;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
