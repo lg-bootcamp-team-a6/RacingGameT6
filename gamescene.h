@@ -61,7 +61,7 @@ public:
     int m_computeTime;
     bool m_bIsResume;
     QList<QGraphicsPixmapItem*> m_cntItems;
-    bool m_bReady = false;
+    bool m_bReady;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

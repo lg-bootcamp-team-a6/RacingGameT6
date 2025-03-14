@@ -9,13 +9,14 @@
 #include <QGraphicsView>
 #include <QUdpSocket>
 #include <unistd.h>
+#include "InputDeviceHandler.h"
 
 #define DEV_NAME "/dev/mydev"
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
       m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
-      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
+      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false)
 {
     m_pUdpSocketHandler = new UdpSocketHandler(this);
     loadPixmap();
@@ -353,6 +354,7 @@ void GameScene::Wait3Seconds() {
             one->setVisible(false);
             removeItem(one);
             m_bReady = false;
+            InputDeviceHandler::m_sbIsResume = false;
             delete one;
         });
     }

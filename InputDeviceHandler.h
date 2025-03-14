@@ -37,7 +37,8 @@ private:
     
 
     /* sh add */
-    bool m_bIsResume;
+public:
+    static bool m_sbIsResume;
     View * m_View;
 };
 
