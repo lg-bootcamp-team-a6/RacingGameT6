@@ -19,6 +19,9 @@ public:
     // 오디오 재생 함수
     void playAudio(const std::string& filePath, bool loop = false);
 
+    // effect sound
+    void playEffectSound(const std::string& filePath);
+
     // 특정 오디오 파일 정지 함수
     void stopAudio(const std::string& filePath);
 

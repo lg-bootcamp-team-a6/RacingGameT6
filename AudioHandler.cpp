@@ -1,5 +1,6 @@
 #include "AudioHandler.h"
 #include <QDebug>
+#include <QTimer>
 
 AudioHandler::~AudioHandler() {
     stopAllAudio();  // 소멸자에서 모든 오디오 중지
@@ -35,6 +36,31 @@ void AudioHandler::playAudio(const std::string& filePath, bool loop) {
 
     qDebug() << "@@@@@@@@@@@@@@@ Audio Playing @@@@@@@@@@@@@@@@";
     audioProcesses[filePath] = process;
+}
+
+void AudioHandler::playEffectSound(const std::string& filePath) {
+    if (audioProcesses.find(filePath) != audioProcesses.end()) {
+        qDebug() << "Effect sound is already playing: " << QString::fromStdString(filePath);
+        return;
+    }
+
+    // 짧은 효과음을 위한 처리
+    QProcess* process = new QProcess();
+    QString qFilePath = QString::fromStdString(filePath);  // std::string -> QString 변환
+    QStringList arguments;
+    arguments << "-Dhw:0,0" << qFilePath;  // -Dhw:0,0 옵션과 오디오 파일 경로
+
+    // 비동기적으로 실행하여 짧은 효과음을 재생
+    process->startDetached("./aplay", arguments);  // startDetached()로 비동기 실행
+
+    // 디버깅용 출력
+    qDebug() << "Playing effect sound: " << QString::fromStdString(filePath);
+
+    // 짧은 효과음은 바로 끝나므로, 잠시 후에 해당 프로세스를 정리
+    QTimer::singleShot(1000, this, [this, process]() {
+        process->terminate();
+        delete process;
+    });
 }
 
 void AudioHandler::stopAudio(const std::string& filePath) {

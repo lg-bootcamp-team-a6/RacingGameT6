@@ -78,9 +78,9 @@ void View::setupOverlay()
 
     // Add Audio button
     m_audioButton = new QPushButton("", m_overlay);
-    m_audioButton->setFixedSize(100, 100);
+    m_audioButton->setFixedSize(232, 72);
     m_audioButton->setIcon(QIcon(":/images/off.png"));  // default: on 상태
-    m_audioButton->setIconSize(QSize(100, 100));
+    m_audioButton->setIconSize(QSize(232, 72));
     m_audioButton->setStyleSheet("border-radius: 50px; left-padding : 25px; background-color: green;");
     m_audioButton->setFocusPolicy(Qt::NoFocus);
     m_audioButton->setAutoRepeat(false);
@@ -113,11 +113,11 @@ void View::setupOverlay()
         if (m_isAudioOn) {
             // 음악 정지
             AudioHandler::getInstance()->stopAudio("magicjuly.wav");
-            m_audioButton->setIcon(QIcon(":/images/on.png"));  // 아이콘 변경
+            m_audioButton->setIcon(QIcon(":/images/off.png"));  // 아이콘 변경
         } else {
             // 음악 재생
             AudioHandler::getInstance()->playAudio("magicjuly.wav", true);
-            m_audioButton->setIcon(QIcon(":/images/off.png"));  // 아이콘 변경
+            m_audioButton->setIcon(QIcon(":/images/on.png"));  // 아이콘 변경
         }
         m_isAudioOn = !m_isAudioOn;  // 상태 반전
     });

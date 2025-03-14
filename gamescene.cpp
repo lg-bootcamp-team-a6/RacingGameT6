@@ -1,4 +1,5 @@
 #include "gamescene.h"
+#include "AudioHandler.h"
 #include <QTimer>
 #include <QDebug>
 #include <QGraphicsPixmapItem>
@@ -559,6 +560,7 @@ bool GameScene::checkStarCollision()
             {
                 bReturn = true;
                 m_game.m_starScore++;
+                AudioHandler::getInstance()->playEffectSound("star_sound.wav");
                 break;
             }
         }
