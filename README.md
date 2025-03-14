@@ -1,6 +1,13 @@
 # RacingGameT6
 
-ㅎㅇ
+# Set up the ALSA driver settings
+
+부팅 직후 아래 커맨드 실행 필요 (부팅 후 최초 1회만)
+혹은 /etc/profile 하에 아래 커맨드 추가하여 RFS 재빌드 필요
+
+```
+source /mnt/nfs/alsa.sh
+```
 
 # Set up the SPI controller and gyro sensor
 1. Enable SPI0
