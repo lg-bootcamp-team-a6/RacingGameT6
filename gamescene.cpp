@@ -398,7 +398,7 @@ void GameScene::update()
         m_carItem[i]->setTransformOriginPoint(21, 34);
         m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
-        //addItem(m_carItem[i]);
+        addItem(m_carItem[i]);
     }
 
     if (m_bIsResume) {
