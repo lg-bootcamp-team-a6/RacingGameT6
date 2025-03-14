@@ -112,3 +112,5 @@ data[104]: PAUSED
 data[105]: PAUSED
 data[106]: PAUSED
 data[107]: PAUSED
+data[0]: PAUSED
+data[1]: PAUSED

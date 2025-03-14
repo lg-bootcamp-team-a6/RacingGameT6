@@ -5,14 +5,14 @@
 #include <QUdpSocket>
 #include <QHostAddress>
 #include <QDebug>
-#include "UdpSocketHandler.h"
+#include <QDataStream>
 
 class UdpSocketHandler : public QObject {
     Q_OBJECT
 
 public:
     explicit UdpSocketHandler(QObject *parent = nullptr);
-    void sendMessage(const QString &message);
+    void BtHsendMessage(const int16_t cmd, const char* data);
 
 private:
     QUdpSocket *m_pUdpSocket;
