@@ -550,6 +550,7 @@ void GameScene::setMapIdx(int mapIdx)
     m_mapIdx = mapIdx;
 
     m_game.resetGameData(mapIdx);
+    Wait3Seconds();
 }
 
 bool GameScene::checkStarCollision()
