@@ -17,7 +17,8 @@ GameScene::GameScene(QObject *parent)
       m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false),
       m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
 {
-    
+    m_pUdpSocketHandler = new UdpSocketHandler(this);
+
     loadPixmap();
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
     // sh fix
@@ -306,19 +307,11 @@ void GameScene::showText() {
 }
 
 void GameScene::SocketUDP() {
-    QUdpSocket *udpSocket = new QUdpSocket(this);
     QHostAddress hostAddress("192.168.10.2");  // Host PC IP address
     quint16 hostPort = 12345;  // Port number
-
     QString message = "PAUSED";
-    QByteArray datagram = message.toUtf8();
-    qint64 bytesWritten = udpSocket->writeDatagram(datagram, hostAddress, hostPort);
-    
-    if (bytesWritten == datagram.size()) {
-        qDebug() << "---------------Message successfully sent: PAUSED" << bytesWritten << "Expected:" << datagram.size();
-    } else {
-        qDebug() << "---------------Error sending message. Bytes written:" << bytesWritten << "Expected:" << datagram.size();
-    }
+
+    udpSocketHandler->sendMessage(message, hostAddress, hostPort);
 }
 
 void GameScene::Wait3Seconds() {
