@@ -14,7 +14,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false),
+      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
       m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false)
 {
     m_pUdpSocketHandler = new UdpSocketHandler(this);
@@ -506,6 +506,10 @@ void GameScene::keyReleaseEvent(QKeyEvent *event)
     QGraphicsScene::keyReleaseEvent(event);
 }
 
+bool GameScene::getDirectionChanged()
+{
+    return m_dirChanged;
+}
 
 void GameScene::setUpDirection(bool upDir)
 {
@@ -526,6 +530,10 @@ void GameScene::setDownDirection(bool downDir)
 
 void GameScene::setAngleDirection(double angle)
 {
+
+    bool previousLeftDir = m_leftDir;
+    bool previousRightDir = m_rightDir;
+
     if(abs(angle) < 200){
         qDebug()<<"##########[Staight]###########################";
         m_leftDir = false;
@@ -541,6 +549,14 @@ void GameScene::setAngleDirection(double angle)
         qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
         m_leftDir = true;
         m_rightDir = false;
+    }
+
+    if (m_leftDir != previousLeftDir || m_rightDir != previousRightDir) {
+        m_dirChanged = true;  // 방향이 변경되었으면 true
+        qDebug()<<"-------------Changed direction--------------";
+
+    } else {
+        m_dirChanged = false; // 변경되지 않으면 false
     }
 
 }

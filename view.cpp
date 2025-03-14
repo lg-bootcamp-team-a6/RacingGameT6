@@ -42,7 +42,10 @@ void View::setupOverlay()
     // 차량 진행 방향 화살표 (왼쪽)
     m_directionArrow = new QLabel(m_overlay);
     QPixmap arrowPixmap(":/images/arrow.png");  // 화살표 이미지 리소스 경로
-    m_directionArrow->setPixmap(arrowPixmap.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
+    QTransform transform;
+    transform.rotate(270);
+    QPixmap rotated = arrowPixmap.transformed(transform, Qt::SmoothTransformation);
+    m_directionArrow->setPixmap(rotated.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_directionArrow->setFixedSize(50, 50);
     m_directionArrow->setStyleSheet("background-color: transparent;");
     topLayout->addWidget(m_directionArrow, 0, Qt::AlignLeft | Qt::AlignVCenter);
@@ -147,7 +150,20 @@ void View::updateDirectionArrow(double angle)
     
     QPixmap arrowPixmap(":/images/arrow.png");
     QTransform transform;
-    transform.rotate(angle + 90); // 필요에 따라 오프셋 조정
+    if(abs(angle) < 200){
+        qDebug()<<"------------[Staight Arrow]-------------";
+        transform.rotate(270); // 필요에 따라 오프셋 조정
+
+    }
+    else if(angle < 0){
+        qDebug()<<"------------[Right Arrow]-------------";
+        transform.rotate(0); // 필요에 따라 오프셋 조정
+    }
+    else{
+        qDebug()<<"-----------[LEFT Arrow]----------------";
+        transform.rotate(180); // 필요에 따라 오프셋 조정
+    }
+
     QPixmap rotated = arrowPixmap.transformed(transform, Qt::SmoothTransformation);
     m_directionArrow->setPixmap(rotated.scaled(m_directionArrow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
 }

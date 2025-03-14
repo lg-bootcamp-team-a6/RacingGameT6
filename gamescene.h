@@ -23,6 +23,7 @@ public:
     void setRightDirection(bool rightDir);
     void setDownDirection(bool downDir);
     void setAngleDirection(double angle);
+    bool getDirectionChanged();
     void setMapIdx(int mapIdx);
     bool checkStarCollision();
     void Goal();
@@ -50,7 +51,7 @@ private:
     QList<QGraphicsPixmapItem*> m_carItems;
     UdpSocketHandler *m_pUdpSocketHandler;
 
-    bool m_upDir, m_rightDir, m_downDir, m_leftDir;
+    bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged;
 
 public:
     void togglePause(bool IsResume);

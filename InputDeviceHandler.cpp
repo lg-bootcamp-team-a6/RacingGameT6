@@ -152,7 +152,7 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
         case ABS_Y:
             acc_y = ev.value;
             m_gameScene -> setAngleDirection(acc_y);
-            m_View -> updateDirectionArrow(calculateRotationAngleAxixz(acc_x, acc_y));
+            if (m_gameScene -> getDirectionChanged()) m_View -> updateDirectionArrow(acc_y);
             qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:
