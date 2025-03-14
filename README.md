@@ -21,7 +21,8 @@
    >Device Drviers > SPI support > BCM2835 SPI controller
 
    
-   >Device Drivers > STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (SPI)
+   >Device Drivers > Misc devices > STMicroeletronics LIS3LV02Dx three-axis digital accelerometer (SPI)
+   (SPI)를 꼭 확인할 것!
    
 
 4. Build
@@ -39,7 +40,15 @@
 
 5. Check
   ```
-#ls /sys/bus/spi/devices/
-spi0.0 확인
+#cd /sys/class/input/event0
+#cat device/name
+ST LIS3LV02DL Accelerometer 확인
+```
+
+6. Result
+```
+/dev/input/event0 : ST LIS3LV02DL Accelerometer
+/dev/input/event1 : ByQDtech (touch screen)
+/dev/input/event2 : bcm2837-gpio-keys (key devices)
 ```
    
