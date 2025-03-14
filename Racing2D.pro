@@ -13,6 +13,7 @@ SOURCES += \
     view.cpp \
     InputDeviceHandler.cpp \
     UdpSocketHandler.cpp
+    AudioHandler.cpp \
 
 HEADERS += \
     car.h \
@@ -21,6 +22,7 @@ HEADERS += \
     view.h \
     InputDeviceHandler.h \
     UdpSocketHandler.h
+    AudioHandler.h 
 
 RESOURCES += \
     resource.qrc \
@@ -30,4 +32,7 @@ RESOURCES += \
 DESTDIR = /nfsroot
 
 # add module build steps
-QMAKE_POST_LINK = cd $$PWD/module && make clean && make
+QMAKE_POST_LINK = make clean \
+                && cd $$PWD/module 
+                && make clean 
+                && make
