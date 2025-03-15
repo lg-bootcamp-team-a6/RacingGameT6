@@ -38,7 +38,8 @@ apptest
 *.mod.c
 *.order
 
-# qmake stash
+# qt cache
 *.stash
 Makefile
 qmake_qmake_immediate.qrc
+*.pro.user.*
