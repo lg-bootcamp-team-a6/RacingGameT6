@@ -6,6 +6,7 @@
 #include <QSettings> 
 #include <unordered_map>
 #include <string>
+#include <memory> // 🔹 unique_ptr 사용 가능
 
 class AudioHandler : public QObject {
     Q_OBJECT
@@ -16,20 +17,19 @@ public:
         static AudioHandler instance; 
         return &instance;
     }
-    void playAudio(const std::string& filePath, bool loop = false);
+
+    void playAudio(const std::string& filePath, bool loop = true);
     void playEffectSound(const std::string& filePath);
-    void stopAudio(const std::string& filePath);
+    void stopAudio();  // 🔹 현재 재생 중인 음악을 자동으로 정지
     void stopAllAudio();
-    
-    bool isPlaying(const std::string& filePath) const;
-    bool isAudioOn() const;
-    
+    QString getCurrentTrack() const; // 🔹 세미콜론 추가
     void setAudioOn(bool enabled);
+    bool isAudioOn() const;
 
 signals:
 
 private:
-    AudioHandler() = default;  
+    explicit AudioHandler();  // 🔹 explicit 추가
     ~AudioHandler(); 
 
     /* Singleton */ 
@@ -38,8 +38,8 @@ private:
 
     /* Process */
     QSettings settings;
-    QProcess* m_currentProcess; // 배경음악 처리
-    std::unordered_map<std::string, QProcess*> audioProcesses;  // 효과음 처리
+    QProcess* m_currentProcess = nullptr;  // 🔹 안전한 초기화 추가
+    std::unordered_map<std::string, QProcess*> audioProcesses;  // 프로세스 전체 처리
 };
 
 #endif // AUDIOHANDLER_H
