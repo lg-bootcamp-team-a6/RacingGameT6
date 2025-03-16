@@ -2,12 +2,14 @@
 #include "AudioHandler.h"
 #include <QTimer>
 #include <QDebug>
-#include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QPushButton>
 #include <QDir>
 #include <QPainter>
 #include <cmath>
 #include <QGraphicsView>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsPixmapItem>
 #include <QUdpSocket>
 #include <unistd.h>
 #include "InputDeviceHandler.h"
@@ -29,6 +31,20 @@ GameScene::GameScene(QObject *parent)
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
     m_timer->start(m_game.ITERATION_VALUE);
 
+    /* Audio button */
+
+    m_audioButton = new QPushButton("");
+    m_audioButton->setFixedSize(232, 72);
+    m_audioButton->setIcon(QIcon(":/images/off.png"));  // default: on 상태
+    m_audioButton->setIconSize(QSize(232, 72));
+    m_audioButton->setStyleSheet("border: none; background: transparent;");
+    m_audioButton->setFocusPolicy(Qt::NoFocus);
+    m_audioButton->setAutoRepeat(false);
+    connect(m_audioButton, &QPushButton::clicked, [this]() {
+        toggleBgSound("magicjuly.wav"); 
+    });
+    m_audioButton->setVisible(false);
+
     update();
 }
 
@@ -36,15 +52,26 @@ GameScene::GameScene(QObject *parent)
 void GameScene::togglePause(bool IsResume)
 {
     QGraphicsPixmapItem *pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
-    pauseItem->setScale(1);
-    pauseItem->setPos(0, 0);
-    addItem(pauseItem);
+    QGraphicsProxyWidget *proxyWidget = new QGraphicsProxyWidget();
+    proxyWidget->setWidget(m_audioButton);
 
     if (!IsResume) {
         m_timer->stop();
         qDebug() << "stop timer success";
         if (nullptr != pauseItem) {
             pauseItem->setVisible(true);
+            m_audioButton->setVisible(true);
+
+            // pauseItem의 위치를 기준으로 m_audioButton 위치 조정
+            pauseItem->setScale(1);
+            pauseItem->setPos(0, 0);
+            qreal pauseItemX = pauseItem->pos().x() + 300;
+            qreal pauseItemY = pauseItem->pos().y() + 190;  // pauseItem 위로 이동하려면 높이만큼 빼면 됩니다.
+            proxyWidget->setPos(pauseItemX, pauseItemY);  // 위치 설정
+
+            addItem(pauseItem);
+            addItem(proxyWidget);
+
             qDebug() << "[GAME] Paused by an interrupt.";
             SocketUDP();
         }
@@ -596,4 +623,20 @@ void GameScene::Goal()
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
 
     setMapIdx(idx);
+}
+
+void GameScene::toggleBgSound(const std::string& audioFile) {
+    bool isAudioOn = AudioHandler::getInstance()->isAudioOn(); // AudioHandler에서 상태 가져오기
+
+    if (isAudioOn) {
+        AudioHandler::getInstance()->stopAudio(audioFile);
+        m_audioButton->setIcon(QIcon(":/images/off.png"));  
+    } else {
+        AudioHandler::getInstance()->playAudio(audioFile, true);
+        m_audioButton->setIcon(QIcon(":/images/on.png"));  
+    }
+
+    // AudioHandler 상태 반전
+    AudioHandler::getInstance()->setAudioOn(!isAudioOn);
+    qDebug() << "@@@@@@@@@@@@@@ [Audio Status] Audio is " << (isAudioOn ? "off" : "on") << "@@@@@@@@@@@@@@";
 }

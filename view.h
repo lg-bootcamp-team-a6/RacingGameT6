@@ -25,15 +25,12 @@ private:
     void setupOverlay();
     void repositionOverlay();
     void resizeEvent(QResizeEvent *event) override;
-    void toggleBgSound(const std::string& audioFile);
 
     QWidget *m_overlay;
     QPushButton *m_accelButton;
     QPushButton *m_brakeButton;
     QPushButton *m_audioButton;  // 추가된 음량 버튼
     QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
-
-    bool m_isAudioOn = true;  // 음량 상태 (기본값: on)
 };
 
 #endif // VIEW_H

@@ -58,7 +58,7 @@ void AudioHandler::playEffectSound(const std::string& filePath) { // 효과음 �
 
     qDebug() << "Playing effect sound: " << QString::fromStdString(filePath);
 
-    QTimer::singleShot(1300, this, [this, process]() { // 프로세스 정리
+    QTimer::singleShot(1300, this, [process]() { // 프로세스 정리
         process->terminate();
         delete process;
     });
@@ -89,4 +89,14 @@ void AudioHandler::stopAllAudio() {
 
 bool AudioHandler::isPlaying(const std::string& filePath) const {
     return audioProcesses.find(filePath) != audioProcesses.end();
+}
+
+/* 전역 상태관리 */
+void AudioHandler::setAudioOn(bool enabled) { // 오디오 상태 설정
+    settings.setValue("audio/enabled", enabled);
+    settings.sync();
+}
+
+bool AudioHandler::isAudioOn() const { // 켜져있는지 여부 반환
+    return settings.value("audio/enabled", true).toBool();
 }
