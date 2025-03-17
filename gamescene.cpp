@@ -462,7 +462,7 @@ void GameScene::update()
          Goal();
 
     for (int i = m_game.m_starScore; i < Game::COUNTING_STARS; ++i) {
-        m_starItem[i]->setScale(1.5);
+        m_starItem[i]->setScale(1);
         m_starItem[i]->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
         addItem(m_starItem[i]);
     }
