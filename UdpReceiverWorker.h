@@ -24,54 +24,55 @@ public:
         : QObject(parent), m_port(port), m_udpSocket(nullptr) {}
 
 public slots:
-    // 이 함수는 worker 스레드에서 실행되며, 여기서 QUdpSocket을 생성합니다.
     void process() {
-        // 반드시 이 함수가 실행되는 스레드(즉, worker 스레드)에서 소켓을 생성해야 함
+        // 이 스레드에서 QUdpSocket을 생성하고 바인딩합니다.
         m_udpSocket = new QUdpSocket();
         if (!m_udpSocket->bind(QHostAddress::Any, m_port)) {
             qWarning() << "Failed to bind UDP socket on port" << m_port;
             return;
         }
         qDebug() << "UdpReceiverWorker: UDP socket bound on port" << m_port;
-
         qDebug() << "Waiting for incoming datagram...";
+
         while (true) {
-            // 무한 블로킹 대기 (-1: 무한 대기)
+            // 무한 대기 (-1: 무한 대기)
             if (m_udpSocket->waitForReadyRead(-1)) {
                 while (m_udpSocket->hasPendingDatagrams()) {
-                    receive_packet packet;
-                    packet.cmd = 0;
-                    packet.data = nullptr;
-
                     QByteArray datagram;
                     datagram.resize(m_udpSocket->pendingDatagramSize());
-
                     QHostAddress sender;
                     quint16 senderPort;
                     m_udpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
-
-                    qDebug() << "UdpReceiverWorker: Received datagram from" << sender.toString() << "port:" << senderPort;
-
-                    // 최소한 int 크기인지 확인
-                    if (datagram.size() < static_cast<int>(sizeof(int))) {
+                    qDebug() << "UdpReceiverWorker: Received datagram from" 
+                             << sender.toString() << "port:" << senderPort;
+                    
+                    // 최소 2바이트(명령) 이상 있어야 함
+                    if (datagram.size() < static_cast<int>(sizeof(int16_t))) {
                         qWarning() << "Received datagram too small for parsing.";
                         continue;
                     }
-
-                    // 첫 4바이트를 cmd로 파싱 (필요 시 ntohl() 고려)
-                    memcpy(&packet.cmd, datagram.data(), sizeof(int));
-
-                    // 나머지 데이터를 문자열로 파싱
-                    int dataSize = datagram.size() - sizeof(int);
+                    
+                    receive_packet packet;
+                    packet.cmd = 0;
+                    packet.data = nullptr;
+                    
+                    // 첫 2바이트를 명령으로 읽습니다.
+                    int16_t cmd_le;
+                    memcpy(&cmd_le, datagram.data(), sizeof(cmd_le));
+                    int16_t cmd = le16toh(cmd_le);
+                    packet.cmd = cmd;
+                    
+                    // 나머지 바이트를 데이터로 복사합니다.
+                    int dataSize = datagram.size() - sizeof(int16_t);
                     if (dataSize > 0) {
                         packet.data = new char[dataSize + 1];
-                        memcpy(packet.data, datagram.data() + sizeof(int), dataSize);
+                        memcpy(packet.data, datagram.data() + sizeof(int16_t), dataSize);
                         packet.data[dataSize] = '\0';
                     }
-
+                    
                     qDebug() << "UdpReceiverWorker: Parsed packet: cmd =" << packet.cmd
                              << ", data =" << (packet.data ? packet.data : "null");
-
+                    
                     emit packetReceived(packet);
                 }
             }
@@ -87,3 +88,4 @@ private:
 };
 
 #endif // UDPRECEIVERWORKER_H
+
