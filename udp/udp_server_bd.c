@@ -113,9 +113,6 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     
     free(data);
     
-    if (sendto(sfd, buf, len, 0, (struct sockaddr *)addr_client, addr_client_len) < 0) {
-        perror("sendto failed");
-    }
 }
 
 int main(int argc, char **argv) {
