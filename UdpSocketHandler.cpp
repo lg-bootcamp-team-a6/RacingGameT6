@@ -3,9 +3,9 @@
 UdpSocketHandler::UdpSocketHandler(QObject *parent) : QObject(parent){
     m_pUdpSocket = new QUdpSocket(this);
 
-    if (!m_pUdpSocket->bind(QHostAddress::Any, SERVER_PORT)) {
-        qDebug() << "Failed to bind UDP socket on port" << SERVER_PORT;
-    }
+    //if (!m_pUdpSocket->bind(QHostAddress::Any, SERVER_PORT)) {
+    //    qDebug() << "Failed to bind UDP socket on port" << SERVER_PORT;
+    //}
     m_hostPort = SERVER_PORT;
     m_hostAddress = QHostAddress("192.168.10.2");  // Host PC IP address
      //connect(m_pUdpSocket, SIGNAL(readyRead()), this, SLOT(processPendingDatagrams()));
