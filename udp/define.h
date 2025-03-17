@@ -20,5 +20,6 @@ struct board{
     int map_info;
     int pos_x;
     int pos_y;
+    float angle;
     struct sockaddr_in board_addr;
 };

@@ -24,6 +24,7 @@ void init_board() {
 	board1.map_info = -1;
     board1.pos_x = -1;
     board1.pos_y = -1;
+    board1.angle = 0;
     memset(&board1.board_addr, 0, sizeof(board1.board_addr));
     board1.board_addr.sin_family = AF_INET;
     board1.board_addr.sin_port = htons(SERVER_PORT);
@@ -40,6 +41,7 @@ void init_board() {
 	board2.map_info = -1;
     board2.pos_x = -1;
     board2.pos_y = -1;
+    board2.angle = 0;
     memset(&board2.board_addr, 0, sizeof(board2.board_addr));
     board2.board_addr.sin_family = AF_INET;
     board2.board_addr.sin_port = htons(SERVER_PORT);
@@ -60,6 +62,7 @@ void getIPv4Address(const struct sockaddr_in *addr_client, char* buf) {
     }
 }
 
+//board to server
 void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_t addr_client_len, int sfd) {
     if (len < (int)(sizeof(int32_t) + sizeof(int16_t))) {
         fprintf(stderr, "Error: Invalid message size (%d bytes)\n", len);
@@ -84,7 +87,6 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     
     switch(cmd)
     {
-		
         case GAME_STATUS:
 			printf("case 0 : start or pause\n");
             setStatus(ip_str, data);
@@ -100,6 +102,8 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
 
             break;
         case CAR_POSITION:
+            updatePosition(ip_str, data);
+            sendRivalPosition(ip_str);
             break;
 		//finish
         case FINISH:

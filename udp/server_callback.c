@@ -209,6 +209,45 @@ void verifyWinner(char* ip_str, char* data, int sfd)
     printf("Success send message to LOSER\n");
 
     free(buffer_loser);  // 메모리 해제
+}
+
+void updatePosition(char* ip_str, char* data)
+{
+    int x = 0, y = 0;
+    if (sscanf(data, "%d,%d", &x, &y) == 2) {
+        printf("Parsed x = %d, y = %d", x, y);
+    } else {
+        perror("Parsing failed!");
+
+    }
+
+    if(!strcmp(ip_str, BOARD_1))
+    {
+        board1.pos_x = x;
+        board1.pos_y = y;
+    }
+    else if(!strcmp(ip_str, BOARD_2))
+    {
+       board2.pos_x = x;
+       board2.pos_y = y;
+    }
+}
+
+void sendRivalPosition(char* ip_str)
+{
+    int16_t cmd = CAR_POSITION;
+    char message[32];
+    if(!strcmp(ip_str, BOARD_1))
+    {
+        int x = board2.pos_x;
+        int y = board2.pos_y;
+        snprintf(message, sizeof(message), "%d,%d", x, y);
+    }
+    else if(!strcmp(ip_str, BOARD_2))
+    {
+        int x = board1.pos_x;
+        int y = board1.pos_y;
+        snprintf(message, sizeof(message), "%d,%d", x, y);
     }
 
 // share checkpoint for the other
@@ -247,4 +286,5 @@ void shareCheckpoint(char* ip, char* data, int sfd)
         else printf("Success send message to board 1\n");
         }
     printf("changed state\n");
+}
 }
