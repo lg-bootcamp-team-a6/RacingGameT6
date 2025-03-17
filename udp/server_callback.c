@@ -210,3 +210,41 @@ void verifyWinner(char* ip_str, char* data, int sfd)
 
     free(buffer_loser);  // 메모리 해제
     }
+
+// share checkpoint for the other
+void shareCheckpoint(char* ip, char* data, int sfd)
+{
+    //define messages
+    int16_t cmd = CHECKPOINT; 
+
+    // 먼저 'cmd'와 'data'를 하나의 버퍼로 결합
+    size_t message_size_checkpoint = sizeof(cmd) + strlen(data) + 1;  // cmd + data + NULL terminator
+    
+    // Send msg to winner
+    char *buffer_checkpoint = malloc(message_size_checkpoint);
+    if (!buffer_checkpoint) {
+        perror("malloc failed for START message\n");
+        return;
+    }
+    memcpy(buffer_checkpoint, &cmd, sizeof(cmd));  // cmd를 먼저 복사
+    memcpy(buffer_checkpoint + sizeof(cmd), data, strlen(data) + 1);  // data를 그 뒤에 복사
+
+
+    if(!strcmp(ip, BOARD_1))
+    {
+        //share checkpoint to board 2
+        if (sendto(sfd, buffer_checkpoint, message_size_checkpoint, 0, (struct sockaddr*)&board2.board_addr, sizeof(board2.board_addr)) < 0) {
+        perror("failed sendto message for board 2\n");
+        }
+        else printf("Success send message to board 2\n");
+        }
+    else if(!strcmp(ip, BOARD_2))
+    {
+        //share checkpoint to board 1
+        if (sendto(sfd, buffer_checkpoint, message_size_checkpoint, 0, (struct sockaddr*)&board1.board_addr, sizeof(board1.board_addr)) < 0) {
+        perror("failed sendto message for board 1\n");
+        }
+        else printf("Success send message to board 1\n");
+        }
+    printf("changed state\n");
+}

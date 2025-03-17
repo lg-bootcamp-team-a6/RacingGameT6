@@ -724,6 +724,10 @@ bool GameScene::checkStarCollision()
                 bReturn = true;
                 m_game.m_starScore++;
                 AudioHandler::getInstance()->playEffectSound("star_sound.wav");
+                //send checkpoint to Server
+                char data[3];  // 30까지의 숫자를 문자열로 표현하기 위해 충분히 큰 배열 크기 (최대 3자리 숫자)
+                sprintf(data, "%d", m_game.m_starScore);  // 숫자를 문자열로 변환
+                m_pUdpSocketHandler -> BtHsendMessage(CHECKPOINT, data);
                 break;
             }
         }

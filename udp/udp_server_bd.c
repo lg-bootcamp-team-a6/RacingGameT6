@@ -95,6 +95,9 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             }
             break;
         case CHECKPOINT:
+            printf("case 1 : Get checkpoint %s\n",data);
+            shareCheckpoint(ip_str, data,sfd);
+
             break;
         case CAR_POSITION:
             break;
