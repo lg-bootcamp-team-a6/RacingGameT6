@@ -84,15 +84,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             break;
         //how many checkpoints 
         case CHECKPOINT:
-            //QString timeText = QString("Rival's Score: %1").arg(pkt.data);
-            //QGraphicsTextItem* textItem = new QGraphicsTextItem();
-            //// QGraphicsTextItem을 사용하여 주행 시간 표시
-            //textItem->setPlainText(timeText);  // Time format: "seconds.miliseconds"
-            //textItem->setDefaultTextColor(Qt::black);
-            //textItem->setFont(QFont("Arial", 15));
-            //textItem->setPos(0, -20); // hard coding..
-            //addItem(textItem);
-            //textItem->setVisible(true);
+            m_rivalScore = atoi(pkt.data);
             
             break;
         case CAR_POSITION:
@@ -105,13 +97,13 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         //cmd : winner, data : time lap
         case WINNER:
             qDebug() << "WINNER";
-            
+            m_rivalScore = 0;
             m_bConnect = false;
             break;
         //cmd : loser, data : winner's time lap
         case LOSER:
             qDebug() << "LOOSER";
-
+            m_rivalScore = 0;
             m_bConnect = false;
             break;
         default:
@@ -427,6 +419,17 @@ void GameScene::showText() {
         textItem3->setFont(QFont("Arial", 15));
         textItem3->setPos(600, 10 + 30* i); // col * row
         addItem(textItem3);
+        textItem->setVisible(true);
+    }
+
+    if(m_rivalScore)
+    {
+        QGraphicsTextItem* textItem4 = new QGraphicsTextItem();
+        textItem4->setPlainText(QString("Rival's Score : %1").arg(m_rivalScore));
+        textItem4->setDefaultTextColor(Qt::black);
+        textItem4->setFont(QFont("Arial", 15));
+        textItem4->setPos(0, -50); // col * row
+        addItem(textItem4);
         textItem->setVisible(true);
     }
 }

@@ -83,6 +83,7 @@ public:
     bool m_bIsResume;
     QList<QGraphicsPixmapItem*> m_cntItems;
     bool m_bReady;
+    int m_rivalScore;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
