@@ -1,3 +1,4 @@
+#pragma once
 #define SERVER_PORT 12345
 #define FILE_NAME "data.txt"
 #include <unistd.h>     // sleep 함수 사용

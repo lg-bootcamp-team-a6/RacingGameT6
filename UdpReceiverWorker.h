@@ -1,6 +1,6 @@
 #ifndef UDPRECEIVERWORKER_H
 #define UDPRECEIVERWORKER_H
-
+#pragma once
 #include <QObject>
 #include <QUdpSocket>
 #include <QHostAddress>

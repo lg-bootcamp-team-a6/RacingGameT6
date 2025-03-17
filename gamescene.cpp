@@ -35,20 +35,28 @@ GameScene::GameScene(QObject *parent)
     qDebug() << "Send map status" << str;
     m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
 
-    UdpReceiverWorker* worker = new UdpReceiverWorker(m_pUdpSocketHandler);
-    QThread* workerThread = new QThread;
-    worker->moveToThread(workerThread);
-    
-    // Worker의 process() 슬롯을 스레드 시작 시 실행
-    connect(workerThread, &QThread::started, worker, &UdpReceiverWorker::process);
-    // Worker가 보낸 패킷을 처리하는 슬롯 (예: handleUdpPacket)
-    connect(worker, &UdpReceiverWorker::packetReceived, this, &GameScene::handleUdpPacket);
-    
-    // 스레드 종료 시 Worker와 스레드 메모리 해제
-    connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
-    connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
-    
-    workerThread->start();
+     // 여기서 receiveMessage() blocking 호출 대신, 별도의 worker를 사용합니다.
+    // 먼저, receive_packet 타입을 Qt 메타 타입 시스템에 등록
+    qRegisterMetaType<receive_packet>("receive_packet");
+
+    // UdpReceiverWorker 생성: 포트는 SERVER_PORT 사용 (define.h에 설정되어 있어야 함)
+    UdpReceiverWorker* receiverWorker = new UdpReceiverWorker(SERVER_PORT);
+    QThread* receiverThread = new QThread(this);
+    receiverWorker->moveToThread(receiverThread);
+
+    // 스레드 시작 시 worker의 process() 슬롯 실행
+    connect(receiverThread, &QThread::started, receiverWorker, &UdpReceiverWorker::process);
+
+    // worker가 보낸 packetReceived 시그널을 GameScene의 슬롯(handleUdpPacket)과 연결
+    connect(receiverWorker, &UdpReceiverWorker::packetReceived,
+            this, &GameScene::handleUdpPacket, Qt::QueuedConnection);
+
+    // 스레드 종료 시 worker 및 스레드 정리
+    connect(receiverThread, &QThread::finished, receiverWorker, &QObject::deleteLater);
+    connect(receiverThread, &QThread::finished, receiverThread, &QObject::deleteLater);
+
+    receiverThread->start();
+
 
     update();
 }
