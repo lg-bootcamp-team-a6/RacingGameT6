@@ -47,6 +47,9 @@ void GameScene::togglePause(bool IsResume)
             pauseItem->setVisible(true);
             qDebug() << "[GAME] Paused by an interrupt.";
             SocketUDP();
+            //SocketUDP();
+            char* data = "PAUSE";
+            m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
@@ -602,6 +605,18 @@ void GameScene::Goal()
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
     std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end(), std::greater<int>());
+
+    int seconds = m_elapsedTime / 100;
+    int mseconds = m_elapsedTime % 100;
+
+    //qDebug() << "Goal 1 ! ";
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
+    //qDebug() << "Goal 2 ! ";
+    qDebug() << "The elapsedTime is " << str;
+    m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
+
+    //Display Finish in solo play
 
     setMapIdx(idx);
 }
