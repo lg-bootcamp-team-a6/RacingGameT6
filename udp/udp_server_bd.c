@@ -83,7 +83,8 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     
     switch(cmd)
     {
-        case 0:
+		
+        case GAME_STATUS:
 			printf("case 0 : start or pause\n");
             setStatus(ip_str, data);
             if (!playMode && board1_pausing && board2_pausing) {
@@ -92,17 +93,17 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
                 startDoublePlayer(sfd);
             }
             break;
-        case 1:
+        case CHECKPOINT:
             break;
-        case 2:
+        case CAR_POSITION:
             break;
 		//finish
-        case 3:
+        case FINISH:
 			printf("case 0 : finish map\n");
-			
+			addRanking(ip_str, data);
             break;
 		//which map
-		case 4:
+		case MAP_STATUS:
 			printf("change map\n");
 			setMapInfo(ip_str, data);
 			break;

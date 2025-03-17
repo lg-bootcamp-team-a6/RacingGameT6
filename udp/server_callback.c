@@ -56,6 +56,7 @@ void setMapInfo(char* ip_str, char* data)
     {
         board2.map_info = atoi(data);
     }
+    printf("dest : %s, map info : %d\n", ip_str, atoi(data));
 }
 
 void addRanking(char* ip_str, char* data)
@@ -69,7 +70,7 @@ void addRanking(char* ip_str, char* data)
         update_ranking_for_map(board2.map_info, atof(data));
     }
 
-    print_ranking_for_map(0);
+    print_ranking_for_map(3);
     // print_ranking_for_map(1);
     // print_ranking_for_map(2);
     // print_ranking_for_map(3);
@@ -118,7 +119,7 @@ void print_ranking_for_map(int mapIndex) {
     Ranking *r = &rankingList[mapIndex];
     printf("Ranking for map %d:\n", mapIndex);
     for (int i = 0; i < r->count; i++) {
-        printf("%d: %d\n", i + 1, r->scores[i]);
+        printf("%d: %f\n", i + 1, r->scores[i]);
     }
     printf("\n");
 }

@@ -14,7 +14,7 @@ extern int board1_pausing;
 extern int board2_pausing;
 
 typedef struct {
-    int scores[TOP_N];  // 내림차순 정렬 (scores[0]이 최고 점수)
+    float scores[TOP_N];  // 내림차순 정렬 (scores[0]이 최고 점수)
     int count;          // 현재 저장된 점수 개수 (최대 TOP_N)
 } Ranking;
 
@@ -26,6 +26,7 @@ void setStatus(char* ip, char* data);
 void startDoublePlayer(int sfd);
 void setMapInfo(char* ip_str, char* data);
 void addRanking(char* ip_str, char* data);
-
+void update_ranking_for_map(int mapIndex, double newScore);
+void print_ranking_for_map(int mapIndex);
 
 #endif // SERVER_CALLBACK_H
