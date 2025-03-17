@@ -35,6 +35,7 @@ public:
 
     int m_mapCnt = 4;
     int m_mapIdx = 0;
+    bool m_bConnect = false;
 
 signals:
 

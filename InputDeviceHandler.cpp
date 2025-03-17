@@ -122,7 +122,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 
             qDebug() << m_gameScene->m_bReady;
 
-            if(!m_gameScene->m_bReady)
+            if(!m_gameScene->m_bReady && !m_gameScene->m_bConnect)
                 m_gameScene->togglePause(m_sbIsResume);
 
             if (!m_sbIsResume)
@@ -139,7 +139,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 
             idx = idx == m_gameScene->m_mapCnt ? 0 : idx;
 
-            if(!m_gameScene->m_bReady)
+            if(!m_gameScene->m_bReady && !m_gameScene->m_bConnect)
                 m_gameScene->setMapIdx(idx);
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
