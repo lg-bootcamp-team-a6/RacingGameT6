@@ -16,7 +16,7 @@ public:
     static const int num_checkpoints;
     static const int points[8][2];
     static const int m_checkpoint[4][30][2];
-    QList<int> m_rankRecord[4];
+    QList<float> m_rankRecord[4];
     static const QSize RESOLUTION;
     const QString PATH_TO_BACKGROUND_PIXMAP[10];
     const QString PATH_TO_CAR_PIXMAP[5];

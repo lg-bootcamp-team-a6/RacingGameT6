@@ -66,7 +66,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "BgPixmap0 is not loaded successfully";
     }
-    
+
     if(m_bgPixmap[1].load(m_game.PATH_TO_BACKGROUND_PIXMAP[1]))
     {
         qDebug() << "BgPixmap1 is loaded successfully";
@@ -85,7 +85,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "BgPixmap2 is not loaded successfully";
     }
-    
+
     if(m_bgPixmap[3].load(m_game.PATH_TO_BACKGROUND_PIXMAP[3]))
     {
         qDebug() << "BgPixmap3 is loaded successfully";
@@ -105,7 +105,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "StarPixmap[0] is loaded successfully";
     }
-    
+
     if(m_readyPixmap[0].load(m_game.PATH_TO_COUNT_PIXMAP[2]))
     {
         qDebug() << "ReadyPixmap[0] is loaded successfully";
@@ -120,7 +120,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "ReadyPixmap[2] is loaded successfully";
     }
-    
+
     if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP))
     {
         qDebug() << "PausePixmap is loaded successfully";
@@ -302,7 +302,7 @@ void GameScene::showText() {
     textItem2->setPlainText(QString("Speed: %1 | Angle: %2").arg(m_game.speed).arg(m_game.angle));
     textItem2->setDefaultTextColor(Qt::black);
     textItem2->setFont(QFont("Arial", 15));
-    textItem2->setPos(600, -50); // col * row 
+    textItem2->setPos(600, -50); // col * row
     addItem(textItem2);
     textItem->setVisible(true);
 
@@ -311,11 +311,11 @@ void GameScene::showText() {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
 
         if(i == 0)
-            textItem3->setPlainText(QString("First : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+            textItem3->setPlainText(QString("First : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
         else if(i == 1)
-            textItem3->setPlainText(QString("Second : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+            textItem3->setPlainText(QString("Second : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
         else if (i == 2)
-            textItem3->setPlainText(QString("Third : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+            textItem3->setPlainText(QString("Third : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
 
         textItem3->setDefaultTextColor(Qt::black);
         textItem3->setFont(QFont("Arial", 15));
@@ -595,7 +595,7 @@ bool GameScene::checkStarCollision()
 void GameScene::Goal()
 {
     int idx = m_mapIdx;
-    
+
     idx++;
 
     idx = idx == m_mapCnt ? 0 : idx;
