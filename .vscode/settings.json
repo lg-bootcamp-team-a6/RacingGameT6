@@ -55,5 +55,10 @@
         "xlocnum": "cpp",
         "xloctime": "cpp",
         "xmemory": "cpp"
+        "array": "cpp",
+        "string": "cpp",
+        "inet.h": "c",
+        "udp_server_bd.h": "c",
+        "server_callback.h": "c"
     }
 }
