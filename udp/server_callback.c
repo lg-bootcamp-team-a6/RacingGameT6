@@ -1,6 +1,7 @@
 #include "server_callback.h"
 #include <stdio.h>
 #include <string.h>
+#include "../UdpCmd.h"
 
 // setting start/pause
 void setStatus(char* ip, char* data)
@@ -123,3 +124,68 @@ void print_ranking_for_map(int mapIndex) {
     }
     printf("\n");
 }
+
+void verifyWinner(char* ip_str, char* data, int sfd)
+{
+    //Check if it is winner
+    // Check if ip_str matches board1 or board2's address
+    struct sockaddr_in *winner_addr = NULL;
+    struct sockaddr_in *loser_addr = NULL;
+
+    // Compare the ip_str with board1.board_addr and board2.board_addr
+    if (strcmp(ip_str, inet_ntoa(board1.board_addr.sin_addr)) == 0) {
+        // ip_str matches board1's address, so board1 is the winner
+        winner_addr = &board1.board_addr;
+        loser_addr = &board2.board_addr;
+    } else if (strcmp(ip_str, inet_ntoa(board2.board_addr.sin_addr)) == 0) {
+        // ip_str matches board2's address, so board2 is the winner
+        winner_addr = &board2.board_addr;
+        loser_addr = &board1.board_addr;
+    } else {
+        // ip_str does not match either board address
+        printf("Error: IP address does not match either board1 or board2.\n");
+        return;
+    }
+    printf("Winner is : %s\n", inet_ntoa(winner_addr->sin_addr));
+
+    //send to message to winner : CMD GAME_STATUS, data : WINNER
+    //define messages
+    int16_t cmd = GAME_STATUS; // 예시: LOSER에 대한 명령 코드
+    char *message_win = "WINNER";
+    char *message_loser = "LOSER";
+
+    // 먼저 'cmd'와 'data'를 하나의 버퍼로 결합
+    size_t message_size_win = sizeof(cmd) + strlen(message_win) + 1;  // cmd + data + NULL terminator
+    size_t message_size_loser = sizeof(cmd) + strlen(message_loser) + 1;  // cmd + data + NULL terminator
+
+    // Send msg to winner
+    char *buffer_win = malloc(message_size_win);
+    if (!buffer_win) {
+        perror("malloc failed for WINNER message\n");
+        return;
+    }
+    memcpy(buffer_win, &cmd, sizeof(cmd));  // cmd를 먼저 복사
+    memcpy(buffer_win + sizeof(cmd), message_win, strlen(message_win) + 1);  // data를 그 뒤에 복사
+
+    if (sendto(sfd, buffer_win, message_size_win, 0, (struct sockaddr*)winner_addr, sizeof(*winner_addr)) < 0) {
+        perror("failed sendto message for WINNER\n");
+    }
+    printf("Success send message to Winner\n");
+    free(buffer_win);  // 메모리 해제
+
+    // Sendo msg to loser
+    char *buffer_loser = malloc(message_size_loser);
+    if (!buffer_loser) {
+        perror("malloc failed for LOSER message\n");
+        return;
+    }
+    memcpy(buffer_loser, &cmd, sizeof(cmd));  // cmd를 먼저 복사
+    memcpy(buffer_loser + sizeof(cmd), message_loser, strlen(message_loser) + 1);  // data를 그 뒤에 복사
+
+    if (sendto(sfd, buffer_loser, message_size_loser, 0, (struct sockaddr*)loser_addr, sizeof(*loser_addr)) < 0) {
+        perror("failed sendto message for LOSER\n");
+    }
+    printf("Success send message to LOSER\n");
+
+    free(buffer_loser);  // 메모리 해제
+    }
