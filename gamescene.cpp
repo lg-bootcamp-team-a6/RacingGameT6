@@ -84,6 +84,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case CHECKPOINT:
             break;
         case CAR_POSITION:
+            parseRivalPosition(pkt.data);
             break;
         case FINISH:
             break;
@@ -105,6 +106,17 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
     }
 }
 
+void GameScene::parseRivalPosition(char* data)
+{
+    int x = 0, y = 0;
+    if (sscanf(data, "%d,%d", &x, &y) == 2) {
+        qDebug() << "Parsed x =" << x << ", y =" << y;
+    } else {
+        qDebug() << "Parsing failed!";
+    }
+    car[1].x = x;
+    car[1].y = y;
+}
 
 /* sh) pause function */
 void GameScene::togglePause(bool IsResume)
