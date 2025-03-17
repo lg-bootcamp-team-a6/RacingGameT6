@@ -34,6 +34,7 @@ public:
     void Goal();
 
     int m_mapCnt = 4;
+    int m_carCnt = 1;
     int m_mapIdx = 0;
     bool m_bConnect = false;
 

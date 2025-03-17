@@ -158,7 +158,6 @@ const int Game::m_checkpoint[4][30][2]=
     }
 };
 const QSize Game::RESOLUTION = QSize(640, 480);
-const int Game::COUNT_OF_CARS = 1;
 const int Game::COUNTING_STARS = 30;
 
 Game::Game()

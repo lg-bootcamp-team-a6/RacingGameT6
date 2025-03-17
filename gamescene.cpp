@@ -78,6 +78,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             {
                 qDebug() << "START setMapIdx";
                 m_bConnect = true;
+                //m_carCnt = 2;
                 setMapIdx(m_mapIdx);
             }
             break;
@@ -343,25 +344,16 @@ void GameScene::carMovement()
         }
     }
 
-    for(int i = 1; i < m_game.COUNT_OF_CARS; i++)
-    {
-        m_game.car[i].move();
-    }
-
-    for(int i=1; i < m_game.COUNT_OF_CARS ;i++)
-    {
-        m_game.car[i].findTarget();
-    }
-
+    m_game.car[0].findTarget();
 
 }
 
 void GameScene::carCollision()
 {
 
-    for(int i = 0; i < Game::COUNT_OF_CARS;i++)
+    for(int i = 0; i < m_carCnt; i++)
     {
-        for(int j=0; j<Game::COUNT_OF_CARS;j++)
+        for(int j=0; j < m_carCnt; j++)
         {
             int dx=0, dy=0;
             while (dx*dx + dy*dy < 4* m_game.car_R*m_game.car_R)
@@ -505,7 +497,7 @@ void GameScene::update()
     for(int i = 0; i < Game::COUNTING_STARS; i ++)
         m_starItem[i] = new QGraphicsPixmapItem(m_starPixmap[0]);
 
-    for (int i = 0; i < Game::COUNT_OF_CARS; ++i)
+    for (int i = 0; i < Game::m_carCnt; ++i)
         m_carItem[i] = new QGraphicsPixmapItem(m_carPixmap[i]);
 
     m_bgItem[m_mapIdx]->setScale(m_game.gamescale);
@@ -528,7 +520,7 @@ void GameScene::update()
         addItem(m_starItem[i]);
     }
 
-    for(int i=0; i < Game::COUNT_OF_CARS; i++)
+    for(int i=0; i < Game::m_carCnt; i++)
     {
         m_carItem[i]->setScale(0.7);
         m_carItem[i]->setTransformOriginPoint(21, 34);
