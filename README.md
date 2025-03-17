@@ -1,5 +1,12 @@
 # RacingGameT6
 
+# Precondition
+
+타겟 보드에 audio/ 하위 리소스를 copy해 주세요.
+```
+cp -r {레포 경로}/audio /nfsroot
+```
+
 # Set up the ALSA driver settings
 
 부팅 직후 아래 커맨드 실행 필요 (부팅 후 최초 1회만)
