@@ -326,14 +326,12 @@ void GameScene::SocketUDP() {
 
 void GameScene::Wait3Seconds() {
     m_bReady = true;
-    qDebug() << "wait 3 sec .."<< m_bReady;
     QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_readyPixmap[0]);
     QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_readyPixmap[1]);
     QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_readyPixmap[2]);
     m_timer->stop();
 
     if (nullptr != three && nullptr != two && nullptr != one) {
-        qDebug() << "print 321...";
         three->setScale(1);
         three->setPos(15, 30);
         three->setVisible(true);
@@ -520,18 +518,15 @@ void GameScene::setAngleDirection(double angle)
     bool previousRightDir = m_rightDir;
 
     if(abs(angle) < 200){
-        qDebug()<<"##########[Staight]###########################";
         m_leftDir = false;
         m_rightDir = false;
 
     }
     else if(angle < 0){
-        qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
     }
     else{
-        qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
         m_leftDir = true;
         m_rightDir = false;
     }
@@ -543,7 +538,6 @@ void GameScene::setAngleDirection(double angle)
     } else {
         m_dirChanged = false; // 변경되지 않으면 false
     }
-
 }
 
 void GameScene::setMapIdx(int mapIdx)
