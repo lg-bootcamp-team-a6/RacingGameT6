@@ -312,6 +312,9 @@ void GameScene::showText() {
     for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size() && i < 3; i++)
     {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
+        
+        int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
+        int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
 
         if(i == 0)
             textItem3->setPlainText(QString("First : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
