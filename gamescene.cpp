@@ -133,6 +133,11 @@ void GameScene::loadPixmap()
     {
         qDebug() << "PausePixmap is loaded successfully";
     }
+
+    if(m_finishPixmap.load(m_game.PATH_TO_FINISH_PIXMAP))
+    {
+        qDebug() << "FinishPixmap is loaded successfully";
+    }
 }
 
 void GameScene::carMovement()
@@ -577,6 +582,13 @@ void GameScene::setMapIdx(int mapIdx)
     m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
 }
 
+void GameScene::resetGame() {
+    m_game.resetGameData(m_mapIdx);
+    m_elapsedTime = 0;
+    update();
+    Wait3Seconds();
+}
+
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
@@ -629,6 +641,18 @@ void GameScene::Goal()
     m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
 
     //Display Finish in solo play
+    QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
 
-    setMapIdx(idx);
+    if (nullptr != fin) {
+        fin->setScale(0.7);
+        fin->setPos(-40, 15);
+        addItem(fin);
+        fin->setVisible(true);
+        }
+
+        InputDeviceHandler::m_sbIsRetry = true;
+        
+        m_timer->stop();
+        // removeItem(fin);
+        // delete fin;
 }
