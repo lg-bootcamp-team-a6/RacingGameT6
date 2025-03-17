@@ -21,11 +21,11 @@ AudioHandler::~AudioHandler() {
 
 const QMap<QString, AudioData>& AudioHandler::getAudioMap() {
     static QMap<QString, AudioData> audioMap = {
-        {"cookie", {"cookie.wav", ":/images/cookie.png"}},
-        {"july", {"july.wav", ":/images/july.png"}},
-        {"dear", {"dear.wav", ":/images/dear.png"}},
-        {"magic", {"magic.wav", ":/images/magic.png"}},
-        {"walk", {"walk.wav", ":/images/walk.png"}}
+        {"cookie", {"cookie.wav", ":/images/cookie.png", 138}},
+        {"july", {"july.wav", ":/images/july.png", 123}},
+        {"dear", {"dear.wav", ":/images/dear.png", 128}},
+        {"magic", {"magic.wav", ":/images/magic.png", 143}},
+        {"walk", {"walk.wav", ":/images/walk.png", 130}}
     };
     return audioMap;
 }

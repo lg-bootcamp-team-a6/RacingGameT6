@@ -13,6 +13,7 @@
 struct AudioData {
     QString filePath;
     QString iconPath;
+    qreal playBacktime;
 };
 
 class AudioHandler : public QObject {
