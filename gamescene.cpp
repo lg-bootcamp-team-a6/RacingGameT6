@@ -570,7 +570,7 @@ bool GameScene::checkStarCollision()
         int i32StarX = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][0]* m_game.gamescale;
         int i32StarY = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][1]* m_game.gamescale;
 
-        if(i32CarX > i32StarX - i32Range && i32CarY < i32StarY + i32Range)
+        if(i32CarX > i32StarX - i32Range && i32CarX < i32StarX + i32Range)
         {
             if(i32CarY > i32StarY - i32Range && i32CarY < i32StarY + i32Range)
             {
