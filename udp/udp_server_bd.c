@@ -103,7 +103,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             break;
         case CAR_POSITION:
             updatePosition(ip_str, data);
-            sendRivalPosition(ip_str);
+            sendRivalPosition(ip_str, sfd);
             break;
 		//finish
         case FINISH:

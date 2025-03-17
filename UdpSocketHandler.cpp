@@ -19,7 +19,7 @@ void UdpSocketHandler::BtHsendMessage(const int16_t cmd, const char* data)
 
         // 메시지 구성
         stream << cmd;
-        stream.writeRawData(static_cast<const char*>(data), sizeof(data));
+        stream.writeRawData(static_cast<const char*>(data), strlen(data) + 1);
 
         qint64 bytesWritten = m_pUdpSocket->writeDatagram(datagram, m_hostAddress, m_hostPort);
 

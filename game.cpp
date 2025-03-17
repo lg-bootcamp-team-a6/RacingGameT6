@@ -166,7 +166,7 @@ Game::Game()
       PATH_TO_STAR_PIXMAP{QString(":/images/star0.png"), QString(":/images/star1.png"), QString(":/images/star2.png")},
       PATH_TO_COUNT_PIXMAP{QString(":/images/Ready_1.png"), QString(":/images/Ready_2.png"), QString(":/images/Ready_3.png")},
       PATH_TO_PAUSE_PIXMAP(":/images/pause.png"), PATH_TO_FINISH_PIXMAP(":/images/finish.png"), PATH_TO_START_PIXMAP(":/images/start.png"),
-      ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(10), acc(1.0f), dec(1.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
+      ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(13), acc(1.0f), dec(1.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
 { car_R = 22;
     speed = 0;
     angle = 0;

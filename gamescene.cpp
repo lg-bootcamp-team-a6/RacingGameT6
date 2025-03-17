@@ -101,7 +101,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             {
                 qDebug() << "START setMapIdx";
                 m_bConnect = true;
-                //m_carCnt = 2;
+                m_carCnt = 2;
                 setMapIdx(m_mapIdx);
             }
             break;
@@ -121,12 +121,14 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case WINNER:
             qDebug() << "WINNER";
             m_rivalScore = 0;
+            m_carCnt = 1;
             m_bConnect = false;
             break;
         //cmd : loser, data : winner's time lap
         case LOSER:
             qDebug() << "LOOSER";
             m_rivalScore = 0;
+            m_carCnt = 1;
             m_bConnect = false;
             break;
         default:
@@ -141,12 +143,27 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 
 void GameScene::parseRivalPosition(char* data)
 {
-    int x = 0, y = 0;
-    if (sscanf(data, "%d,%d", &x, &y) == 2) {
-        qDebug() << "Parsed x =" << x << ", y =" << y;
+    float x = 0, y = 0;
+    
+    qDebug() << "data : " << data;
+    
+    // 접두사를 건너뛰기 위해 콜론(:)을 찾습니다.
+    const char* p = strchr(data, ':');
+    if (p != nullptr) {
+        p++; // 콜론 다음 문자로 이동
+        // 필요하면 공백도 건너뜁니다.
+        while (*p == ' ') {
+            p++;
+        }
+        if (sscanf(p, "%f,%f", &x, &y) == 2) {
+            qDebug() << "Parsed x =" << x << ", y =" << y;
+        } else {
+            qDebug() << "Parsing failed!!!!!!";
+        }
     } else {
-        qDebug() << "Parsing failed!";
+        qDebug() << "No colon found in data.";
     }
+    
     m_game.car[1].x = x;
     m_game.car[1].y = y;
 }
@@ -624,8 +641,10 @@ void GameScene::update()
 
     if(m_bConnect)
     {
-        char message[32];
-        snprintf(message, sizeof(message), "%d,%d", m_game.car[0].x, m_game.car[0].y);
+        char message[100];
+        qDebug() << m_game.car[0].x << " " << m_game.car[0].y ;
+        snprintf(message, sizeof(message), "%f,%f", m_game.car[0].x, m_game.car[0].y);
+        printf("%s\n",message);
         m_pUdpSocketHandler -> BtHsendMessage(CAR_POSITION, message);
     }
 
