@@ -24,7 +24,8 @@ static Ranking rankingList[MAP_COUNT] = {0};
 
 void setStatus(char* ip, char* data);
 void startDoublePlayer(int sfd);
-void setMapInfo(ip_str, data);
+void setMapInfo(char* ip_str, char* data);
+void addRanking(char* ip_str, char* data);
 
 
 #endif // SERVER_CALLBACK_H

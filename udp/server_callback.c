@@ -46,7 +46,7 @@ void startDoublePlayer(int sfd)
     printf("successfully sended.\n");
 }
 
-void setMapInfo(ip_str, data)
+void setMapInfo(char* ip_str, char* data)
 {
     if(!strcmp(ip_str, BOARD_1))
     {
@@ -58,7 +58,7 @@ void setMapInfo(ip_str, data)
     }
 }
 
-void addRanking(ip_str, data)
+void addRanking(char* ip_str, char* data)
 {
      if(!strcmp(ip_str, BOARD_1))
     {
