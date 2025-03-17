@@ -601,7 +601,7 @@ void GameScene::Goal()
     idx = idx == m_mapCnt ? 0 : idx;
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
-    m_game.m_rankRecord[m_mapIdx].sort();
+    std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end(), std::greater<int>());
 
     setMapIdx(idx);
 }
