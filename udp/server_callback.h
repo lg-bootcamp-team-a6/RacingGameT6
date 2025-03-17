@@ -31,4 +31,6 @@ void print_ranking_for_map(int mapIndex);
 void verifyWinner(char* ip_str, char* data, int sfd);
 void shareCheckpoint(char* ip, char* data,int sfd);
 
+void updatePosition(char* ip_str, char* data);
+void sendRivalPosition(char* ip_str);
 #endif // SERVER_CALLBACK_H

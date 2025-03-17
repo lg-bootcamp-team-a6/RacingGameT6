@@ -557,6 +557,13 @@ void GameScene::update()
         addItem(m_carItem[i]);
     }
 
+    if(m_bConnect)
+    {
+        char message[32];
+        snprintf(message, sizeof(message), "%d,%d", m_game.car[0].x, m_game.car[0].y);
+        m_pUdpSocketHandler -> BtHsendMessage(CAR_POSITION, message);
+    }
+
     if (m_bIsResume) {
         m_bIsResume = false;
         Wait3Seconds();
