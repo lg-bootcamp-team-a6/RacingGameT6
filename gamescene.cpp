@@ -132,8 +132,8 @@ void GameScene::parseRivalPosition(char* data)
     } else {
         qDebug() << "Parsing failed!";
     }
-    car[1].x = x;
-    car[1].y = y;
+    m_game.car[1].x = x;
+    m_game.car[1].y = y;
 }
 
 /* sh) pause function */
@@ -497,7 +497,7 @@ void GameScene::update()
     for(int i = 0; i < Game::COUNTING_STARS; i ++)
         m_starItem[i] = new QGraphicsPixmapItem(m_starPixmap[0]);
 
-    for (int i = 0; i < Game::m_carCnt; ++i)
+    for (int i = 0; i < m_carCnt; ++i)
         m_carItem[i] = new QGraphicsPixmapItem(m_carPixmap[i]);
 
     m_bgItem[m_mapIdx]->setScale(m_game.gamescale);
@@ -520,7 +520,7 @@ void GameScene::update()
         addItem(m_starItem[i]);
     }
 
-    for(int i=0; i < Game::m_carCnt; i++)
+    for(int i=0; i < m_carCnt; i++)
     {
         m_carItem[i]->setScale(0.7);
         m_carItem[i]->setTransformOriginPoint(21, 34);
