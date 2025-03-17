@@ -306,10 +306,17 @@ void GameScene::showText() {
     addItem(textItem2);
     textItem->setVisible(true);
 
-    for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size(); i++)
+    for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size() && i < 3; i++)
     {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-        textItem3->setPlainText(QString("First : ").arg(m_game.m_rankRecord[m_mapIdx][i]));
+
+        if(i == 0)
+            textItem3->setPlainText(QString("First : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+        else if(i == 1)
+            textItem3->setPlainText(QString("Second : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+        else if (i == 2)
+            textItem3->setPlainText(QString("Third : %1").arg(m_game.m_rankRecord[m_mapIdx][i]));
+
         textItem3->setDefaultTextColor(Qt::black);
         textItem3->setFont(QFont("Arial", 15));
         textItem3->setPos(600, 10 + 30* i); // col * row
@@ -594,6 +601,7 @@ void GameScene::Goal()
     idx = idx == m_mapCnt ? 0 : idx;
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
+    m_game.m_rankRecord[m_mapIdx].sort();
 
     setMapIdx(idx);
 }
