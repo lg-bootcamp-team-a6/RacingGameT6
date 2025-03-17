@@ -75,16 +75,6 @@ void View::setupOverlay()
     buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     mainLayout->addLayout(buttonLayout);
 
-    // Add Audio button
-    m_audioButton = new QPushButton("", m_overlay);
-    m_audioButton->setFixedSize(232, 72);
-    m_audioButton->setIcon(QIcon(":/images/off.png"));  // default: on 상태
-    m_audioButton->setIconSize(QSize(232, 72));
-    m_audioButton->setStyleSheet("border-radius: 50px; left-padding : 25px;");
-    m_audioButton->setFocusPolicy(Qt::NoFocus);
-    m_audioButton->setAutoRepeat(false);
-    mainLayout->addWidget(m_audioButton, 0, Qt::AlignHCenter | Qt::AlignBottom);  // m_brakeButton 밑에 배치
-
     // set layout
     m_overlay->setLayout(mainLayout);
     repositionOverlay();
@@ -134,16 +124,16 @@ void View::updateDirectionArrow(double angle)
     QPixmap arrowPixmap(":/images/arrow.png");
     QTransform transform;
     if(abs(angle) < 200){
-        qDebug()<<"------------[Staight Arrow]-------------";
+        // qDebug()<<"------------[Staight Arrow]-------------";
         transform.rotate(270); // 필요에 따라 오프셋 조정
 
     }
     else if(angle < 0){
-        qDebug()<<"------------[Right Arrow]-------------";
+        // qDebug()<<"------------[Right Arrow]-------------";
         transform.rotate(0); // 필요에 따라 오프셋 조정
     }
     else{
-        qDebug()<<"-----------[LEFT Arrow]----------------";
+        // qDebug()<<"-----------[LEFT Arrow]----------------";
         transform.rotate(180); // 필요에 따라 오프셋 조정
     }
 

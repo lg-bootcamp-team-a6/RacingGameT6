@@ -21,10 +21,10 @@
         <file>images/Ready_3.png</file>
         <file>images/on.png</file>
         <file>images/off.png</file>
-        <file>images/audio_select/cookie.png</file>
-        <file>images/audio_select/dear.png</file>
-        <file>images/audio_select/july.png</file>
-        <file>images/audio_select/magic.png</file>
-        <file>images/audio_select/walk.png</file>
+        <file>images/cookie.png</file>
+        <file>images/dear.png</file>
+        <file>images/july.png</file>
+        <file>images/magic.png</file>
+        <file>images/walk.png</file>
     </qresource>
 </RCC>

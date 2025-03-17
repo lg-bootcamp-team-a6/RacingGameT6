@@ -54,7 +54,6 @@ private:
     /* Audio */
     QPushButton* m_audioButton;
     QPushButton* m_audioChangeButton;
-    QMap<QString, QPair<QString, QIcon>> m_audioMap;
     QString m_currentTrackKey;
     AudioHandler* m_audioHandler; // AudioHandler 싱글턴 인스턴스
 

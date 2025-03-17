@@ -6,7 +6,14 @@
 #include <QSettings> 
 #include <unordered_map>
 #include <string>
-#include <memory> // 🔹 unique_ptr 사용 가능
+#include <memory>
+#include <QMap>
+#include <QString>
+
+struct AudioData {
+    QString filePath;
+    QString iconPath;
+};
 
 class AudioHandler : public QObject {
     Q_OBJECT
@@ -25,6 +32,8 @@ public:
     QString getCurrentTrack() const; // 🔹 세미콜론 추가
     void setAudioOn(bool enabled);
     bool isAudioOn() const;
+    std::pair<QString, QString> playNextTrack();
+    static const QMap<QString, AudioData>& getAudioMap();
 
 signals:
 

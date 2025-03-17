@@ -155,7 +155,7 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
             acc_y = ev.value;
             m_gameScene -> setAngleDirection(acc_y);
             if (m_gameScene -> getDirectionChanged()) m_View -> updateDirectionArrow(acc_y);
-            qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
+            // qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:
             //qDebug() << "Unknown accelerometer event code:" << ev.code;
