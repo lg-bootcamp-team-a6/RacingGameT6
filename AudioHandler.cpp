@@ -75,7 +75,7 @@ void AudioHandler::playEffectSound(const std::string& filePath) {
 
     qDebug() << __FUNCTION__ << " - Playing effect sound: " << QString::fromStdString(filePath);
 
-    QTimer::singleShot(1300, this, [process]() {
+    QTimer::singleShot(5000, this, [process]() {
         process->terminate();
         delete process;
     });
@@ -83,7 +83,7 @@ void AudioHandler::playEffectSound(const std::string& filePath) {
 
 void AudioHandler::stopAudio() {
     QString currentTrack = getCurrentTrack();
-
+ 
     if (currentTrack.isEmpty()) {
         qDebug() << __FUNCTION__ << " - No audio is currently playing.";
         return;
