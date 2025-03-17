@@ -10,6 +10,7 @@
 #include <QTime>
 #include <QGraphicsTextItem>
 #include "UdpSocketHandler.h"
+#include "UdpCmd.h"
 
 class QTimer;
 
