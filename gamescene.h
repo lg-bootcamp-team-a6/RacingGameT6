@@ -74,6 +74,7 @@ public:
     void SocketUDP();
     void Wait3Seconds();
     void resetGame();
+    void parseRivalPosition(char* data);
     QGraphicsPixmapItem *m_pauseItem;
     QGraphicsPixmapItem *m_finishItem;
     qint64 m_elapsedTime;
