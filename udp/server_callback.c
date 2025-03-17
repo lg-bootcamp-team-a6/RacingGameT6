@@ -35,16 +35,36 @@ void startDoublePlayer(int sfd)
 {
     printf("start double player\n");
     sleep(5);
-    char message[] = "start";
-    int msg_len = strlen(message);
+    //char message[] = "start";
+    //int msg_len = strlen(message);
+
+    //define messages
+    int16_t cmd = GAME_STATUS; // 예시: LOSER에 대한 명령 코드
+    char *message_start = "START";
+
+    // 먼저 'cmd'와 'data'를 하나의 버퍼로 결합
+    size_t message_size_start = sizeof(cmd) + strlen(message_start) + 1;  // cmd + data + NULL terminator
     
-    if (sendto(sfd, message, msg_len, 0, (struct sockaddr*)&board1.board_addr, sizeof(board1.board_addr)) < 0) {
-        perror("sendto board1 failed");
+    // Send msg to winner
+    char *buffer_start = malloc(message_size_start);
+    if (!buffer_start) {
+        perror("malloc failed for START message\n");
+        return;
     }
-    if (sendto(sfd, message, msg_len, 0, (struct sockaddr*)&board2.board_addr, sizeof(board2.board_addr)) < 0) {
-        perror("sendto board2 failed");
+    memcpy(buffer_start, &cmd, sizeof(cmd));  // cmd를 먼저 복사
+    memcpy(buffer_start + sizeof(cmd), message_start, strlen(message_start) + 1);  // data를 그 뒤에 복사
+
+    if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr*)&board1.board_addr, sizeof(board1.board_addr)) < 0) {
+        perror("failed sendto message for board 1\n");
     }
-    printf("successfully sended.\n");
+    else printf("Success send message to board 1\n");
+    
+
+    if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr*)&board2.board_addr, sizeof(board2.board_addr)) < 0) {
+        perror("failed sendto message for board 2\n");
+    }
+    else printf("Success send message to board 2\n");
+    free(buffer_start);  // 메모리 해제
 }
 
 void setMapInfo(char* ip_str, char* data)
