@@ -4,6 +4,7 @@
 #include <QSize>
 #include <QList>
 #include <QString>
+#include <algorithm> 
 #include "car.h"
 
 class Game
@@ -15,13 +16,14 @@ public:
     static const int num_checkpoints;
     static const int points[8][2];
     static const int m_checkpoint[4][30][2];
-    QList<float> m_rankRecord[4];
+    QList<qint64> m_rankRecord[4];
     static const QSize RESOLUTION;
     const QString PATH_TO_BACKGROUND_PIXMAP[10];
     const QString PATH_TO_CAR_PIXMAP[5];
     const QString PATH_TO_STAR_PIXMAP[5];
     QString PATH_TO_COUNT_PIXMAP[3];
     const QString PATH_TO_PAUSE_PIXMAP;
+    const QString PATH_TO_FINISH_PIXMAP;
     const float ITERATION_VALUE;
 
     float car_R;

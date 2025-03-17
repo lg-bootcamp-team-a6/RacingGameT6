@@ -9,9 +9,12 @@
 #include <QTimer>
 #include <QFont>
 #include <QTime>
+#include <QThread>
 #include <QGraphicsTextItem>
 #include <QPushButton>
 #include "UdpSocketHandler.h"
+#include "UdpCmd.h"
+#include "UdpReceiverWorker.h"
 
 class QTimer;
 
@@ -35,6 +38,9 @@ public:
 
 signals:
 
+public slots:
+    void handleUdpPacket(const receive_packet &pkt);
+
 
 private slots:
     void update();
@@ -47,7 +53,7 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap;
+    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap;
     QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
     
@@ -66,7 +72,9 @@ public:
     void showText();
     void SocketUDP();
     void Wait3Seconds();
+    void resetGame();
     QGraphicsPixmapItem *m_pauseItem;
+    QGraphicsPixmapItem *m_finishItem;
     qint64 m_elapsedTime;
     int m_computeTime;
     bool m_bIsResume;

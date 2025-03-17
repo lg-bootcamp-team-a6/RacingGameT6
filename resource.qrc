@@ -12,7 +12,7 @@
         <file>images/star0.png</file>
         <file>images/star1.png</file>
         <file>images/star2.png</file>
-	    <file>images/brake_pedal.png</file>
+        <file>images/brake_pedal.png</file>
         <file>images/accel_pedal.png</file>
         <file>images/arrow.png</file>
         <file>images/pause.png</file>
@@ -26,5 +26,6 @@
         <file>images/july.png</file>
         <file>images/magic.png</file>
         <file>images/walk.png</file>
+        <file>images/finish.png</file>
     </qresource>
 </RCC>

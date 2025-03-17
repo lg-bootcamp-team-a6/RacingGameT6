@@ -39,6 +39,7 @@ private:
     /* sh add */
 public:
     static bool m_sbIsResume;
+    static bool m_sbIsRetry;
     View * m_View;
 };
 

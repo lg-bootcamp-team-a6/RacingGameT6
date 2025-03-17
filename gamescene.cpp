@@ -37,9 +37,52 @@ GameScene::GameScene(QObject *parent)
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
 
     m_audioHandler->playAudio("cookie.wav", true);
+    m_timer->start(m_game.ITERATION_VALUE);
+    //Send map status
+    
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+
+     // 여기서 receiveMessage() blocking 호출 대신, 별도의 worker를 사용합니다.
+    // 먼저, receive_packet 타입을 Qt 메타 타입 시스템에 등록
+    qRegisterMetaType<receive_packet>("receive_packet");
+
+    // UdpReceiverWorker 생성: 포트는 SERVER_PORT 사용 (define.h에 설정되어 있어야 함)
+    UdpReceiverWorker* receiverWorker = new UdpReceiverWorker(SERVER_PORT);
+    QThread* receiverThread = new QThread(this);
+    receiverWorker->moveToThread(receiverThread);
+
+    // 스레드 시작 시 worker의 process() 슬롯 실행
+    connect(receiverThread, &QThread::started, receiverWorker, &UdpReceiverWorker::process);
+
+    // worker가 보낸 packetReceived 시그널을 GameScene의 슬롯(handleUdpPacket)과 연결
+    connect(receiverWorker, &UdpReceiverWorker::packetReceived,
+            this, &GameScene::handleUdpPacket, Qt::QueuedConnection);
+
+    // 스레드 종료 시 worker 및 스레드 정리
+    connect(receiverThread, &QThread::finished, receiverWorker, &QObject::deleteLater);
+    connect(receiverThread, &QThread::finished, receiverThread, &QObject::deleteLater);
+
+    receiverThread->start();
+
 
     update();
 }
+
+void GameScene::handleUdpPacket(const receive_packet &pkt)
+{
+    qDebug() << "[GameScene] UDP packet received: cmd =" << pkt.cmd
+             << ", data =" << (pkt.data ? pkt.data : "null");
+    
+    // 예: 패킷 내용에 따라 게임 상태를 업데이트하거나, 필요한 로직을 수행합니다.
+    // 사용 후 동적으로 할당된 메모리는 해제해 주세요.
+    if (pkt.data) {
+        delete[] pkt.data;
+    }
+}
+
 
 /* sh) pause function */
 void GameScene::togglePause(bool IsResume)
@@ -107,6 +150,9 @@ void GameScene::togglePause(bool IsResume)
 
             qDebug() << "[GAME] Paused by an interrupt.";
             SocketUDP();
+            //SocketUDP();
+            char* data = "PAUSE";
+            m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
@@ -127,7 +173,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "BgPixmap0 is not loaded successfully";
     }
-    
+
     if(m_bgPixmap[1].load(m_game.PATH_TO_BACKGROUND_PIXMAP[1]))
     {
         qDebug() << "BgPixmap1 is loaded successfully";
@@ -146,7 +192,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "BgPixmap2 is not loaded successfully";
     }
-    
+
     if(m_bgPixmap[3].load(m_game.PATH_TO_BACKGROUND_PIXMAP[3]))
     {
         qDebug() << "BgPixmap3 is loaded successfully";
@@ -166,7 +212,7 @@ void GameScene::loadPixmap()
     {
         qDebug() << "StarPixmap[0] is loaded successfully";
     }
-    
+
     if(m_readyPixmap[0].load(m_game.PATH_TO_COUNT_PIXMAP[2]))
     {
         qDebug() << "ReadyPixmap[0] is loaded successfully";
@@ -181,10 +227,15 @@ void GameScene::loadPixmap()
     {
         qDebug() << "ReadyPixmap[2] is loaded successfully";
     }
-    
+
     if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP))
     {
         qDebug() << "PausePixmap is loaded successfully";
+    }
+
+    if(m_finishPixmap.load(m_game.PATH_TO_FINISH_PIXMAP))
+    {
+        qDebug() << "FinishPixmap is loaded successfully";
     }
 }
 
@@ -363,14 +414,24 @@ void GameScene::showText() {
     textItem2->setPlainText(QString("Speed: %1 | Angle: %2").arg(m_game.speed).arg(m_game.angle));
     textItem2->setDefaultTextColor(Qt::black);
     textItem2->setFont(QFont("Arial", 15));
-    textItem2->setPos(600, -50); // col * row 
+    textItem2->setPos(600, -50); // col * row
     addItem(textItem2);
     textItem->setVisible(true);
 
-    for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size(); i++)
+    for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size() && i < 3; i++)
     {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-        textItem3->setPlainText(QString("First : ").arg(m_game.m_rankRecord[m_mapIdx][i]));
+        
+        int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
+        int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
+
+        if(i == 0)
+            textItem3->setPlainText(QString("First : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
+        else if(i == 1)
+            textItem3->setPlainText(QString("Second : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
+        else if (i == 2)
+            textItem3->setPlainText(QString("Third : %1.%2").arg(seconds, 2, 10, QChar('0')).arg(mseconds, 2, 10, QChar('0')));
+
         textItem3->setDefaultTextColor(Qt::black);
         textItem3->setFont(QFont("Arial", 15));
         textItem3->setPos(600, 10 + 30* i); // col * row
@@ -470,7 +531,7 @@ void GameScene::update()
 
     for(int i=0; i < Game::COUNT_OF_CARS; i++)
     {
-        m_carItem[i]->setScale(1);
+        m_carItem[i]->setScale(0.7);
         m_carItem[i]->setTransformOriginPoint(21, 34);
         m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
@@ -581,25 +642,25 @@ void GameScene::setAngleDirection(double angle)
     bool previousRightDir = m_rightDir;
 
     if(abs(angle) < 200){
-        // qDebug()<<"##########[Staight]###########################";
+        //qDebug()<<"##########[Staight]###########################";
         m_leftDir = false;
         m_rightDir = false;
 
     }
     else if(angle < 0){
-        // qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
+        //qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
     }
     else{
-        // qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
+        //qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
         m_leftDir = true;
         m_rightDir = false;
     }
 
     if (m_leftDir != previousLeftDir || m_rightDir != previousRightDir) {
         m_dirChanged = true;  // 방향이 변경되었으면 true
-        qDebug()<<"-------------Changed direction--------------";
+        //qDebug()<<"-------------Changed direction--------------";
 
     } else {
         m_dirChanged = false; // 변경되지 않으면 false
@@ -614,12 +675,23 @@ void GameScene::setMapIdx(int mapIdx)
     m_elapsedTime = 0;
     update();
     Wait3Seconds();
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status in changed mode" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+}
+
+void GameScene::resetGame() {
+    m_game.resetGameData(m_mapIdx);
+    m_elapsedTime = 0;
+    update();
+    Wait3Seconds();
 }
 
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
-    int i32Range = 20;
+    int i32Range = 100;
     int i32CarX = m_game.car[0].x;
     int i32CarY = m_game.car[0].y;
 
@@ -631,7 +703,7 @@ bool GameScene::checkStarCollision()
         int i32StarX = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][0]* m_game.gamescale;
         int i32StarY = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][1]* m_game.gamescale;
 
-        if(i32CarX > i32StarX - i32Range && i32CarY < i32StarY + i32Range)
+        if(i32CarX > i32StarX - i32Range && i32CarX < i32StarX + i32Range)
         {
             if(i32CarY > i32StarY - i32Range && i32CarY < i32StarY + i32Range)
             {
@@ -649,14 +721,39 @@ bool GameScene::checkStarCollision()
 void GameScene::Goal()
 {
     int idx = m_mapIdx;
-    
+
     idx++;
 
     idx = idx == m_mapCnt ? 0 : idx;
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
+    std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end());
+    //Send elapsedTime
+    int seconds = m_elapsedTime / 100;
+    int mseconds = m_elapsedTime % 100;
 
-    setMapIdx(idx);
+    //qDebug() << "Goal 1 ! ";
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
+    //qDebug() << "Goal 2 ! ";
+    qDebug() << "The elapsedTime is " << str;
+    m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
+
+    //Display Finish in solo play
+    QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
+
+    if (nullptr != fin) {
+        fin->setScale(0.7);
+        fin->setPos(-40, 15);
+        addItem(fin);
+        fin->setVisible(true);
+        }
+
+        InputDeviceHandler::m_sbIsRetry = true;
+        
+        m_timer->stop();
+        // removeItem(fin);
+        // delete fin;
 }
 
 /* Sound ON/OFF */

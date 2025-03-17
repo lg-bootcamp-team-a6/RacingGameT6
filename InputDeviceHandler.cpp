@@ -11,6 +11,7 @@
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
 
 bool InputDeviceHandler::m_sbIsResume = false;
+bool InputDeviceHandler::m_sbIsRetry = false;
 
 InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, View* view, QObject *parent)
     : QObject(parent), m_gameScene(gameScene), m_View(view)
@@ -113,7 +114,12 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
-            
+            if (m_sbIsRetry) {
+                m_gameScene->resetGame();
+                m_sbIsRetry = false;
+                return;
+            }
+
             qDebug() << m_gameScene->m_bReady;
 
             if(!m_gameScene->m_bReady)
@@ -133,7 +139,8 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 
             idx = idx == m_gameScene->m_mapCnt ? 0 : idx;
 
-            m_gameScene->setMapIdx(idx);
+            if(!m_gameScene->m_bReady)
+                m_gameScene->setMapIdx(idx);
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
         }
@@ -155,7 +162,7 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
             acc_y = ev.value;
             m_gameScene -> setAngleDirection(acc_y);
             if (m_gameScene -> getDirectionChanged()) m_View -> updateDirectionArrow(acc_y);
-            // qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
+            //qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:
             //qDebug() << "Unknown accelerometer event code:" << ev.code;

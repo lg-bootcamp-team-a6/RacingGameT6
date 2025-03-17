@@ -92,36 +92,36 @@ const int Game::m_checkpoint[4][30][2]=
                                {380,1400}
     },
     {
-                               {350,1300},
-                               {350,1200},
-                               {350,1100},
-                               {350,1000},
-                               {350,900},
-                               {350,800},
-                               {350,700},
-                               {350,600},
-                               {350,500},
-                               {350,400},
-                               {470,300},
-                               {570,300},
-                               {670,300},
-                               {780,360},
-                               {810,450},
-                               {880,550},
-                               {940,650},
-                               {1000,700},
-                               {1100,800},
-                               {1100,900},
-                               {1100,1000},
-                               {1100,1100},
-                               {1100,1200},
-                               {1100,1300},
-                               {1100,1400},
-                               {950,1570},
-                               {850,1570},
-                               {750,1570},
-                               {650,1570},
-                               {550,1570}
+                               {290,450},
+                               {350,260},
+                               {560,280},
+                               {780,340},
+                               {950,240},
+                               {1110,310},
+                               {1080,500},
+                               {900,570},
+                               {720,600},
+                               {620,800},
+                               {800,760},
+                               {950,750},
+                               {1050,880},
+                               {1140,1010},
+                               {1200,1150},
+                               {1070,1350},
+                               {870,1450},
+                               {800,1340},
+                               {740,1100},
+                               {570,1150},
+                               {620,1170},
+                               {640,1360},
+                               {650,1540},
+                               {450,1550},
+                               {350,1500},
+                               {290,1300},
+                               {290,1150},
+                               {290,1000},
+                               {290,850},
+                               {290,600}
     },
 
     {
@@ -166,8 +166,8 @@ Game::Game()
       PATH_TO_CAR_PIXMAP{QString(":/images/car0.png"), QString(":/images/car1.png"), QString(":/images/car2.png"), QString(":/images/car3.png"), QString(":/images/car4.png")},
       PATH_TO_STAR_PIXMAP{QString(":/images/star0.png"), QString(":/images/star1.png"), QString(":/images/star2.png")},
       PATH_TO_COUNT_PIXMAP{QString(":/images/Ready_1.png"), QString(":/images/Ready_2.png"), QString(":/images/Ready_3.png")},
-      PATH_TO_PAUSE_PIXMAP(":/images/pause.png"),
-      ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(20), acc(2.0f), dec(2.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
+      PATH_TO_PAUSE_PIXMAP(":/images/pause.png"), PATH_TO_FINISH_PIXMAP(":/images/finish.png"),
+      ITERATION_VALUE(150), car_R(22), speed(0), angle(0), maxSpeed(10), acc(1.0f), dec(1.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
 { car_R = 22;
     speed = 0;
     angle = 0;
@@ -200,9 +200,6 @@ void Game::resetGameData(int mapIdx)
     car_R = 22;
     speed = 0;
     angle = 0;
-    maxSpeed = 20;
-    acc = 2.0f;
-    dec = 2.0f;
     turnSpeed = 0.08;
     offsetX = 0;
     offsetY = 0;
