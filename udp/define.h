@@ -16,6 +16,7 @@ struct board{
     int checkpointIndex;
     int status;
     char* time;
+    int map_info;
     int pos_x;
     int pos_y;
     struct sockaddr_in board_addr;

@@ -20,6 +20,7 @@ void init_board() {
     board1.checkpointIndex = -1;
     board1.status = -1;
     board1.time = "";
+	board1.map_info = -1;
     board1.pos_x = -1;
     board1.pos_y = -1;
     memset(&board1.board_addr, 0, sizeof(board1.board_addr));
@@ -35,6 +36,7 @@ void init_board() {
     board2.checkpointIndex = -1;
     board2.status = -1;
     board2.time = "";
+	board2.map_info = -1;
     board2.pos_x = -1;
     board2.pos_y = -1;
     memset(&board2.board_addr, 0, sizeof(board2.board_addr));
@@ -94,8 +96,16 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             break;
         case 2:
             break;
+		//finish
         case 3:
+			printf("case 0 : finish map\n");
+			
             break;
+		//which map
+		case 4:
+			printf("change map\n");
+			setMapInfo(ip_str, data);
+			break;
         default:
             break;
     }
