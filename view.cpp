@@ -53,14 +53,23 @@ void View::setupOverlay()
 
     // 하단 영역: 버튼들을 포함하는 수평 레이아웃 생성
     QHBoxLayout *buttonLayout = new QHBoxLayout();
-    // 왼쪽 버튼: Accel
-    m_accelButton = new QPushButton("", m_overlay);
-    m_accelButton->setFixedSize(100, 100);
-    m_accelButton->setIcon(QIcon(":/images/accel_pedal.png"));
-    m_accelButton->setIconSize(QSize(100, 100));
-    m_accelButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 255, 255, 150);");
-    m_accelButton->setFocusPolicy(Qt::NoFocus);
-    m_accelButton->setAutoRepeat(false);
+    // 왼쪽 버튼: Accel Front
+    m_accelForwardButton = new QPushButton("", m_overlay);
+    m_accelForwardButton->setFixedSize(100, 100);
+    m_accelForwardButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_accelForwardButton->setIconSize(QSize(100, 100));
+    m_accelForwardButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 255, 255, 150);");
+    m_accelForwardButton->setFocusPolicy(Qt::NoFocus);
+    m_accelForwardButton->setAutoRepeat(false);
+
+    // 왼쪽 아래 버튼: Accel Back
+    m_accelBackButton = new QPushButton("", m_overlay);
+    m_accelBackButton->setFixedSize(100, 100);
+    m_accelBackButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_accelBackButton->setIconSize(QSize(100, 100));
+    m_accelBackButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 255, 255, 150);");
+    m_accelBackButton->setFocusPolicy(Qt::NoFocus);
+    m_accelBackButton->setAutoRepeat(false);
 
     // 오른쪽 버튼: Brake
     m_brakeButton = new QPushButton("", m_overlay);
@@ -71,7 +80,8 @@ void View::setupOverlay()
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
     m_brakeButton->setAutoRepeat(false);
 
-    buttonLayout->addWidget(m_accelButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    buttonLayout->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    buttonLayout->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
     buttonLayout->addStretch();
     buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     mainLayout->addLayout(buttonLayout);
@@ -93,20 +103,31 @@ void View::setupOverlay()
     m_overlay->show();
 
     // 버튼 이벤트 연결
-    connect(m_accelButton, &QPushButton::pressed, this, [this]() {
+    connect(m_accelForwardButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "UP pressed";
         m_gameScene->setUpDirection(true);
+        m_gameScene->setDownDirection(false);
+        m_accelForwardButton->setEnabled(false);  // Disable the button
+        m_accelBackButton->setEnabled(true);  // Disable the button
+        m_brakeButton->setEnabled(true);  // Disable the button
     });
-    connect(m_accelButton, &QPushButton::released, this, [this]() {
-        qDebug() << "UP released";
+    connect(m_accelBackButton, &QPushButton::pressed, this, [this]() {
+        qDebug() << "DOWN pressed";
         m_gameScene->setUpDirection(false);
+        m_gameScene->setDownDirection(true);
+        m_accelBackButton->setEnabled(false);  // Disable the button
+        m_accelForwardButton->setEnabled(true);  // Disable the button
+        m_brakeButton->setEnabled(true);  // Disable the button
     });
     connect(m_brakeButton, &QPushButton::pressed, this, [this]() {
-        m_gameScene->setDownDirection(true);
-    });
-    connect(m_brakeButton, &QPushButton::released, this, [this]() {
+        qDebug() << "Brake pressed";
+        m_gameScene->setUpDirection(false);
         m_gameScene->setDownDirection(false);
+        m_brakeButton->setEnabled(false);  // Disable the button
+        m_accelForwardButton->setEnabled(true);  // Disable the button
+        m_accelBackButton->setEnabled(true);  // Disable the button
     });
+
 
     // 음량 버튼 클릭 시 상태 변경
     // connect(m_audioButton, &QPushButton::clicked, this, [this]() {
