@@ -4,7 +4,7 @@
 
 타겟 보드에 audio/ 하위 리소스를 copy해 주세요.
 ```
-cp -r {레포 경로}/audio /nfsroot
+cp -r {레포 경로}/audio/*.wav /nfsroot
 ```
 
 # Set up the ALSA driver settings
