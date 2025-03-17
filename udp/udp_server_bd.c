@@ -8,6 +8,7 @@ pid_t pid;
 struct board board1;
 struct board board2;
 int playMode = 0;
+bool is_winner = 0;
 int double_played = 0;
 int board1_pausing = 0;
 int board2_pausing = 0;
@@ -99,13 +100,19 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             break;
 		//finish
         case FINISH:
-			printf("case 0 : finish map\n");
+			printf("case 3: finish map\n");
 			addRanking(ip_str, data);
+            if (playMode && !is_winner){
+                verifyWinner(ip_str, data, sfd);
+                is_winner = 1;
+            }
             break;
 		//which map
 		case MAP_STATUS:
 			printf("change map\n");
 			setMapInfo(ip_str, data);
+            //reset winner information
+            is_winner = 0;
 			break;
         default:
             break;

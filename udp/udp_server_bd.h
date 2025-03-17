@@ -15,6 +15,7 @@
 #include <endian.h>  // le32toh, le16toh 사용 (glibc 기반 시스템)
 #include "../UdpCmd.h"
 #include "server_callback.h"
+#include <stdbool.h> 
 
 
 // 함수 프로토타입 정의
