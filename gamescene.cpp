@@ -629,7 +629,7 @@ void GameScene::resetGame() {
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
-    int i32Range = 200;
+    int i32Range = 100;
     int i32CarX = m_game.car[0].x;
     int i32CarY = m_game.car[0].y;
 
@@ -641,9 +641,9 @@ bool GameScene::checkStarCollision()
         int i32StarX = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][0]* m_game.gamescale;
         int i32StarY = Game::m_checkpoint[m_mapIdx][m_game.m_starScore][1]* m_game.gamescale;
 
-        if(i32CarX > i32StarX && i32CarX < i32StarX + i32Range)
+        if(i32CarX > i32StarX - i32Range && i32CarX < i32StarX + i32Range)
         {
-            if(i32CarY > i32StarY && i32CarY < i32StarY + i32Range)
+            if(i32CarY > i32StarY - i32Range && i32CarY < i32StarY + i32Range)
             {
                 bReturn = true;
                 m_game.m_starScore++;
