@@ -91,7 +91,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             if (!playMode && board1_pausing && board2_pausing) {
 				printf("double\n");
                 playMode = 1;
-                startDoublePlayer(sfd);
+                if(board1.map_info == board2.map_info) startDoublePlayer(sfd);
             }
             break;
         case CHECKPOINT:

@@ -70,15 +70,17 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
     // 사용 후 동적으로 할당된 메모리는 해제해 주세요.
     switch(pkt.cmd)
     {
+        //START, PAUSE
         case GAME_STATUS:
             qDebug() << "START";
+
             if(!strcmp(pkt.data,"START"))
             {
                 qDebug() << "START setMapIdx";
                 setMapIdx(m_mapIdx);
             }
             break;
-        
+        //how many checkpoints 
         case CHECKPOINT:
             break;
         case CAR_POSITION:
@@ -87,7 +89,12 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             break;
         case MAP_STATUS:
             break;
-        
+        //cmd : winner, data : time lap
+        case WINNER:
+            break;
+        //cmd : loser, data : winner's time lap
+        case LOSER:
+            break;
         default:
             break;
     }
