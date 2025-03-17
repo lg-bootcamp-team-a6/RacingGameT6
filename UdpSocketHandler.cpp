@@ -1,6 +1,6 @@
 #include "UdpSocketHandler.h"
 
-UdpSocketHandler::UdpSocketHandler(QObject *parent) : QObject(parent),m_gameScene(gameScene) {
+UdpSocketHandler::UdpSocketHandler(QObject *parent) : QObject(parent){
     m_pUdpSocket = new QUdpSocket(this);
 
     if (!m_pUdpSocket->bind(QHostAddress::Any, SERVER_PORT)) {
@@ -30,24 +30,56 @@ void UdpSocketHandler::BtHsendMessage(const int16_t cmd, const char* data)
         }
 }
 
-void UdpSocketHandler::processPendingDatagrams()
+
+
+receive_packet UdpSocketHandler::receiveMessage()
 {
-    while (m_pUdpSocket->hasPendingDatagrams()) {
-        QByteArray datagram;
-        datagram.resize(m_pUdpSocket->pendingDatagramSize());
-        QHostAddress sender;
-        quint16 senderPort;
-        m_pUdpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+    receive_packet packet;
+    packet.cmd = 0;
+    packet.data = nullptr;
 
-        // startDoublePlayer()에서 보내는 메시지는 단순 텍스트 "start"입니다.
-        QString receivedMessage = QString::fromUtf8(datagram);
-        qDebug() << "Received message:" << receivedMessage << "from" << sender.toString()
-                 << "port:" << senderPort;
+    qDebug() << "Waiting for incoming datagram...";
 
-        // 만약 받은 메시지가 "start"라면 추가 처리를 여기에 작성할 수 있습니다.
-        if (receivedMessage.trimmed() == "START") {
-            qDebug() << "Start command received from UDP server.";
+    // 무한루프를 돌면서 데이터 도착을 기다림 (blocking 방식)
+    while (true) {
+        // -1: 무한 대기, 데이터가 도착하면 true를 리턴
+        if (m_pUdpSocket->waitForReadyRead(-1)) {
+            // 데이터가 도착했으므로 pending datagram 확인
+            qDebug() << "received!";
+            if (m_pUdpSocket->hasPendingDatagrams()) {
+                QByteArray datagram;
+                datagram.resize(m_pUdpSocket->pendingDatagramSize());
+
+                QHostAddress sender;
+                quint16 senderPort;
+                m_pUdpSocket->readDatagram(datagram.data(), datagram.size(), &sender, &senderPort);
+
+                qDebug() << "Received datagram from" << sender.toString() << "port:" << senderPort;
+
+                // 최소한 cmd (int) 크기 이상인지 확인
+                if (datagram.size() < static_cast<int>(sizeof(int))) {
+                    qWarning() << "Received datagram too small for parsing.";
+                    continue; // datagram이 올바르지 않으면 계속 대기
+                }
+
+                // 첫 4바이트를 cmd로 파싱 (네트워크 바이트 순서인 경우 ntohl() 고려)
+                memcpy(&packet.cmd, datagram.data(), sizeof(int));
+
+                // 나머지 데이터를 문자열로 파싱
+                int dataSize = datagram.size() - sizeof(int);
+                if (dataSize > 0) {
+                    packet.data = new char[dataSize + 1];
+                    memcpy(packet.data, datagram.data() + sizeof(int), dataSize);
+                    packet.data[dataSize] = '\0';
+                }
+
+                qDebug() << "Parsed packet: cmd =" << packet.cmd
+                         << ", data =" << (packet.data ? packet.data : "null");
+
+                break;  // 올바른 패킷을 읽었으므로 루프 종료
+            }
         }
     }
-}
 
+    return packet;
+}

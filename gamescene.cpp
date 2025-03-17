@@ -34,8 +34,37 @@ GameScene::GameScene(QObject *parent)
     sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
     qDebug() << "Send map status" << str;
     m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+
+    UdpReceiverWorker* worker = new UdpReceiverWorker(m_pUdpSocketHandler);
+    QThread* workerThread = new QThread;
+    worker->moveToThread(workerThread);
+    
+    // Worker의 process() 슬롯을 스레드 시작 시 실행
+    connect(workerThread, &QThread::started, worker, &UdpReceiverWorker::process);
+    // Worker가 보낸 패킷을 처리하는 슬롯 (예: handleUdpPacket)
+    connect(worker, &UdpReceiverWorker::packetReceived, this, &GameScene::handleUdpPacket);
+    
+    // 스레드 종료 시 Worker와 스레드 메모리 해제
+    connect(workerThread, &QThread::finished, worker, &QObject::deleteLater);
+    connect(workerThread, &QThread::finished, workerThread, &QObject::deleteLater);
+    
+    workerThread->start();
+
     update();
 }
+
+void GameScene::handleUdpPacket(const receive_packet &pkt)
+{
+    qDebug() << "[GameScene] UDP packet received: cmd =" << pkt.cmd
+             << ", data =" << (pkt.data ? pkt.data : "null");
+    
+    // 예: 패킷 내용에 따라 게임 상태를 업데이트하거나, 필요한 로직을 수행합니다.
+    // 사용 후 동적으로 할당된 메모리는 해제해 주세요.
+    if (pkt.data) {
+        delete[] pkt.data;
+    }
+}
+
 
 /* sh) pause function */
 void GameScene::togglePause(bool IsResume)

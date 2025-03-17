@@ -8,9 +8,11 @@
 #include <QTimer>
 #include <QFont>
 #include <QTime>
+#include <QThread>
 #include <QGraphicsTextItem>
 #include "UdpSocketHandler.h"
 #include "UdpCmd.h"
+#include "UdpReceiverWorker.h"
 
 class QTimer;
 
@@ -33,6 +35,9 @@ public:
     int m_mapIdx = 0;
 
 signals:
+
+public slots:
+    void handleUdpPacket(const receive_packet &pkt);
 
 
 private slots:

@@ -22,7 +22,8 @@ HEADERS += \
     view.h \
     InputDeviceHandler.h \
     UdpSocketHandler.h \
-    AudioHandler.h 
+    AudioHandler.h \
+    UdpReceiverWorker.h
 
 RESOURCES += \
     resource.qrc \
