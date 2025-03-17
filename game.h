@@ -24,6 +24,7 @@ public:
     QString PATH_TO_COUNT_PIXMAP[3];
     const QString PATH_TO_PAUSE_PIXMAP;
     const QString PATH_TO_FINISH_PIXMAP;
+    const QString PATH_TO_START_PIXMAP;
     const float ITERATION_VALUE;
 
     float car_R;

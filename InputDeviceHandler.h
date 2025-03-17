@@ -40,6 +40,8 @@ private:
 public:
     static bool m_sbIsResume;
     static bool m_sbIsRetry;
+    static bool m_sbIsStartGame;
+    bool m_bIsSetMode;
     View * m_View;
 };
 

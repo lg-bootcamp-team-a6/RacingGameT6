@@ -12,9 +12,10 @@
 
 bool InputDeviceHandler::m_sbIsResume = false;
 bool InputDeviceHandler::m_sbIsRetry = false;
+bool InputDeviceHandler::m_sbIsStartGame = false;
 
 InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, View* view, QObject *parent)
-    : QObject(parent), m_gameScene(gameScene), m_View(view)
+    : QObject(parent), m_gameScene(gameScene), m_View(view), m_bIsSetMode(true)
 {
     inputDevice = new QFile(DEV_NAME, this);
     accDevice = new QFile(ACC_NAME, this);
@@ -112,6 +113,21 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     //qDebug() << "[KEY EVENT] Code:" << ev.code << "Value:" << ev.value;
 
     // SW2 이벤트 처리
+    if (m_bIsSetMode) {
+        m_bIsSetMode = false;
+
+        if (ev.code == KEY0_CODE) {
+            m_gameScene->m_bSingle = true;
+            qDebug() << "m_bSingle to true";
+        }
+        else if (ev.code == KEY1_CODE) {
+            m_gameScene->m_bSingle = false;
+            qDebug() << "m_bSingle to false";
+        }
+        m_gameScene->m_bStart = true;
+        return;
+    }
+
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
             if (m_sbIsRetry) {

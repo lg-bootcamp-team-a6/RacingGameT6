@@ -84,6 +84,8 @@ public:
     QList<QGraphicsPixmapItem*> m_cntItems;
     bool m_bReady;
     int m_rivalScore;
+    bool m_bSingle;
+    bool m_bStart;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;

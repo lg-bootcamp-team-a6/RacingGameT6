@@ -27,5 +27,6 @@
         <file>images/magic.png</file>
         <file>images/walk.png</file>
         <file>images/finish.png</file>
+        <file>images/start.png</file>
     </qresource>
 </RCC>
