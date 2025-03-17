@@ -529,6 +529,8 @@ void GameScene::Wait3Seconds() {
     m_timer->stop();
 
     if (nullptr != three && nullptr != two && nullptr != one) {
+        qDebug() << "print 321...";
+        m_audioHandler->playEffectSound("start_sound.wav"); /* Play SoundEffect */
         three->setScale(1);
         three->setPos(15, 30);
         three->setVisible(true);
@@ -880,7 +882,6 @@ void GameScene::toggleAudioStatus() {
     qDebug() << __FUNCTION__ << ": Audio status: " << isAudioOn;
     const QMap<QString, AudioData>& audioMap = m_audioHandler->getAudioMap();
 
-    m_audioHandler->stopAllAudio();
     if (isAudioOn) {    // play -> stop
         m_audioButton->setIcon(QIcon(":/images/off.png"));
     } else {            // stop -> play
