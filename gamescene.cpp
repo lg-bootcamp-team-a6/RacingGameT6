@@ -12,7 +12,6 @@
 #include <unistd.h>
 #include "InputDeviceHandler.h"
 
-
 #define DEV_NAME "/dev/mydev"
 
 GameScene::GameScene(QObject *parent)
@@ -47,9 +46,7 @@ void GameScene::togglePause(bool IsResume)
         if (nullptr != pauseItem) {
             pauseItem->setVisible(true);
             qDebug() << "[GAME] Paused by an interrupt.";
-            //SocketUDP();
-            char* data = "PAUSE";
-            m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
+            SocketUDP();
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
@@ -329,12 +326,14 @@ void GameScene::SocketUDP() {
 
 void GameScene::Wait3Seconds() {
     m_bReady = true;
+    qDebug() << "wait 3 sec .."<< m_bReady;
     QGraphicsPixmapItem *three = new QGraphicsPixmapItem(m_readyPixmap[0]);
     QGraphicsPixmapItem *two = new QGraphicsPixmapItem(m_readyPixmap[1]);
     QGraphicsPixmapItem *one = new QGraphicsPixmapItem(m_readyPixmap[2]);
     m_timer->stop();
 
     if (nullptr != three && nullptr != two && nullptr != one) {
+        qDebug() << "print 321...";
         three->setScale(1);
         three->setPos(15, 30);
         three->setVisible(true);
@@ -403,7 +402,7 @@ void GameScene::update()
          Goal();
 
     for (int i = m_game.m_starScore; i < Game::COUNTING_STARS; ++i) {
-        m_starItem[i]->setScale(1);
+        m_starItem[i]->setScale(3);
         m_starItem[i]->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
         addItem(m_starItem[i]);
     }
@@ -521,26 +520,30 @@ void GameScene::setAngleDirection(double angle)
     bool previousRightDir = m_rightDir;
 
     if(abs(angle) < 200){
+        //qDebug()<<"##########[Staight]###########################";
         m_leftDir = false;
         m_rightDir = false;
 
     }
     else if(angle < 0){
+        //qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
     }
     else{
+        //qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
         m_leftDir = true;
         m_rightDir = false;
     }
 
     if (m_leftDir != previousLeftDir || m_rightDir != previousRightDir) {
         m_dirChanged = true;  // 방향이 변경되었으면 true
-        qDebug()<<"-------------Changed direction--------------";
+        //qDebug()<<"-------------Changed direction--------------";
 
     } else {
         m_dirChanged = false; // 변경되지 않으면 false
     }
+
 }
 
 void GameScene::setMapIdx(int mapIdx)
@@ -555,9 +558,9 @@ void GameScene::setMapIdx(int mapIdx)
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
-    int i32Range = 20;
-    int i32CarX = m_game.car[0].x;
-    int i32CarY = m_game.car[0].y;
+    int i32Range = 100;
+    int i32CarX = m_game.car[0].x + 5;
+    int i32CarY = m_game.car[0].y + 10;
 
     do
     {
@@ -591,20 +594,6 @@ void GameScene::Goal()
     idx = idx == m_mapCnt ? 0 : idx;
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
-
-    int seconds = m_elapsedTime / 100;
-    int mseconds = m_elapsedTime % 100;
-
-    //qDebug() << "Goal 1 ! ";
-    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
-    sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
-    //qDebug() << "Goal 2 ! ";
-    qDebug() << "The elapsedTime is " << str;
-    m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
-
-    //Display Finish in solo play
-
-    //Display Finish in dual play
 
     setMapIdx(idx);
 }

@@ -113,7 +113,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
-            
+
             qDebug() << m_gameScene->m_bReady;
 
             if(!m_gameScene->m_bReady)
@@ -133,8 +133,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 
             idx = idx == m_gameScene->m_mapCnt ? 0 : idx;
 
-            if(!m_gameScene->m_bReady)
-                m_gameScene->setMapIdx(idx);
+            m_gameScene->setMapIdx(idx);
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
         }
@@ -156,7 +155,7 @@ void InputDeviceHandler::handleAccEvent(const struct input_event &ev)
             acc_y = ev.value;
             m_gameScene -> setAngleDirection(acc_y);
             if (m_gameScene -> getDirectionChanged()) m_View -> updateDirectionArrow(acc_y);
-            // qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
+            //qDebug() << "[ROTATION ANGLE] :" << rotation_angle << "Value (X,Y):" << acc_x << "," << acc_y;
             break;
         default:
             //qDebug() << "Unknown accelerometer event code:" << ev.code;
