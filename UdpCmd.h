@@ -3,3 +3,5 @@
 #define CAR_POSITION 2
 #define FINISH 3
 #define MAP_STATUS 4
+#define WINNER 5
+#define LOSER 6

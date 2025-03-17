@@ -170,13 +170,14 @@ void verifyWinner(char* ip_str, char* data, int sfd)
 
     //send to message to winner : CMD GAME_STATUS, data : WINNER
     //define messages
-    int16_t cmd = GAME_STATUS; // 예시: LOSER에 대한 명령 코드
-    char *message_win = "WINNER";
-    char *message_loser = "LOSER";
+    int16_t cmd_win = WINNER; // 예시: LOSER에 대한 명령 코드
+    int16_t cmd_loser = LOSER; // 예시: LOSER에 대한 명령 코드
+    char *message_win = data;
+    char *message_loser = data;
 
     // 먼저 'cmd'와 'data'를 하나의 버퍼로 결합
-    size_t message_size_win = sizeof(cmd) + strlen(message_win) + 1;  // cmd + data + NULL terminator
-    size_t message_size_loser = sizeof(cmd) + strlen(message_loser) + 1;  // cmd + data + NULL terminator
+    size_t message_size_win = sizeof(cmd_win) + strlen(message_win) + 1;  // cmd + data + NULL terminator
+    size_t message_size_loser = sizeof(cmd_loser) + strlen(message_loser) + 1;  // cmd + data + NULL terminator
 
     // Send msg to winner
     char *buffer_win = malloc(message_size_win);
@@ -184,8 +185,8 @@ void verifyWinner(char* ip_str, char* data, int sfd)
         perror("malloc failed for WINNER message\n");
         return;
     }
-    memcpy(buffer_win, &cmd, sizeof(cmd));  // cmd를 먼저 복사
-    memcpy(buffer_win + sizeof(cmd), message_win, strlen(message_win) + 1);  // data를 그 뒤에 복사
+    memcpy(buffer_win, &cmd_win, sizeof(cmd_win));  // cmd를 먼저 복사
+    memcpy(buffer_win + sizeof(cmd_win), message_win, strlen(message_win) + 1);  // data를 그 뒤에 복사
 
     if (sendto(sfd, buffer_win, message_size_win, 0, (struct sockaddr*)winner_addr, sizeof(*winner_addr)) < 0) {
         perror("failed sendto message for WINNER\n");
@@ -199,8 +200,8 @@ void verifyWinner(char* ip_str, char* data, int sfd)
         perror("malloc failed for LOSER message\n");
         return;
     }
-    memcpy(buffer_loser, &cmd, sizeof(cmd));  // cmd를 먼저 복사
-    memcpy(buffer_loser + sizeof(cmd), message_loser, strlen(message_loser) + 1);  // data를 그 뒤에 복사
+    memcpy(buffer_loser, &cmd_loser, sizeof(cmd_loser));  // cmd를 먼저 복사
+    memcpy(buffer_loser + sizeof(cmd_loser), message_loser, strlen(message_loser) + 1);  // data를 그 뒤에 복사
 
     if (sendto(sfd, buffer_loser, message_size_loser, 0, (struct sockaddr*)loser_addr, sizeof(*loser_addr)) < 0) {
         perror("failed sendto message for LOSER\n");
