@@ -462,14 +462,14 @@ void GameScene::update()
          Goal();
 
     for (int i = m_game.m_starScore; i < Game::COUNTING_STARS; ++i) {
-        m_starItem[i]->setScale(3);
+        m_starItem[i]->setScale(1.5);
         m_starItem[i]->setPos(Game::m_checkpoint[m_mapIdx][i][0] * m_game.gamescale - m_game.offsetX,Game::m_checkpoint[m_mapIdx][i][1] * m_game.gamescale - m_game.offsetY);
         addItem(m_starItem[i]);
     }
 
     for(int i=0; i < Game::COUNT_OF_CARS; i++)
     {
-        m_carItem[i]->setScale(1);
+        m_carItem[i]->setScale(0.7);
         m_carItem[i]->setTransformOriginPoint(21, 34);
         m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
