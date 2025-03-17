@@ -4,12 +4,14 @@
 #include <QGraphicsScene>
 #include <QPixmap>
 #include "game.h"
+#include "AudioHandler.h"
 #include <QLabel>
 #include <QTimer>
 #include <QFont>
 #include <QTime>
 #include <QThread>
 #include <QGraphicsTextItem>
+#include <QPushButton>
 #include "UdpSocketHandler.h"
 #include "UdpCmd.h"
 #include "UdpReceiverWorker.h"
@@ -54,11 +56,19 @@ private:
     QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap;
     QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
+    
+    /* Audio */
+    QPushButton* m_audioButton;
+    QPushButton* m_audioChangeButton;
+    QString m_currentTrackKey;
+    AudioHandler* m_audioHandler; // AudioHandler 싱글턴 인스턴스
 
     bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged;
 
 public:
     void togglePause(bool IsResume);
+    void toggleAudioStatus();
+    void changeAudio();
     void showText();
     void SocketUDP();
     void Wait3Seconds();

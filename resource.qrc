@@ -21,6 +21,11 @@
         <file>images/Ready_3.png</file>
         <file>images/on.png</file>
         <file>images/off.png</file>
+        <file>images/cookie.png</file>
+        <file>images/dear.png</file>
+        <file>images/july.png</file>
+        <file>images/magic.png</file>
+        <file>images/walk.png</file>
         <file>images/finish.png</file>
     </qresource>
 </RCC>

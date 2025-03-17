@@ -2,89 +2,163 @@
 #include <QDebug>
 #include <QTimer>
 #include <QObject>
+#include <QFileInfo>
+#include <QIcon>
+#include <QPointer>
 
+AudioHandler::AudioHandler() 
+    : settings("RacingGameT6", "AudioHandler")
+{
+    qDebug() << "AudioHandler initialized.";
+    settings.setValue("audio/enabled", true);
+    settings.setValue("audio/currentTrack", "cookie.wav");
+    settings.sync();
+}
 
 AudioHandler::~AudioHandler() {
-    stopAllAudio();  // 소멸자에서 모든 오디오 중지
+    stopAllAudio();
+}
+
+const QMap<QString, AudioData>& AudioHandler::getAudioMap() {
+    static QMap<QString, AudioData> audioMap = {
+        {"cookie", {"cookie.wav", ":/images/cookie.png"}},
+        {"july", {"july.wav", ":/images/july.png"}},
+        {"dear", {"dear.wav", ":/images/dear.png"}},
+        {"magic", {"magic.wav", ":/images/magic.png"}},
+        {"walk", {"walk.wav", ":/images/walk.png"}}
+    };
+    return audioMap;
 }
 
 void AudioHandler::playAudio(const std::string& filePath, bool loop) {
+    stopAudio();
+
     if (audioProcesses.find(filePath) != audioProcesses.end()) {
-        qDebug() << "Audio is already playing: " << QString::fromStdString(filePath);
+        qDebug() << __FUNCTION__ << " - Audio is already playing: " << QString::fromStdString(filePath);
         return;
     }
 
-    // 새로운 오디오 재생 프로세스 생성
     QProcess* process = new QProcess();
-    QString qFilePath = QString::fromStdString(filePath);  // std::string -> QString 변환
-    QStringList arguments;
-    arguments << "-Dhw:0,0";
-
-    // 오디오 파일을 반복 재생하려면 추가 인자 설정
-
-    arguments << qFilePath;
-
-    // 디버깅용 출력: 실행할 커맨드와 인자 출력
-    qDebug() << "Executing command: ./aplay with arguments:" << arguments;
-    
-    process->start("./aplay", arguments);  // QProcess의 start()는 QString을 사용
-    
-    // 디버깅용 출력: 표준 오류 출력 읽기
-    QByteArray errorOutput = process->readAllStandardError();
-    if (!errorOutput.isEmpty()) {
-        qDebug() << "Error Output:" << errorOutput;
+    QString qFilePath = QString::fromStdString(filePath);
+    if (!qFilePath.endsWith(".wav", Qt::CaseInsensitive)) {
+        qFilePath += ".wav";
     }
+    QStringList arguments;
+    arguments << "-Dhw:0,0" << qFilePath;
 
-    qDebug() << "@@@@@@@@@@@@@@@ Audio Playing @@@@@@@@@@@@@@@@";
+    qDebug() << __FUNCTION__ << " - Executing command: ./aplay with arguments:" << arguments;
+    
+    process->start("./aplay", arguments);
+
+    settings.setValue("audio/currentTrack", qFilePath);
+    setAudioOn(true);
+    settings.sync();
+
     audioProcesses[filePath] = process;
+
+    qDebug() << __FUNCTION__ << " - Audio Playing: " << qFilePath;
+    
 }
 
 void AudioHandler::playEffectSound(const std::string& filePath) {
     if (audioProcesses.find(filePath) != audioProcesses.end()) {
-        qDebug() << "Effect sound is already playing: " << QString::fromStdString(filePath);
+        qDebug() << __FUNCTION__ << " - Effect sound is already playing: " << QString::fromStdString(filePath);
         return;
     }
 
-    // 짧은 효과음을 위한 처리
     QProcess* process = new QProcess();
-    QString qFilePath = QString::fromStdString(filePath);  // std::string -> QString 변환
+    QString qFilePath = QString::fromStdString(filePath);
     QStringList arguments;
-    arguments << "-Dhw:0,0" << qFilePath;  // -Dhw:0,0 옵션과 오디오 파일 경로
+    arguments << "-Dhw:0,0" << qFilePath;
 
-    // 비동기적으로 실행하여 짧은 효과음을 재생
-    process->startDetached("./aplay", arguments);  // startDetached()로 비동기 실행
+    process->startDetached("./aplay", arguments);
 
-    // 디버깅용 출력
-    qDebug() << "Playing effect sound: " << QString::fromStdString(filePath);
+    qDebug() << __FUNCTION__ << " - Playing effect sound: " << QString::fromStdString(filePath);
 
-    // 짧은 효과음은 바로 끝나므로, 잠시 후에 해당 프로세스를 정리
-    QTimer::singleShot(1000, this, [this, process]() {
+    QTimer::singleShot(1300, this, [process]() {
         process->terminate();
         delete process;
     });
 }
 
-void AudioHandler::stopAudio(const std::string& filePath) {
-    auto it = audioProcesses.find(filePath);
+void AudioHandler::stopAudio() {
+    QString currentTrack = getCurrentTrack();
+
+    if (currentTrack.isEmpty()) {
+        qDebug() << __FUNCTION__ << " - No audio is currently playing.";
+        return;
+    }
+
+    auto it = audioProcesses.find(currentTrack.toStdString());
     if (it != audioProcesses.end()) {
-        it->second->terminate();
-        it->second->waitForFinished();
-        delete it->second;
+        QProcess* process = it->second;
+        qDebug() << __FUNCTION__ << " - Killing process: " << currentTrack;
+        process->kill();
+        process->waitForFinished();
+
+        disconnect(process, nullptr, this, nullptr);
+        process->deleteLater();  // 안전한 삭제
         audioProcesses.erase(it);
-        qDebug() << "Stopped: " << QString::fromStdString(filePath);
+
+        settings.remove("audio/currentTrack");
+        settings.sync();
+
+        qDebug() << __FUNCTION__ << " - Stopped: " << currentTrack;
     }
 }
 
 void AudioHandler::stopAllAudio() {
-    for (auto& pair : audioProcesses) {
-        pair.second->terminate();
-        pair.second->waitForFinished();
-        delete pair.second;
+    for (auto& processPair : audioProcesses) {
+        processPair.second->terminate();
+        processPair.second->waitForFinished();
+        delete processPair.second;
     }
     audioProcesses.clear();
-    qDebug() << "All audio stopped";
+
+    settings.remove("audio/currentTrack");
+    settings.sync();
+
+    qDebug() << __FUNCTION__ << " - Stopped all audio.";
 }
 
-bool AudioHandler::isPlaying(const std::string& filePath) const {
-    return audioProcesses.find(filePath) != audioProcesses.end();
+QString AudioHandler::getCurrentTrack() const {
+    QString currentTrack = settings.value("audio/currentTrack", "").toString();
+    qDebug() << __FUNCTION__ << " - Current track: " << currentTrack;
+    
+    return currentTrack;
+}
+
+void AudioHandler::setAudioOn(bool enabled) {
+    settings.setValue("audio/enabled", enabled);
+    settings.sync();
+
+    if (!enabled) {
+        stopAllAudio();
+    }
+}
+
+bool AudioHandler::isAudioOn() const {
+    return settings.value("audio/enabled", true).toBool();
+}
+
+std::pair<QString, QString> AudioHandler::playNextTrack() {
+    const QMap<QString, AudioData>& audioMap = getAudioMap();
+    QString currentTrack = getCurrentTrack();
+    QString currentTrackKey = QFileInfo(currentTrack).baseName();
+    
+    QList<QString> keys = audioMap.keys();
+    int index = keys.indexOf(currentTrackKey);
+    if (index == -1 || index + 1 >= keys.size()) {
+        index = 0;
+    } else {
+        index++;
+    }
+    
+    QString nextTrackKey = keys[index];
+    QString nextTrack = audioMap[nextTrackKey].filePath;  // 첫 번째 값이 파일명 (예: "cookie.wav")
+    playAudio(nextTrack.toStdString());
+
+    qDebug() << __FUNCTION__ << " - Switching to next track: " << nextTrack;
+    
+    return {nextTrack, audioMap[nextTrackKey].iconPath};
 }

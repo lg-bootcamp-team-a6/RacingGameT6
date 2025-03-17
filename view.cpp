@@ -1,6 +1,5 @@
 #include "view.h"
 #include "gamescene.h"
-#include "AudioHandler.h"
 #include <QHBoxLayout>
 #include <QVBoxLayout>
 #include <QResizeEvent>
@@ -86,16 +85,6 @@ void View::setupOverlay()
     buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     mainLayout->addLayout(buttonLayout);
 
-    // Add Audio button
-    // m_audioButton = new QPushButton("", m_overlay);
-    // m_audioButton->setFixedSize(232, 72);
-    // m_audioButton->setIcon(QIcon(":/images/off.png"));  // default: on 상태
-    // m_audioButton->setIconSize(QSize(232, 72));
-    // m_audioButton->setStyleSheet("border-radius: 50px; left-padding : 25px;");
-    // m_audioButton->setFocusPolicy(Qt::NoFocus);
-    // m_audioButton->setAutoRepeat(false);
-    // mainLayout->addWidget(m_audioButton, 0, Qt::AlignHCenter | Qt::AlignBottom);  // m_brakeButton 밑에 배치
-
     // set layout
     m_overlay->setLayout(mainLayout);
     repositionOverlay();
@@ -127,12 +116,6 @@ void View::setupOverlay()
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
     });
-
-
-    // 음량 버튼 클릭 시 상태 변경
-    // connect(m_audioButton, &QPushButton::clicked, this, [this]() {
-    //     toggleBgSound("magicjuly.wav");
-    // });
 }
 
 void View::resizeEvent(QResizeEvent *event)
@@ -161,32 +144,19 @@ void View::updateDirectionArrow(double angle)
     QPixmap arrowPixmap(":/images/arrow.png");
     QTransform transform;
     if(abs(angle) < 200){
-        qDebug()<<"------------[Staight Arrow]-------------";
+        // qDebug()<<"------------[Staight Arrow]-------------";
         transform.rotate(270); // 필요에 따라 오프셋 조정
 
     }
     else if(angle < 0){
-        qDebug()<<"------------[Right Arrow]-------------";
+        // qDebug()<<"------------[Right Arrow]-------------";
         transform.rotate(0); // 필요에 따라 오프셋 조정
     }
     else{
-        qDebug()<<"-----------[LEFT Arrow]----------------";
+        // qDebug()<<"-----------[LEFT Arrow]----------------";
         transform.rotate(180); // 필요에 따라 오프셋 조정
     }
 
     QPixmap rotated = arrowPixmap.transformed(transform, Qt::SmoothTransformation);
     m_directionArrow->setPixmap(rotated.scaled(m_directionArrow->size(), Qt::KeepAspectRatio, Qt::SmoothTransformation));
-}
-
-void View::toggleBgSound(const std::string& audioFile) {
-    if (m_isAudioOn) {
-        // 음악 정지
-        AudioHandler::getInstance()->stopAudio(audioFile);
-        m_audioButton->setIcon(QIcon(":/images/off.png"));  // 아이콘 변경
-    } else {
-        // 음악 재생
-        AudioHandler::getInstance()->playAudio(audioFile, true);
-        m_audioButton->setIcon(QIcon(":/images/on.png"));  // 아이콘 변경
-    }
-    m_isAudioOn = !m_isAudioOn;  // 상태 반전
 }

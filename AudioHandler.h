@@ -3,41 +3,52 @@
 
 #include <QObject>
 #include <QProcess>
+#include <QSettings> 
 #include <unordered_map>
 #include <string>
+#include <memory>
+#include <QMap>
+#include <QString>
+
+struct AudioData {
+    QString filePath;
+    QString iconPath;
+};
 
 class AudioHandler : public QObject {
     Q_OBJECT
 
 public:
-    // 싱글톤 인스턴스를 반환하는 함수
+    /* Singleton */ 
     static AudioHandler* getInstance() {
-        static AudioHandler instance;  // 싱글톤 패턴
+        static AudioHandler instance; 
         return &instance;
     }
 
-    // 오디오 재생 함수
-    void playAudio(const std::string& filePath, bool loop = false);
-
-    // effect sound
+    void playAudio(const std::string& filePath, bool loop = true);
     void playEffectSound(const std::string& filePath);
-
-    // 특정 오디오 파일 정지 함수
-    void stopAudio(const std::string& filePath);
-
-    // 모든 오디오 정지 함수
+    void stopAudio();  // 🔹 현재 재생 중인 음악을 자동으로 정지
     void stopAllAudio();
+    QString getCurrentTrack() const; // 🔹 세미콜론 추가
+    void setAudioOn(bool enabled);
+    bool isAudioOn() const;
+    std::pair<QString, QString> playNextTrack();
+    static const QMap<QString, AudioData>& getAudioMap();
 
-    // 오디오가 재생 중인지 확인하는 함수
-    bool isPlaying(const std::string& filePath) const;
+signals:
 
 private:
-    std::unordered_map<std::string, QProcess*> audioProcesses;  // 오디오 파일과 관련된 QProcess 맵
-    AudioHandler() = default;  // 기본 생성자
-    ~AudioHandler();  // 소멸자
+    explicit AudioHandler();  // 🔹 explicit 추가
+    ~AudioHandler(); 
 
-    AudioHandler(const AudioHandler&) = delete;  // 복사 생성자 삭제
-    AudioHandler& operator=(const AudioHandler&) = delete;  // 대입 연산자 삭제
+    /* Singleton */ 
+    AudioHandler(const AudioHandler&) = delete;  
+    AudioHandler& operator=(const AudioHandler&) = delete;
+
+    /* Process */
+    QSettings settings;
+    QProcess* m_currentProcess = nullptr;  // 🔹 안전한 초기화 추가
+    std::unordered_map<std::string, QProcess*> audioProcesses;  // 프로세스 전체 처리
 };
 
 #endif // AUDIOHANDLER_H

@@ -2,12 +2,19 @@
 #include "AudioHandler.h"
 #include <QTimer>
 #include <QDebug>
-#include <QGraphicsPixmapItem>
 #include <QKeyEvent>
+#include <QPushButton>
 #include <QDir>
 #include <QPainter>
 #include <cmath>
 #include <QGraphicsView>
+#include <QGraphicsProxyWidget>
+#include <QGraphicsPixmapItem>
+#include <QGraphicsScene>
+#include <QLabel>
+#include <QVBoxLayout>
+#include <QPixmap>
+#include <QWidget>
 #include <QUdpSocket>
 #include <unistd.h>
 #include "InputDeviceHandler.h"
@@ -17,7 +24,8 @@
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
       m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
-     m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false)
+     m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false),
+     m_audioHandler(AudioHandler::getInstance())
 {
     m_mapIdx =3;
     m_pUdpSocketHandler = new UdpSocketHandler(this);
@@ -27,6 +35,8 @@ GameScene::GameScene(QObject *parent)
 
     m_timer->setInterval(m_game.ITERATION_VALUE);
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
+
+    m_audioHandler->playAudio("cookie.wav", true);
     m_timer->start(m_game.ITERATION_VALUE);
     //Send map status
     
@@ -78,15 +88,66 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 void GameScene::togglePause(bool IsResume)
 {
     QGraphicsPixmapItem *pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
-    pauseItem->setScale(1);
-    pauseItem->setPos(0, 0);
-    addItem(pauseItem);
+    QWidget *pauseWidget = new QWidget();
+    pauseWidget->setFixedSize(609, 473);  // 위젯 크기 설정 (배경 이미지 크기)
+    pauseWidget->setStyleSheet("background: transparent;");
+    pauseWidget->setAttribute(Qt::WA_TranslucentBackground);
+
+    QLabel *backgroundLabel = new QLabel(pauseWidget);
+    QPixmap backgroundPixmap(":/images/pause.png");  // 배경 이미지 경로 설정
+    backgroundLabel->setPixmap(backgroundPixmap);
+    backgroundLabel->setScaledContents(true);  // 크기에 맞게 이미지를 자동으로 조정
+    backgroundLabel->setGeometry(0, 0, backgroundPixmap.width(), backgroundPixmap.height());
+    backgroundLabel->setStyleSheet("background: transparent;");
+    
+    /* Audio Button */
+    m_audioButton = new QPushButton(pauseWidget);
+    m_audioButton->setFixedSize(232, 72);
+    m_audioButton->setIcon(QIcon(":/images/on.png"));  // default: on 상태
+    m_audioButton->setIconSize(QSize(232, 72));
+    m_audioButton->setStyleSheet("border: none; background:transparent;");
+    m_audioButton->setFocusPolicy(Qt::NoFocus);
+    m_audioButton->setAutoRepeat(false);
+    m_audioButton->setVisible(false);
+
+    /* Audio Change Button */
+    m_audioChangeButton = new QPushButton(pauseWidget);
+    m_audioButton->setFixedSize(249, 59);
+    // 초기값 설정 (첫 번째 음악 재생되도록)
+    QString currentTrack = m_audioHandler->getCurrentTrack();
+    qDebug() << __FUNCTION__ << "Initial Track: " << currentTrack;
+    m_audioChangeButton->setIcon(QIcon(":/images/cookie.png"));
+    m_audioChangeButton->setIconSize(QSize(249, 59));
+    m_audioChangeButton->setStyleSheet("border: none; background:transparent;");
+    m_audioChangeButton->setFocusPolicy(Qt::NoFocus);
+    m_audioChangeButton->setAutoRepeat(false);
+    m_audioChangeButton->setVisible(false);
 
     if (!IsResume) {
         m_timer->stop();
         qDebug() << "stop timer success";
         if (nullptr != pauseItem) {
-            pauseItem->setVisible(true);
+            // pauseItem->setVisible(true);
+            m_audioButton->setVisible(true);
+            m_audioChangeButton->setVisible(true);
+
+            /* Button position set */
+            qreal audioButtonX = 295;  // 원하는 X 위치
+            qreal audioButtonY = 200;  // 원하는 Y 위치
+            m_audioButton->setGeometry(audioButtonX, audioButtonY, 232, 72);
+
+            qreal audioChangeButtonX = 310;  // 원하는 X 위치
+            qreal audioChangeButtonY = 275;  // 원하는 Y 위치
+            m_audioChangeButton->setGeometry(audioChangeButtonX, audioChangeButtonY, 249, 59);
+
+            // QWidget을 QGraphicsProxyWidget에 추가
+            QGraphicsProxyWidget *pauseWidgetProxy = new QGraphicsProxyWidget();
+            pauseWidgetProxy->setWidget(pauseWidget);
+            addItem(pauseWidgetProxy);
+
+            connect(m_audioButton, &QPushButton::clicked, this, &GameScene::toggleAudioStatus);
+            connect(m_audioChangeButton, &QPushButton::clicked, this, &GameScene::changeAudio);
+
             qDebug() << "[GAME] Paused by an interrupt.";
             SocketUDP();
             //SocketUDP();
@@ -95,8 +156,9 @@ void GameScene::togglePause(bool IsResume)
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
-        pauseItem->setVisible(false);
-        qDebug() << "[GAME] Resumed by an interrupt.";
+        m_audioButton->setVisible(false);
+        m_audioChangeButton->setVisible(false);
+        qDebug() << __FUNCTION__ << "[GAME] Resumed by an interrupt.";
         m_bIsResume = true;
     }
 }
@@ -647,7 +709,7 @@ bool GameScene::checkStarCollision()
             {
                 bReturn = true;
                 m_game.m_starScore++;
-                AudioHandler::getInstance()->playEffectSound("star_sound.wav");
+                m_audioHandler->playEffectSound("star_sound.wav");
                 break;
             }
         }
@@ -692,4 +754,54 @@ void GameScene::Goal()
         m_timer->stop();
         // removeItem(fin);
         // delete fin;
+}
+
+/* Sound ON/OFF */
+void GameScene::toggleAudioStatus() {
+    // 현재 오디오 상태 및 재생 중인 트랙 확인
+    bool isAudioOn = m_audioHandler->isAudioOn();
+    qDebug() << __FUNCTION__ << ": Audio status: " << isAudioOn;
+    const QMap<QString, AudioData>& audioMap = m_audioHandler->getAudioMap();
+
+    m_audioHandler->stopAllAudio();
+    if (isAudioOn) {    // play -> stop
+        m_audioButton->setIcon(QIcon(":/images/off.png"));
+    } else {            // stop -> play
+        m_audioButton->setIcon(QIcon(":/images/on.png"));
+        m_audioHandler->playAudio("cookie.wav", true);
+        /* apply music info to select button */
+        QString currentTrack = m_audioHandler->getCurrentTrack();
+        m_audioChangeButton->setIcon(QIcon(":/images/cookie.png"));
+        qDebug() << "stop >> play: icon name is " << QIcon(audioMap[currentTrack].iconPath);
+        return;
+    }
+
+    // 오디오 상태 토글 후 저장
+    m_audioHandler->setAudioOn(!isAudioOn);
+    qDebug() << __FUNCTION__ << "[Audio Status] Audio is " << (!isAudioOn ? "on" : "off") << "@@@@@@@@@@@@@@";
+}
+
+
+/* Sound Change */
+void GameScene::changeAudio() {
+    if (!m_audioHandler->isAudioOn()) {
+        qDebug() << __FUNCTION__ << "OFF";
+        return;
+    }
+
+    // playNextTrack 호출하여 트랙과 아이콘 경로 받기
+    auto result = m_audioHandler->playNextTrack();
+    qDebug() << __FUNCTION__ << "result: " << result;
+    QString nextTrack = result.first;   // 다음 트랙 이름
+    QString iconPath = result.second;   // 아이콘 경로
+
+    if (nextTrack.isEmpty() || iconPath.isEmpty()) {
+        qDebug() << __FUNCTION__ << ": @@@@@@@@@@ Track && Icon Empty @@@@@@@@@@@";
+        return;
+    }
+
+    QIcon newIcon(iconPath);
+    m_audioChangeButton->setIcon(newIcon);
+
+    qDebug() << "##### Changed background audio to: " << nextTrack;
 }
