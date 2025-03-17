@@ -20,6 +20,7 @@ void init_board() {
     board1.checkpointIndex = -1;
     board1.status = -1;
     board1.time = "";
+	board1.map_info = -1;
     board1.pos_x = -1;
     board1.pos_y = -1;
     memset(&board1.board_addr, 0, sizeof(board1.board_addr));
@@ -35,6 +36,7 @@ void init_board() {
     board2.checkpointIndex = -1;
     board2.status = -1;
     board2.time = "";
+	board2.map_info = -1;
     board2.pos_x = -1;
     board2.pos_y = -1;
     memset(&board2.board_addr, 0, sizeof(board2.board_addr));
@@ -81,7 +83,8 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     
     switch(cmd)
     {
-        case 0:
+		
+        case GAME_STATUS:
 			printf("case 0 : start or pause\n");
             setStatus(ip_str, data);
             if (!playMode && board1_pausing && board2_pausing) {
@@ -90,12 +93,20 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
                 startDoublePlayer(sfd);
             }
             break;
-        case 1:
+        case CHECKPOINT:
             break;
-        case 2:
+        case CAR_POSITION:
             break;
-        case 3:
+		//finish
+        case FINISH:
+			printf("case 0 : finish map\n");
+			addRanking(ip_str, data);
             break;
+		//which map
+		case MAP_STATUS:
+			printf("change map\n");
+			setMapInfo(ip_str, data);
+			break;
         default:
             break;
     }

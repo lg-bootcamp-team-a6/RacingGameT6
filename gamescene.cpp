@@ -28,7 +28,12 @@ GameScene::GameScene(QObject *parent)
     m_timer->setInterval(m_game.ITERATION_VALUE);
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
     m_timer->start(m_game.ITERATION_VALUE);
-
+    //Send map status
+    
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
     update();
 }
 
@@ -127,6 +132,11 @@ void GameScene::loadPixmap()
     if(m_pausePixmap.load(m_game.PATH_TO_PAUSE_PIXMAP))
     {
         qDebug() << "PausePixmap is loaded successfully";
+    }
+
+    if(m_finishPixmap.load(m_game.PATH_TO_FINISH_PIXMAP))
+    {
+        qDebug() << "FinishPixmap is loaded successfully";
     }
 }
 
@@ -566,6 +576,17 @@ void GameScene::setMapIdx(int mapIdx)
     m_elapsedTime = 0;
     update();
     Wait3Seconds();
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status in changed mode" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+}
+
+void GameScene::resetGame() {
+    m_game.resetGameData(m_mapIdx);
+    m_elapsedTime = 0;
+    update();
+    Wait3Seconds();
 }
 
 bool GameScene::checkStarCollision()
@@ -608,7 +629,7 @@ void GameScene::Goal()
 
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
     std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end());
-
+    //Send elapsedTime
     int seconds = m_elapsedTime / 100;
     int mseconds = m_elapsedTime % 100;
 
@@ -620,6 +641,18 @@ void GameScene::Goal()
     m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
 
     //Display Finish in solo play
+    QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
 
-    setMapIdx(idx);
+    if (nullptr != fin) {
+        fin->setScale(0.7);
+        fin->setPos(-40, 15);
+        addItem(fin);
+        fin->setVisible(true);
+        }
+
+        InputDeviceHandler::m_sbIsRetry = true;
+        
+        m_timer->stop();
+        // removeItem(fin);
+        // delete fin;
 }

@@ -11,6 +11,7 @@
 #define KEY1_CODE 103  // SW3 이벤트 코드 (적절한 코드로 변경하세요)
 
 bool InputDeviceHandler::m_sbIsResume = false;
+bool InputDeviceHandler::m_sbIsRetry = false;
 
 InputDeviceHandler::InputDeviceHandler(GameScene* gameScene, View* view, QObject *parent)
     : QObject(parent), m_gameScene(gameScene), m_View(view)
@@ -113,6 +114,11 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     // SW2 이벤트 처리
     if (ev.code == KEY0_CODE) {
         if (ev.value == 1) {
+            if (m_sbIsRetry) {
+                m_gameScene->resetGame();
+                m_sbIsRetry = false;
+                return;
+            }
 
             qDebug() << m_gameScene->m_bReady;
 
