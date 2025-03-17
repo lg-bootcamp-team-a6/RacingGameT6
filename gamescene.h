@@ -72,7 +72,7 @@ public:
     void toggleAudioStatus();
     void changeAudio();
     void showText();
-    void SocketUDP();
+    void SocketUDP(const int16_t cmd, const char* data);
     void Wait3Seconds();
     void resetGame();
     void parseRivalPosition(char* data);

@@ -219,9 +219,10 @@ void GameScene::togglePause(bool IsResume)
             connect(m_audioChangeButton, &QPushButton::clicked, this, &GameScene::changeAudio);
 
             qDebug() << "[GAME] Paused by an interrupt.";
-            SocketUDP();
-            char* data = "PAUSE";
-            m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
+            //SocketUDP();
+            //SocketUDP();
+            //char* data = "PAUSE";
+            //m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
@@ -516,10 +517,8 @@ void GameScene::showText() {
     }
 }
 
-void GameScene::SocketUDP() {
-    QString message = "PAUSED";
-    char* data = "data";
-    m_pUdpSocketHandler -> BtHsendMessage(1, data);
+void GameScene::SocketUDP(const int16_t cmd, const char* data) {
+    m_pUdpSocketHandler -> BtHsendMessage(cmd, data);
 }
 
 void GameScene::Wait3Seconds() {

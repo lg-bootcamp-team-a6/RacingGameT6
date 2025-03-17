@@ -125,6 +125,9 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
             qDebug() << "m_bSingle to false";
         }
         m_gameScene->m_bStart = true;
+        char* data = "PAUSE";
+        m_gameScene->SocketUDP(GAME_STATUS, "PAUSE");
+
         return;
     }
 
