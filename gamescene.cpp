@@ -1050,6 +1050,7 @@ void GameScene::Goal()
     char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
     sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
     qDebug() << "The elapsedTime is " << str;
+    m_audioHandler->playEffectSound("finish_sound.wav");
     m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
 
     //Display Finish in solo play
