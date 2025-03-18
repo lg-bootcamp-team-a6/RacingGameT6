@@ -135,6 +135,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_bConnect = false;
             FinishRace(false, pkt.data);
             break;
+
         case IP_ADDRESS:
             parseMyIp(pkt.data);
             break;
@@ -867,6 +868,11 @@ void GameScene::setAngleDirection(double angle)
 
 void GameScene::setMapIdx(int mapIdx)
 {
+    bool bSend = true;
+
+    if(m_mapIdx == mapIdx)
+        bSend = false;
+
     m_mapIdx = mapIdx;
     m_bConnect = false;
     m_carCnt = 1;
@@ -902,7 +908,9 @@ void GameScene::setMapIdx(int mapIdx)
     char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
     sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
     qDebug() << "Send map status in changed mode" << str;
-    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+
+    if(bSend)
+        m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
 }
 
 void GameScene::resetGame() {

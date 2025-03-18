@@ -299,7 +299,7 @@ void updatePosition(char *ip_str, char *data)
     float x = 0, y = 0, angle = 0;
     if (sscanf(data, "%f,%f,%f", &x, &y, &angle) == 3)
     {
-        printf("Parsed x = %f, y = %f, angle = %f", x, y, angle);
+        //printf("Parsed x = %f, y = %f, angle = %f", x, y, angle);
     }
     else
     {

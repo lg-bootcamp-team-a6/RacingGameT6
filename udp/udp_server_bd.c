@@ -12,6 +12,7 @@ bool is_winner = 0;
 int double_played = 0;
 int board1_pausing = 0;
 int board2_pausing = 0;
+int finished = 0;
 // 0 : single player, 1 : double player
 
 // 보드 정보 초기화 (소켓 오류 시 close() 호출 필요 없음)
@@ -83,8 +84,8 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     data[dataSize] = '\0';
     
     getIPv4Address(addr_client, ip_str);
-    printf("Received message: dest = %s, cmd = %d, data = %s\n", ip_str, cmd, data);
-    
+    //printf("Received message: dest = %s, cmd = %d, data = %s\n", ip_str, cmd, data);
+    printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
     switch(cmd)
     {
         case GAME_STATUS:
@@ -109,6 +110,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
         case FINISH:
 			printf("case 3: finish map\n");
 			addRanking(ip_str, data);
+            finished = 1;
             printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
             if (playMode && !is_winner){
                 printf("who is the winner : %s\n", ip_str);
