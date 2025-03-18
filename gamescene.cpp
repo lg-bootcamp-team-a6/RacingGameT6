@@ -89,7 +89,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 {
     qDebug() << "[GameScene] UDP packet received: cmd =" << pkt.cmd
              << ", data =" << (pkt.data ? pkt.data : "null");
-    
+
     // 예: 패킷 내용에 따라 게임 상태를 업데이트하거나, 필요한 로직을 수행합니다.
     // 사용 후 동적으로 할당된 메모리는 해제해 주세요.
     switch(pkt.cmd)
@@ -106,10 +106,10 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
                 m_carCnt = 2;
             }
             break;
-        //how many checkpoints 
+        //how many checkpoints
         case CHECKPOINT:
             m_rivalScore = atoi(pkt.data);
-            
+
             break;
         case CAR_POSITION:
             parseRivalPosition(pkt.data);
@@ -119,16 +119,16 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case MAP_STATUS:
             break;
         //cmd : winner, data : time lap
-        case WINNER: 
+        case WINNER:
             qDebug() << "WINNER";
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
             FinishRace(true, pkt.data);
             break;
-        
+
         //cmd : loser, data : winner's time lap
-        case LOSER: 
+        case LOSER:
             qDebug() << "LOOSER";
             m_rivalScore = 0;
             m_carCnt = 1;
@@ -214,14 +214,19 @@ void GameScene::FinishRace(bool win, char *pszTime) {
     InputDeviceHandler::m_sbIsRetry = true;
 }
 
+void GameScene::setBoosterOn(bool boosterOn)
+{
+    m_boosterOn = boosterOn;
+}
+
 void GameScene::parseMyIp(char* data)
 {
     printf("%s\n", data);
-    
+
     if(!strcmp(data,"192.168.10.4"))
     {
         m_myIp = 4;
-        
+
         if(m_carPixmap[0].load(m_game.PATH_TO_CAR_PIXMAP[1]))
         {
             qDebug() << "CarPixmap[0] is loaded successfully";
@@ -231,15 +236,26 @@ void GameScene::parseMyIp(char* data)
         {
             qDebug() << "CarPixmap[0] is loaded successfully";
         }
+
+        
+        if(m_boosterPixmap[0].load(m_game.PATH_TO_BOOSTER_PIXMAP[1]))
+        {
+            qDebug() << "m_boosterPixmap[0] is loaded successfully";
+        }
+
+        if(m_boosterPixmap[1].load(m_game.PATH_TO_BOOSTER_PIXMAP[0]))
+        {
+            qDebug() << "m_boosterPixmap[1] is loaded successfully";
+        }
     }
 }
 
 void GameScene::parseRivalPosition(char* data)
 {
     float x = 0, y = 0, angle = 0;
-    
+
     qDebug() << "data : " << data;
-    
+
     // 접두사를 건너뛰기 위해 콜론(:)을 찾습니다.
     const char* p = strchr(data, ':');
     if (p != nullptr) {
@@ -256,7 +272,7 @@ void GameScene::parseRivalPosition(char* data)
     } else {
         qDebug() << "No colon found in data.";
     }
-    
+
     m_game.car[1].x = x;
     m_game.car[1].y = y;
     m_game.car[1].angle = angle;
@@ -277,7 +293,7 @@ void GameScene::togglePause(bool IsResume)
     backgroundLabel->setScaledContents(true);  // 크기에 맞게 이미지를 자동으로 조정
     backgroundLabel->setGeometry(0, 0, backgroundPixmap.width(), backgroundPixmap.height());
     backgroundLabel->setStyleSheet("background: transparent;");
-    
+
     /* Audio Button */
     m_audioButton = new QPushButton(pauseWidget);
     m_audioButton->setFixedSize(232, 72);
@@ -432,6 +448,16 @@ void GameScene::loadPixmap()
     if(m_losePixmap.load(m_game.PATH_TO_LOSE_PIXMAP))
     {
         qDebug() << "LosePixmap is loaded successfully";
+    }
+
+    if(m_boosterPixmap[0].load(m_game.PATH_TO_BOOSTER_PIXMAP[0]))
+    {
+        qDebug() << "BoosterPixmap[0] is loaded successfully";
+    }
+
+    if(m_boosterPixmap[1].load(m_game.PATH_TO_BOOSTER_PIXMAP[1]))
+    {
+        qDebug() << "BoosterPixmap[1] is loaded successfully";
     }
 }
 
@@ -608,7 +634,7 @@ void GameScene::showText() {
     for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size() && i < 3; i++)
     {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-        
+
         int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
         int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
 
@@ -714,6 +740,10 @@ void GameScene::update()
 
     for (int i = 0; i < m_carCnt; ++i)
         m_carItem[i] = new QGraphicsPixmapItem(m_carPixmap[i]);
+        
+    for (int i = 0; i < m_carCnt; ++i)
+        m_boosterItem[i] = new QGraphicsPixmapItem(m_boosterPixmap[i]);
+
 
     m_bgItem[m_mapIdx]->setScale(m_game.gamescale);
     m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
@@ -734,12 +764,23 @@ void GameScene::update()
 
     for(int i=0; i < m_carCnt; i++)
     {
-        m_carItem[i]->setScale(0.7);
-        m_carItem[i]->setTransformOriginPoint(21, 34);
-        m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
-        m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
+        if(i == 0 && m_boosterOn)
+        {
+            m_boosterItem[i]->setScale(0.7);
+            m_boosterItem[i]->setTransformOriginPoint(21, 34);
+            m_boosterItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
+            m_boosterItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
+            addItem(m_boosterItem[i]);
+        }
+        else
+        {
+            m_carItem[i]->setScale(0.7);
+            m_carItem[i]->setTransformOriginPoint(21, 34);
+            m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
+            m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
 
-        addItem(m_carItem[i]);
+            addItem(m_carItem[i]);
+        }
     }
 
     if(m_bConnect)

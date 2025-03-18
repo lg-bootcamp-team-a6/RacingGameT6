@@ -55,8 +55,8 @@ private slots:
 private:
 
     QTimer* m_timer;
-    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap, m_winPixmap, m_losePixmap;
-    QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
+    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap, m_winPixmap, m_losePixmap, m_boosterPixmap[2];
+    QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30], *m_boosterItem[2];
     UdpSocketHandler *m_pUdpSocketHandler;
     
     /* Audio */
@@ -65,7 +65,7 @@ private:
     QString m_currentTrackKey;
     AudioHandler* m_audioHandler; // AudioHandler 싱글턴 인스턴스
 
-    bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged;
+    bool m_upDir, m_rightDir, m_downDir, m_leftDir, m_dirChanged, m_boosterOn;
 
 public:
     void togglePause(bool IsResume);

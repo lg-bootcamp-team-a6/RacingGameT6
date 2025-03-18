@@ -30,5 +30,7 @@
         <file>images/start.png</file>
         <file>images/lose.png</file>
         <file>images/win.png</file>
+        <file>images/Booster.png</file>
+        <file>images/Booster1.png</file>
     </qresource>
 </RCC>

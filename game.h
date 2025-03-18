@@ -27,6 +27,7 @@ public:
     const QString PATH_TO_START_PIXMAP;
     const QString PATH_TO_WIN_PIXMAP;
     const QString PATH_TO_LOSE_PIXMAP;
+    const QString PATH_TO_BOOSTER_PIXMAP[2];
     const float ITERATION_VALUE;
 
     float car_R;

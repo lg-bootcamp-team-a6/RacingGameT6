@@ -112,11 +112,16 @@ void View::setupOverlay()
     // 버튼 이벤트 연결
     connect(m_accelForwardButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "UP pressed";
+
+        if(m_gameScene->m_game.car[0].speed > 14)
+            m_gameScene->m_game.car[0].speed = 14;
+
         m_gameScene->m_game.maxSpeed = 13;
         m_gameScene->m_game.acc = 1.f;
         m_gameScene->m_game.dec = 1.f;
         m_gameScene->setUpDirection(true);
         m_gameScene->setDownDirection(false);
+        m_gameScene->setBoosterOn(false);
         m_accelForwardButton->setEnabled(false);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
         m_brakeButton->setEnabled(true);  // Disable the button
@@ -129,6 +134,7 @@ void View::setupOverlay()
         m_gameScene->m_game.dec = 1.f;
         m_gameScene->setUpDirection(false);
         m_gameScene->setDownDirection(true);
+        m_gameScene->setBoosterOn(false);
         m_accelBackButton->setEnabled(false);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_brakeButton->setEnabled(true);  // Disable the button
@@ -145,12 +151,15 @@ void View::setupOverlay()
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
         m_boosterButton->setEnabled(true);  // Disable the button
+        m_gameScene->setBoosterOn(false);
     });
     connect(m_boosterButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "Booster pressed";
         m_gameScene->m_game.maxSpeed = 20;
         m_gameScene->m_game.acc = 2.f;
         m_gameScene->m_game.dec = 2.f;
+        m_gameScene->setUpDirection(true);
+        m_gameScene->setBoosterOn(true);
         m_brakeButton->setEnabled(true);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
