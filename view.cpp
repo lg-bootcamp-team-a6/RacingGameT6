@@ -50,8 +50,6 @@ void View::setupOverlay()
     // 중간에 스트레치 (상단과 하단 사이 공간 확보)
     mainLayout->addStretch();
 
-    // 하단 영역: 버튼들을 포함하는 수평 레이아웃 생성
-    QHBoxLayout *buttonLayout = new QHBoxLayout();
     // 왼쪽 버튼: Accel Front
     m_accelForwardButton = new QPushButton("", m_overlay);
     m_accelForwardButton->setFixedSize(100, 100);
@@ -79,11 +77,18 @@ void View::setupOverlay()
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
     m_brakeButton->setAutoRepeat(false);
 
-    buttonLayout->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    buttonLayout->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
-    buttonLayout->addStretch();
-    buttonLayout->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
-    mainLayout->addLayout(buttonLayout);
+    
+    // 하단 영역: 버튼들을 포함하는 수평 레이아웃 생성
+    QHBoxLayout *HbuttonLayout1 = new QHBoxLayout();
+    QHBoxLayout *HbuttonLayout2 = new QHBoxLayout();
+
+    HbuttonLayout1->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    HbuttonLayout2->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    HbuttonLayout2->addStretch();
+    HbuttonLayout2->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
+
+    mainLayout->addLayout(HbuttonLayout1);
+    mainLayout->addLayout(HbuttonLayout2);
 
     // set layout
     m_overlay->setLayout(mainLayout);
