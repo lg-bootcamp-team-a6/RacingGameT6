@@ -135,9 +135,9 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_bConnect = false;
             FinishRace(false, pkt.data);
             break;
-        }
         case IP_ADDRESS:
             parseMyIp(pkt.data);
+            break;
         default:
             break;
     }
