@@ -64,7 +64,7 @@ void getIPv4Address(const struct sockaddr_in *addr_client, char* buf) {
 
 //board to server
 void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_t addr_client_len, int sfd) {
-    if (len < (int)(sizeof(int32_t) + sizeof(int16_t))) {
+    if (len < (int)(sizeof(int16_t))) {
         fprintf(stderr, "Error: Invalid message size (%d bytes)\n", len);
         return;
     }
