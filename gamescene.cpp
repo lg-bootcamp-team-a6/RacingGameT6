@@ -666,14 +666,22 @@ void GameScene::showText() {
         addItem(textItem3);
         textItem->setVisible(true);
     }
+        QGraphicsTextItem* my_score = new QGraphicsTextItem();
+        my_score->setPlainText(QString("My Score : %1").arg(m_game.m_starScore));
+        my_score->setDefaultTextColor(Qt::black);
+        my_score->setFont(QFont("Arial", 15));
+        my_score->setPos(0, -50); // col * row
+        addItem(my_score);
+        my_score->setVisible(true);
 
     if(m_rivalScore)
     {
+        QGraphicsTextItem* my_score = new QGraphicsTextItem();
         QGraphicsTextItem* textItem4 = new QGraphicsTextItem();
         textItem4->setPlainText(QString("Rival's Score : %1").arg(m_rivalScore));
         textItem4->setDefaultTextColor(Qt::black);
         textItem4->setFont(QFont("Arial", 15));
-        textItem4->setPos(0, -50); // col * row
+        textItem4->setPos(0, -20); // col * row
         addItem(textItem4);
         textItem->setVisible(true);
     }
