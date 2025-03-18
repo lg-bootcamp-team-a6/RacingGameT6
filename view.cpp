@@ -147,9 +147,9 @@ void View::setupOverlay()
     });
     connect(m_boosterButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "Booster pressed";
-        m_game.maxSpeed = 20;
-        m_game.acc = 1.5f;
-        m_game.dec = 1.5f;
+        m_gameScene->m_game.maxSpeed = 20;
+        m_gameScene->m_game.acc = 2.f;
+        m_gameScene->m_game.dec = 2.f;
         m_brakeButton->setEnabled(true);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
