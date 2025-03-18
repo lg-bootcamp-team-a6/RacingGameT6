@@ -5,22 +5,22 @@
 #include <QFileInfo>
 #include <QIcon>
 #include <QPointer>
+#include <QEventLoop>
+
 
 AudioHandler::AudioHandler() 
     : settings("RacingGameT6", "AudioHandler"),
-    loopTimer(new QTimer(this))
+    loopTimer(new QTimer(this))  // ✅ 여기에서 생성됨
 {
     setAudioStatus(true);
     setCurrentTrack("cookie");
     settings.sync();
 
-    loopTimer->setSingleShot(true);  // 한 번만 실행 후 정지
     qDebug() << "AudioHandler initialized.";
 }
 
 AudioHandler::~AudioHandler() {
     stopAllAudio();
-    delete loopTimer; // FREE loopTimer memory
 }
 
 const QMap<QString, AudioData>& AudioHandler::getAudioMap() {
@@ -121,9 +121,12 @@ void AudioHandler::stopAudio() {
         setAudioStatus(false);
         settings.sync();
 
+        loopTimer->stop();  // 🎯 반복 재생 중지
+
         qDebug() << __FUNCTION__ << " - Stopped: " << currentTrack;
     }
 }
+
 
 void AudioHandler::stopAllAudio() {
     for (auto& processPair : audioProcesses) {
@@ -184,50 +187,50 @@ std::pair<QString, QString> AudioHandler::playNextTrack() {
     }
     
     QString nextTrack = keys[index];
+    setAudioStatus(true);
     setCurrentTrack(nextTrack);
-    playAudio();
+    loopAudio();
 
     qDebug() << __FUNCTION__ << " - Switching to next track: " << nextTrack;
     
     return {nextTrack, audioMap[nextTrack].iconPath};
 }
 
-int AudioHandler::getTrackDurationMs(const QString& filePath) {
-    const QMap<QString, AudioData>& audioMap = getAudioMap();
-    QString trackKey = QFileInfo(filePath).baseName();
+void AudioHandler::loopAudio() {
+    // if (!isAudioOn()) {
+    //     qDebug() << __FUNCTION__ << " - Audio is disabled. Exiting loop.";
+    //     return;
+    // }
 
-    if (audioMap.contains(trackKey)) {
-        return audioMap[trackKey].playBacktime;  // second -> ms 
-    }
-
-    return -1; // unknown duration
-}
-
-
-void AudioHandler::startLoopPlayback() {
-    stopLoopPlayback(); // 기존 타이머 중지
+    setAudioStatus(true);
     QString currentTrack = getCurrentTrack();
+    const QMap<QString, AudioData>& audioMap = getAudioMap();
 
-    int trackDurationMs = getTrackDurationMs(currentTrack);
-    if (trackDurationMs <= 0) {
-        qDebug() << __FUNCTION__ << " - Invalid track duration, skipping loop.";
+    if (!audioMap.contains(currentTrack)) {
+        qDebug() << __FUNCTION__ << " - Invalid track, stopping loop.";
         return;
     }
 
-    loopTimer->start(trackDurationMs + 1000);  // 🎵 종료시간 +1초 후 재생
-    connect(loopTimer, &QTimer::timeout, this, [this, currentTrack]() {
-        qDebug() << __FUNCTION__ << " - Looping track: " << currentTrack;
-        playAudio(); // 🔄 다시 재생
-    });
+    int durationMs = audioMap[currentTrack].playBacktime * 1000; // 초 -> 밀리초 변환
 
-    qDebug() << __FUNCTION__ << " - Loop playback scheduled every " << trackDurationMs + 1000 << "ms";
-}
-
-void AudioHandler::stopLoopPlayback() {
-    if (loopTimer->isActive()) {
-        loopTimer->stop();
-        qDebug() << __FUNCTION__ << " - Loop playback stopped.";
+    /* Existing process removal */
+    auto it = audioProcesses.find(currentTrack.toStdString());
+    if (it != audioProcesses.end()) {
+        QProcess* oldProcess = it->second;
+        qDebug() << __FUNCTION__ << " - Stopping existing process for: " << currentTrack;
+        oldProcess->kill();
+        oldProcess->waitForFinished();
+        delete oldProcess;
+        audioProcesses.erase(it);
     }
-    stopAudio();
+
+    // 🎵 새롭게 오디오 재생
+    playAudio();
+
+    // 🔄 일정 시간 후 다시 loopAudio() 호출 (반복 실행)
+    loopTimer->start(durationMs);
+    connect(loopTimer, &QTimer::timeout, this, &AudioHandler::loopAudio, Qt::UniqueConnection);
+
+    qDebug() << __FUNCTION__ << " - Looping track: " << currentTrack;
 }
 

@@ -50,7 +50,7 @@ GameScene::GameScene(QObject *parent)
 
     m_timer->setInterval(m_game.ITERATION_VALUE);
     connect(m_timer, &QTimer::timeout, this, &GameScene::update);
-    m_audioHandler->playAudio();
+    m_audioHandler->loopAudio();
     m_timer->start(m_game.ITERATION_VALUE);
 
 
@@ -1100,21 +1100,17 @@ void GameScene::toggleAudioStatus() {
     const QMap<QString, AudioData>& audioMap = m_audioHandler->getAudioMap();
 
     if (isAudioOn) {    // play -> stop
-        m_audioHandler->stopAudio();
+        m_audioHandler->stopAllAudio();
         m_audioButton->setIcon(QIcon(":/images/off.png"));
     } else {            // stop -> play
         m_audioButton->setIcon(QIcon(":/images/on.png"));
         QString initialTrack = "cookie";
         m_audioHandler->setCurrentTrack(initialTrack);
-        m_audioHandler->playAudio();
+        m_audioHandler->loopAudio();
         /* apply music info to select button */
         m_audioChangeButton->setIcon(QIcon(":/images/cookie.png"));
-        qDebug() << "stop >> play: icon name is " << QIcon(audioMap[initialTrack].iconPath);
-        return;
+        qDebug() << "stop >> play";
     }
-
-    // 오디오 상태 토글 후 저장
-    qDebug() << __FUNCTION__ << "[Audio Status] Audio is " << (!isAudioOn ? "on" : "off") << "@@@@@@@@@@@@@@";
 }
 
 /* Sound Change */

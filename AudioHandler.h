@@ -36,11 +36,12 @@ public:
     void setAudioStatus(bool enabled);      // audio on / off setting
     bool isAudioOn() const;             // on / off return
     std::pair<QString, QString> playNextTrack();
+    void loopAudio();
 
     static const QMap<QString, AudioData>& getAudioMap();
-    int getTrackDurationMs(const QString& filePath);
 
 signals:
+    void audioStopped();
 
 private:
     explicit AudioHandler();  // 🔹 explicit 추가
@@ -56,10 +57,7 @@ private:
     std::unordered_map<std::string, QProcess*> audioProcesses;  // 프로세스 전체 처리
 
     /* Loop */
-    QTimer* loopTimer;  // 🎵 루프 타이머
-    int getTrackDurationMs(const std::string& filePath);
-    void stopLoopPlayback();
-    void startLoopPlayback();
+    QTimer* loopTimer;  // 🎶 반복 재생을 위한 타이머 (이미 존재)
 };
 
 #endif // AUDIOHANDLER_H
