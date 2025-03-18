@@ -9,6 +9,7 @@
 #include <memory>
 #include <QMap>
 #include <QString>
+#include <QTimer>
 
 struct AudioData {
     QString filePath;
@@ -26,15 +27,18 @@ public:
         return &instance;
     }
 
-    void playAudio(const std::string& filePath, bool loop = true);
+    void playAudio();
     void playEffectSound(const std::string& filePath);
-    void stopAudio();  // 🔹 현재 재생 중인 음악을 자동으로 정지
+    void stopAudio();                   // set off / remove currentTrack / remove processMap / kill
     void stopAllAudio();
-    QString getCurrentTrack() const; // 🔹 세미콜론 추가
-    void setAudioOn(bool enabled);
-    bool isAudioOn() const;
+    QString getCurrentTrack() const;    // get audio/currentTrack
+    void setCurrentTrack(const QString& trackName);
+    void setAudioStatus(bool enabled);      // audio on / off setting
+    bool isAudioOn() const;             // on / off return
     std::pair<QString, QString> playNextTrack();
+
     static const QMap<QString, AudioData>& getAudioMap();
+    int getTrackDurationMs(const QString& filePath);
 
 signals:
 
@@ -50,6 +54,12 @@ private:
     QSettings settings;
     QProcess* m_currentProcess = nullptr;  // 🔹 안전한 초기화 추가
     std::unordered_map<std::string, QProcess*> audioProcesses;  // 프로세스 전체 처리
+
+    /* Loop */
+    QTimer* loopTimer;  // 🎵 루프 타이머
+    int getTrackDurationMs(const std::string& filePath);
+    void stopLoopPlayback();
+    void startLoopPlayback();
 };
 
 #endif // AUDIOHANDLER_H
