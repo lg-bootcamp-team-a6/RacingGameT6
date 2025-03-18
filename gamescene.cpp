@@ -876,23 +876,23 @@ void GameScene::setMapIdx(int mapIdx)
     {
         if(mapIdx == 0)
         {
-            car[0].x = 300 * gamescale;
-            car[0].y = 1500 * gamescale;
+            m_game.car[0].x = 300 * gamescale;
+            m_game.car[0].y = 1500 * gamescale;
         }
         else if (mapIdx == 1)
         {
-            car[0].x = 300 * gamescale;
-            car[0].y = 1300 * gamescale;
+            m_game.car[0].x = 300 * gamescale;
+            m_game.car[0].y = 1300 * gamescale;
         }
         else if (mapIdx == 2)
         {
-            car[0].x = 250 * gamescale;
-            car[0].y = 600 * gamescale;
+            m_game.car[0].x = 250 * gamescale;
+            m_game.car[0].y = 600 * gamescale;
         }
         else if (mapIdx == 3)
         {
-            car[0].x = 190 * gamescale;
-            car[0].y = 2400 * gamescale;
+            m_game.car[0].x = 190 * gamescale;
+            m_game.car[0].y = 2400 * gamescale;
         }
     }
 
