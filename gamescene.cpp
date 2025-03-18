@@ -180,6 +180,7 @@ void GameScene::parseRanking(char* data)
 
 
 void GameScene::FinishRace(bool win, char *pszTime) {
+    printf("win : %d\n",win );
     if (win) {
         qDebug() << "dual finished, lap time: " << pszTime << ")";
         QGraphicsPixmapItem *win = new QGraphicsPixmapItem(m_winPixmap);
