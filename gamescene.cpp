@@ -746,8 +746,8 @@ void GameScene::update()
 
 
     m_bgItem[m_mapIdx]->setScale(m_game.gamescale);
-    m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale;
-    m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale;
+    m_game.offsetX = m_game.car[0].x-160 * m_game.gamescale+ 200;
+    m_game.offsetY = m_game.car[0].y-120 * m_game.gamescale + 100;
     m_bgItem[m_mapIdx]->setPos(-m_game.offsetX, -m_game.offsetY);
 
     addItem(m_bgItem[m_mapIdx]);

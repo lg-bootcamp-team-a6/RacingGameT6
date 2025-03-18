@@ -41,7 +41,7 @@ public:
    float maxSpeed;
    float acc, dec;
    float turnSpeed;
-   float gamescale = 2;
+   float gamescale = 3;
    int m_pixelRed = 173;
    int m_pixelGreen = 173;
    int m_pixelBlue = 173;
