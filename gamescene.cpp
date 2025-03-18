@@ -19,6 +19,7 @@
 #include <QPixmap>
 #include <QWidget>
 #include "InputDeviceHandler.h"
+#include <QFontDatabase>
 
 #define DEV_NAME "/dev/mydev"
 
@@ -31,7 +32,13 @@ GameScene::GameScene(QObject *parent)
     m_mapIdx =3;
     m_pUdpSocketHandler = new UdpSocketHandler(this);
     loadPixmap();
-
+    int fontId = QFontDatabase::addApplicationFont(":/font/Chewy-Regular.ttf");
+    if (fontId == -1) {
+        qDebug() << "Failed to load font.";
+    } else {
+        QStringList fontFamilies = QFontDatabase::applicationFontFamilies(fontId);
+        qDebug() << "Loaded font families:" << fontFamilies;
+    }
     setSceneRect(0, 0, Game::RESOLUTION.width(), Game::RESOLUTION.height());
 
     QPixmap startPixmap;
@@ -628,7 +635,7 @@ void GameScene::showText() {
     QGraphicsTextItem* textItem = new QGraphicsTextItem();
     textItem->setPlainText(timeText);  // Time format: "seconds.miliseconds"
     textItem->setDefaultTextColor(Qt::black);
-    textItem->setFont(QFont("Arial", 15));
+    textItem->setFont(QFont("Chewy-Regular", 15));
     textItem->setPos(600, -20); // hard coding..
     addItem(textItem);
     textItem->setVisible(true);

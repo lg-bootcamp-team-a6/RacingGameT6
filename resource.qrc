@@ -34,5 +34,6 @@
         <file>images/Booster.png</file>
         <file>images/Booster1.png</file>
         <file>images/boost.png</file>
+        <file>font/Chewy-Regular.ttf</file>
     </qresource>
 </RCC>
