@@ -154,13 +154,23 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 void GameScene::parseRanking(char* data)
 {
     float scores[5] = {0};
-    if (sscanf(data, "%f,%f,%f,%f,%f", &scores[0], &scores[1], &scores[2], &scores[3], &scores[4]) == 5) {
+    if (sscanf(data, "%f,%f,%f,%f,%f", 
+               &scores[0], &scores[1], &scores[2], &scores[3], &scores[4]) == 5) {
         qDebug() << "Parsed scores:" 
                  << scores[0] << scores[1] << scores[2] << scores[3] << scores[4];
+        
+        // 기존 랭킹 리스트를 초기화하고, 파싱된 값을 qint64로 변환하여 저장합니다.
+        m_game.m_rankRecord[m_mapIdx].clear();
+        for (int i = 0; i < 5; i++) {
+            // 예시: 소수점 이하를 버리고 정수로 저장 (또는 필요한 변환을 수행)
+            qint64 convertedScore = static_cast<qint64>(scores[i] * 100);
+            m_game.m_rankRecord[m_mapIdx].append(convertedScore);
+        }
     } else {
         qDebug() << "Parsing failed for ranking data!";
     }
 }
+
 
 void GameScene::FinishRace(bool win, char *pszTime) {
     if (win) {
@@ -634,7 +644,12 @@ void GameScene::showText() {
     for(int i = 0; i < m_game.m_rankRecord[m_mapIdx].size() && i < 3; i++)
     {
         QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-
+        if(m_game.m_rankRecord[m_mapIdx][i] == 0)
+        {
+            m_game.m_rankRecord[m_mapIdx].removeAt(i);
+            i--; // 삭제했으므로 현재 인덱스 다시 검사
+            continue;
+        }
         int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
         int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
 
@@ -972,6 +987,10 @@ void GameScene::setMapIdx(int mapIdx)
 void GameScene::resetGame() {
     m_game.resetGameData(m_mapIdx);
     m_elapsedTime = 0;
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status in changed mode" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
     update();
     Wait3Seconds();
 }

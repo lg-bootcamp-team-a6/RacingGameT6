@@ -441,7 +441,7 @@ void sendRanking(char* ip, char* data, int sfd)
         }
         memcpy(buffer_start, &cmd, sizeof(cmd));                          // cmd를 먼저 복사
         memcpy(buffer_start + sizeof(cmd), message, strlen(message) + 1); // data를 그 뒤에 복사
-
+        printf("ranking data board 1: %s\n", message);
         if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board1.board_addr, sizeof(board1.board_addr)) < 0)
         {
             perror("failed sendto message for board 1\n");
@@ -466,7 +466,7 @@ void sendRanking(char* ip, char* data, int sfd)
         }
         memcpy(buffer_start, &cmd, sizeof(cmd));                          // cmd를 먼저 복사
         memcpy(buffer_start + sizeof(cmd), message, strlen(message) + 1); // data를 그 뒤에 복사
-
+        printf("ranking data board2: %s\n", message);
         if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board2.board_addr, sizeof(board2.board_addr)) < 0)
         {
             perror("failed sendto message for board 2\n");
