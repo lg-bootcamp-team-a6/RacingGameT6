@@ -94,7 +94,7 @@ void View::setupOverlay()
 
     HbuttonLayout1->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
     HbuttonLayout2->addStretch();
-    HbuttonLayout1->addWidget(m_boosterButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    HbuttonLayout1->addWidget(m_boosterButton, 0, Qt::AlignRight | Qt::AlignVCenter);
     HbuttonLayout2->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
     HbuttonLayout2->addStretch();
     HbuttonLayout2->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
