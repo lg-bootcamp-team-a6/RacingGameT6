@@ -213,9 +213,9 @@ void verifyWinner(char* ip_str, char* data, int sfd)
 
 void updatePosition(char* ip_str, char* data)
 {
-    float x = 0, y = 0;
-    if (sscanf(data, "%f,%f", &x, &y) == 2) {
-        printf("Parsed x = %f, y = %f", x, y);
+    float x = 0, y = 0, angle = 0;
+    if (sscanf(data, "%f,%f,%f", &x, &y, &angle) == 3) {
+        printf("Parsed x = %f, y = %f, angle = %f", x, y, angle);
     } else {
         perror("Parsing failed!");
 
@@ -225,11 +225,13 @@ void updatePosition(char* ip_str, char* data)
     {
         board1.pos_x = x;
         board1.pos_y = y;
+        board1.angle = angle;
     }
     else if(!strcmp(ip_str, BOARD_2))
     {
        board2.pos_x = x;
        board2.pos_y = y;
+       board2.angle = angle;
     }
 }
 
@@ -241,7 +243,8 @@ void sendRivalPosition(char* ip_str, int sfd)
     {
         float x = board2.pos_x;
         float y = board2.pos_y;
-        snprintf(message, sizeof(message), "Board 2 : %f,%f\n", x, y);
+        float angle = board2.angle;
+        snprintf(message, sizeof(message), "Board 2 : %f,%f,%f\n", x, y, angle);
 
         size_t message_size_start = sizeof(cmd) + strlen(message) + 1;  // cmd + data + NULL terminator
     
@@ -263,7 +266,8 @@ void sendRivalPosition(char* ip_str, int sfd)
     {
         float x = board1.pos_x;
         float y = board1.pos_y;
-        snprintf(message, sizeof(message), "Board 1 : %f,%f\n", x, y);
+        float angle = board1.angle;
+        snprintf(message, sizeof(message), "Board 1 : %f,%f,%f\n", x, y, angle);
 
         size_t message_size_start = sizeof(cmd) + strlen(message) + 1;  // cmd + data + NULL terminator
     

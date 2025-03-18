@@ -143,7 +143,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 
 void GameScene::parseRivalPosition(char* data)
 {
-    float x = 0, y = 0;
+    float x = 0, y = 0, angle = 0;
     
     qDebug() << "data : " << data;
     
@@ -155,8 +155,8 @@ void GameScene::parseRivalPosition(char* data)
         while (*p == ' ') {
             p++;
         }
-        if (sscanf(p, "%f,%f", &x, &y) == 2) {
-            qDebug() << "Parsed x =" << x << ", y =" << y;
+        if (sscanf(p, "%f,%f,%f", &x, &y, &angle) == 3) {
+            qDebug() << "Parsed x =" << x << ", y =" << y <<", angle = " << angle;
         } else {
             qDebug() << "Parsing failed!!!!!!";
         }
@@ -166,6 +166,7 @@ void GameScene::parseRivalPosition(char* data)
     
     m_game.car[1].x = x;
     m_game.car[1].y = y;
+    m_game.car[1].angle = angle;
 }
 
 /* sh) pause function */
@@ -636,6 +637,7 @@ void GameScene::update()
         m_carItem[i]->setTransformOriginPoint(21, 34);
         m_carItem[i]->setPos(m_game.car[i].x - m_game.offsetX, m_game.car[i].y - m_game.offsetY);
         m_carItem[i]->setRotation(m_game.car[i].angle * 180/3.141593);
+
         addItem(m_carItem[i]);
     }
 
@@ -643,7 +645,7 @@ void GameScene::update()
     {
         char message[100];
         qDebug() << m_game.car[0].x << " " << m_game.car[0].y ;
-        snprintf(message, sizeof(message), "%f,%f", m_game.car[0].x, m_game.car[0].y);
+        snprintf(message, sizeof(message), "%f,%f,%f", m_game.car[0].x, m_game.car[0].y, m_game.car[0].angle);
         printf("%s\n",message);
         m_pUdpSocketHandler -> BtHsendMessage(CAR_POSITION, message);
     }
