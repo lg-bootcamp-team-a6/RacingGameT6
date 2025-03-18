@@ -227,7 +227,7 @@ void Game::resetGameData(int mapIdx)
     else if (mapIdx == 2)
     {
         car[0].x = 300 * gamescale;
-        car[0].y = 600 * gamescale;
+        car[0].y = 500 * gamescale;
         m_pixelRed = 173;
         m_pixelGreen = 173;
         m_pixelBlue = 173;
