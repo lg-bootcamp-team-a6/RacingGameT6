@@ -990,6 +990,9 @@ void GameScene::setMapIdx(int mapIdx)
 
     if(bSend)
         m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+    
+    InputDeviceHandler::m_sbIsResume = false;
+    InputDeviceHandler::m_sbIsRetry = false;
 }
 
 void GameScene::resetGame() {
@@ -1062,7 +1065,6 @@ void GameScene::Goal()
             }
 
         QStringList rankNames = {"1st", "2nd", "3rd", "4th", "5th"};
-        int tmpX = 0;
         for(int i = 0; i < 5; i++)
         {
             QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
@@ -1087,7 +1089,7 @@ void GameScene::Goal()
         }
     InputDeviceHandler::m_sbIsRetry = true;
     } else {
-        // FinishRace(false, "test:test"); // todo) remove this code
+        FinishRace(false, "test:test"); // todo) remove this code
     }
     m_timer->stop();
 }
