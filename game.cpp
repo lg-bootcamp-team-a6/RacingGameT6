@@ -171,7 +171,7 @@ Game::Game()
 { car_R = 22;
     speed = 0;
     angle = 0;
-    maxSpeed = 60;
+    maxSpeed = 13;
     acc = 2.0f;
     dec = 2.0f;
     turnSpeed = 0.08;

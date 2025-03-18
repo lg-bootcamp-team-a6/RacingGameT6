@@ -179,20 +179,20 @@ void update_ranking_for_map(int mapIndex, double newScore)
         return;
     }
 
-    // 만약 배열이 꽉 찼고 새 점수가 최하위보다 작거나 같으면 업데이트하지 않음
-    if (r->count == TOP_N && newScore <= r->scores[TOP_N - 1])
+    // 만약 배열이 꽉 찼고 새 점수가 최악의 점수(오름차순에서는 최댓값)보다 크거나 같으면 업데이트하지 않음.
+    if (r->count == TOP_N && newScore >= r->scores[TOP_N - 1])
         return;
 
-    // 내림차순 배열에서 새 점수를 삽입할 위치 찾기 (최대 5회 비교)
+    // 오름차순 정렬: 낮은 점수가 더 좋으므로, 새 점수가 기존 점수보다 크거나 같으면 뒤로 밀어야 함.
     int pos = 0;
-    while (pos < r->count && newScore <= r->scores[pos])
+    while (pos < r->count && newScore >= r->scores[pos])
     {
         pos++;
     }
 
-    // 꽉 찼다면 마지막 원소는 버려지고, 그렇지 않으면 count를 증가
+    // 만약 배열이 꽉 찼다면 마지막 원소는 버려지고, 그렇지 않으면 count를 증가
     int limit = (r->count < TOP_N) ? r->count : TOP_N - 1;
-    // pos 이후의 요소들을 오른쪽으로 한 칸씩 이동 (최대 5회 이동)
+    // pos 이후의 요소들을 오른쪽으로 한 칸씩 이동 (최대 TOP_N 개까지)
     for (int i = limit; i > pos; i--)
     {
         r->scores[i] = r->scores[i - 1];
@@ -418,4 +418,16 @@ void shareCheckpoint(char *ip, char *data, int sfd)
             printf("Success send message to board 1\n");
     }
     printf("changed state\n");
+}
+
+void sendRanking(char* ip, char* data, int sfd)
+{
+    if(!strcmp(ip,BOARD_1))
+    {
+
+    }
+    else if(!strcmp(ip,BOARD_2))
+    {
+        
+    }
 }

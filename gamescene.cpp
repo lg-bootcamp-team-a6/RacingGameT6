@@ -119,16 +119,16 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case MAP_STATUS:
             break;
         //cmd : winner, data : time lap
-        case WINNER: {
+        case WINNER: 
             qDebug() << "WINNER";
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
             FinishRace(true, pkt.data);
             break;
-        }
+        
         //cmd : loser, data : winner's time lap
-        case LOSER: {
+        case LOSER: 
             qDebug() << "LOOSER";
             m_rivalScore = 0;
             m_carCnt = 1;
@@ -875,22 +875,22 @@ void GameScene::setMapIdx(int mapIdx)
     {
         if(mapIdx == 0)
         {
-            m_game.car[0].x = 300 * m_game.gamescale;
+            m_game.car[0].x = 320 * m_game.gamescale;
             m_game.car[0].y = 1500 * m_game.gamescale;
         }
         else if (mapIdx == 1)
         {
-            m_game.car[0].x = 300 * m_game.gamescale;
+            m_game.car[0].x = 320 * m_game.gamescale;
             m_game.car[0].y = 1300 * m_game.gamescale;
         }
         else if (mapIdx == 2)
         {
-            m_game.car[0].x = 250 * m_game.gamescale;
+            m_game.car[0].x = 270 * m_game.gamescale;
             m_game.car[0].y = 600 * m_game.gamescale;
         }
         else if (mapIdx == 3)
         {
-            m_game.car[0].x = 190 * m_game.gamescale;
+            m_game.car[0].x = 200 * m_game.gamescale;
             m_game.car[0].y = 2400 * m_game.gamescale;
         }
     }
