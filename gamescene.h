@@ -54,7 +54,6 @@ private slots:
 
 private:
 
-    Game m_game;
     QTimer* m_timer;
     QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap, m_winPixmap, m_losePixmap;
     QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
@@ -90,6 +89,7 @@ public:
     int m_rivalScore;
     bool m_bSingle;
     bool m_bStart;
+    Game m_game;
 
 protected:
     virtual void keyPressEvent(QKeyEvent *event) override;
