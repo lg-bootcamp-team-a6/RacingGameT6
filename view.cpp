@@ -93,17 +93,15 @@ void View::setupOverlay()
     QHBoxLayout *HbuttonLayout2 = new QHBoxLayout();
 
     HbuttonLayout1->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignHCenter);
-<<<<<<< HEAD
     HbuttonLayout2->addStretch();
     HbuttonLayout1->addWidget(m_boosterButton, 0, Qt::AlignRight | Qt::AlignHCenter);
     HbuttonLayout2->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignHCenter);
     HbuttonLayout2->addStretch();
-=======
+
     HbuttonLayout1->addStretch();
     HbuttonLayout1->addWidget(m_boosterButton, 0, Qt::AlignRight | Qt::AlignHCenter);
     HbuttonLayout2->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignHCenter);
     HbuttonLayout2->addStretch();
->>>>>>> 0c612ef7f5932cb72530c4e3786428f0a1b54683
     HbuttonLayout2->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignHCenter);
 
     mainLayout->addLayout(HbuttonLayout1);
