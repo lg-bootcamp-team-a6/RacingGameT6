@@ -77,6 +77,7 @@ public:
     void resetGame();
     void parseRivalPosition(char* data);
     void FinishRace(bool win, char *pszTime);
+    void parseRanking(char* data);
     QGraphicsPixmapItem *m_pauseItem;
     QGraphicsPixmapItem *m_finishItem;
     QGraphicsPixmapItem *m_winItem;

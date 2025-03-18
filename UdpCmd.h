@@ -6,3 +6,4 @@
 #define WINNER 5
 #define LOSER 6
 #define IP_ADDRESS 7
+#define RANKING 8

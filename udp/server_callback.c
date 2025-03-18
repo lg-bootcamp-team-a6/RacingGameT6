@@ -422,12 +422,56 @@ void shareCheckpoint(char *ip, char *data, int sfd)
 
 void sendRanking(char* ip, char* data, int sfd)
 {
-    if(!strcmp(ip,BOARD_1))
+    int16_t cmd = RANKING;
+    char message[100];
+    if (!strcmp(ip, BOARD_1))
     {
+        int mapIndex = board1.map_info;
+        Ranking *r = &rankingList[mapIndex];
+        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r-> scores[2], r-> scores[3], r-> scores[4]);
 
+        size_t message_size_start = sizeof(cmd) + strlen(message) + 1; // cmd + data + NULL terminator
+
+        // Send msg to winner
+        char *buffer_start = malloc(message_size_start);
+        if (!buffer_start)
+        {
+            perror("malloc failed for START message\n");
+            return;
+        }
+        memcpy(buffer_start, &cmd, sizeof(cmd));                          // cmd를 먼저 복사
+        memcpy(buffer_start + sizeof(cmd), message, strlen(message) + 1); // data를 그 뒤에 복사
+
+        if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board1.board_addr, sizeof(board1.board_addr)) < 0)
+        {
+            perror("failed sendto message for board 1\n");
+        }
+        else
+            printf("Success send message to board 1\n");
     }
-    else if(!strcmp(ip,BOARD_2))
+    else if (!strcmp(ip, BOARD_2))
     {
-        
+        int mapIndex = board2.map_info;
+        Ranking *r = &rankingList[mapIndex];
+        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r-> scores[2], r-> scores[3], r-> scores[4]);
+
+        size_t message_size_start = sizeof(cmd) + strlen(message) + 1; // cmd + data + NULL terminator
+
+        // Send msg to winner
+        char *buffer_start = malloc(message_size_start);
+        if (!buffer_start)
+        {
+            perror("malloc failed for START message\n");
+            return;
+        }
+        memcpy(buffer_start, &cmd, sizeof(cmd));                          // cmd를 먼저 복사
+        memcpy(buffer_start + sizeof(cmd), message, strlen(message) + 1); // data를 그 뒤에 복사
+
+        if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board2.board_addr, sizeof(board2.board_addr)) < 0)
+        {
+            perror("failed sendto message for board 2\n");
+        }
+        else
+            printf("Success send message to board 2\n");
     }
 }

@@ -138,6 +138,9 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case IP_ADDRESS:
             parseMyIp(pkt.data);
             break;
+
+        case RANKING:
+            parseRanking(pkt.data);
         default:
             break;
     }
@@ -145,6 +148,17 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 
     if (pkt.data) {
         delete[] pkt.data;
+    }
+}
+
+void GameScene::parseRanking(char* data)
+{
+    float scores[5] = {0};
+    if (sscanf(data, "%f,%f,%f,%f,%f", &scores[0], &scores[1], &scores[2], &scores[3], &scores[4]) == 5) {
+        qDebug() << "Parsed scores:" 
+                 << scores[0] << scores[1] << scores[2] << scores[3] << scores[4];
+    } else {
+        qDebug() << "Parsing failed for ranking data!";
     }
 }
 
