@@ -146,7 +146,6 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
     }
 }
 
-<<<<<<< Updated upstream
 void GameScene::FinishRace(bool win) {
     if (win) {
         qDebug() << "round finished (single mode: " << m_bSingle << ")";
@@ -195,11 +194,24 @@ void GameScene::FinishRace(bool win) {
 
         m_timer->stop();
     }
-=======
+}
+
 void GameScene::parseMyIp(char* data)
 {
     printf("%s\n", data);
->>>>>>> Stashed changes
+    
+    if(!strcmp(data,"192.168.10.4"))
+    {
+        if(m_carPixmap[0].load(m_game.PATH_TO_CAR_PIXMAP[1]))
+        {
+            qDebug() << "CarPixmap[0] is loaded successfully";
+        }
+
+        if(m_carPixmap[1].load(m_game.PATH_TO_CAR_PIXMAP[0]))
+        {
+            qDebug() << "CarPixmap[0] is loaded successfully";
+        }
+    }
 }
 
 void GameScene::parseRivalPosition(char* data)
