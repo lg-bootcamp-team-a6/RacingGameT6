@@ -42,8 +42,8 @@ GameScene::GameScene(QObject *parent)
     QGraphicsPixmapItem *start = new QGraphicsPixmapItem(startPixmap);
 
     if (nullptr != start) {
-        start->setScale(0.7);
-        start->setPos(-40, 15);
+        start->setScale(0.86);
+        start->setPos(-230, -125);
         addItem(start);
         start->setVisible(true);
     }
@@ -135,7 +135,6 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_bConnect = false;
             FinishRace(false, pkt.data);
             break;
-
         case IP_ADDRESS:
             parseMyIp(pkt.data);
             break;
@@ -197,6 +196,8 @@ void GameScene::FinishRace(bool win, char *pszTime) {
 
         m_timer->stop();
     }
+
+    InputDeviceHandler::m_sbIsRetry = true;
 }
 
 void GameScene::parseMyIp(char* data)
@@ -1002,11 +1003,10 @@ void GameScene::Goal()
             addItem(textItem3);
             textItem3->setVisible(true);
         }
-        InputDeviceHandler::m_sbIsRetry = true;
+    InputDeviceHandler::m_sbIsRetry = true;
     } else {
         // FinishRace(false, "12:43"); // todo) remove this code
     }
-
     m_timer->stop();
 }
 
