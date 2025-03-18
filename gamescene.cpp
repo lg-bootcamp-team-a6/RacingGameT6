@@ -100,9 +100,9 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             if(!strcmp(pkt.data,"START"))
             {
                 qDebug() << "START setMapIdx";
+                setMapIdx(m_mapIdx);
                 m_bConnect = true;
                 m_carCnt = 2;
-                setMapIdx(m_mapIdx);
             }
             break;
         //how many checkpoints 
@@ -783,6 +783,8 @@ void GameScene::setAngleDirection(double angle)
 void GameScene::setMapIdx(int mapIdx)
 {
     m_mapIdx = mapIdx;
+    m_bConnect = false;
+    m_carCnt = 1;
     m_game.resetGameData(mapIdx);
     m_elapsedTime = 0;
     update();
