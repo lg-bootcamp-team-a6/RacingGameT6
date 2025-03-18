@@ -119,20 +119,21 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
         case MAP_STATUS:
             break;
         //cmd : winner, data : time lap
-        case WINNER:
+        case WINNER: {
             qDebug() << "WINNER";
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
-            FinishRace(true);
+            FinishRace(true, pkt.data);
             break;
+        }
         //cmd : loser, data : winner's time lap
-        case LOSER:
+        case LOSER: {
             qDebug() << "LOOSER";
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
-            FinishRace(false);
+            FinishRace(false, pkt.data);
             break;
         case IP_ADDRESS:
             parseMyIp(pkt.data);
@@ -146,9 +147,9 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
     }
 }
 
-void GameScene::FinishRace(bool win) {
+void GameScene::FinishRace(bool win, char *pszTime) {
     if (win) {
-        qDebug() << "round finished (single mode: " << m_bSingle << ")";
+        qDebug() << "dual finished, lap time: " << pszTime << ")";
         QGraphicsPixmapItem *win = new QGraphicsPixmapItem(m_winPixmap);
 
         if (nullptr != win) {
@@ -161,7 +162,7 @@ void GameScene::FinishRace(bool win) {
         QGraphicsTextItem* record = new QGraphicsTextItem();
 
         QString recordText;
-        recordText = "You are winner";
+        recordText = pszTime;
 
         record->setPlainText(QString("%1").arg(recordText));
         record->setDefaultTextColor(Qt::black);
@@ -170,7 +171,7 @@ void GameScene::FinishRace(bool win) {
         addItem(record);
         record->setVisible(true);
     } else {
-        qDebug() << "round finished (single mode: " << m_bSingle << ")";
+        qDebug() << "dual finished, lap time: " << pszTime << ")";
         QGraphicsPixmapItem *lose = new QGraphicsPixmapItem(m_losePixmap);
 
         if (nullptr != lose) {
@@ -183,7 +184,7 @@ void GameScene::FinishRace(bool win) {
         QGraphicsTextItem* record = new QGraphicsTextItem();
 
         QString recordText;
-        recordText = "12:34";
+        recordText = pszTime;
 
         record->setPlainText(QString("%1").arg(recordText));
         record->setDefaultTextColor(Qt::white);
@@ -679,8 +680,6 @@ void GameScene::update()
     if (!m_bStart) {
         qDebug() << "before set mode";
         return;
-    } else {
-        qDebug() << "single mode: " << m_bSingle;
     }
 
     clear();
@@ -996,7 +995,7 @@ void GameScene::Goal()
         }
         InputDeviceHandler::m_sbIsRetry = true;
     } else {
-        // FinishRace(false); // todo) remove this code
+        // FinishRace(false, "12:43"); // todo) remove this code
     }
 
     m_timer->stop();
