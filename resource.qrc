@@ -13,6 +13,7 @@
         <file>images/star1.png</file>
         <file>images/star2.png</file>
         <file>images/brake_pedal.png</file>
+        <file>images/back_pedal.png</file>
         <file>images/accel_pedal.png</file>
         <file>images/arrow.png</file>
         <file>images/pause.png</file>
@@ -32,5 +33,6 @@
         <file>images/win.png</file>
         <file>images/Booster.png</file>
         <file>images/Booster1.png</file>
+        <file>images/boost.png</file>
     </qresource>
 </RCC>

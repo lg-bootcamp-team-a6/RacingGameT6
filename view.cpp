@@ -55,35 +55,35 @@ void View::setupOverlay()
     m_accelForwardButton->setFixedSize(100, 100);
     m_accelForwardButton->setIcon(QIcon(":/images/accel_pedal.png"));
     m_accelForwardButton->setIconSize(QSize(100, 100));
-    m_accelForwardButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 255, 255, 150);");
+    m_accelForwardButton->setStyleSheet("border: none; background-color: transparent;");
     m_accelForwardButton->setFocusPolicy(Qt::NoFocus);
     m_accelForwardButton->setAutoRepeat(false);
 
     // 왼쪽 아래 버튼: Accel Back
     m_accelBackButton = new QPushButton("", m_overlay);
     m_accelBackButton->setFixedSize(100, 100);
-    m_accelBackButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_accelBackButton->setIcon(QIcon(":/images/back_pedal.png"));
     m_accelBackButton->setIconSize(QSize(100, 100));
-    m_accelBackButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 255, 255, 150);");
+    m_accelBackButton->setStyleSheet("border: none; background-color: transparent;");
     m_accelBackButton->setFocusPolicy(Qt::NoFocus);
     m_accelBackButton->setAutoRepeat(false);
 
 
-    // 오른쪽 버튼: Brake
+    // 오른쪽 버튼: Boost
     m_boosterButton = new QPushButton("", m_overlay);
     m_boosterButton->setFixedSize(100, 100);
-    m_boosterButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_boosterButton->setIcon(QIcon(":/images/boost.png"));
     m_boosterButton->setIconSize(QSize(100, 100));
-    m_boosterButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 0, 0, 150);");
+    m_boosterButton->setStyleSheet("border: none; background-color: transparent;");
     m_boosterButton->setFocusPolicy(Qt::NoFocus);
     m_boosterButton->setAutoRepeat(false);
 
     // 오른쪽 버튼: Brake
     m_brakeButton = new QPushButton("", m_overlay);
     m_brakeButton->setFixedSize(100, 100);
-    m_brakeButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_brakeButton->setIcon(QIcon(":/images/brake_pedal.png"));
     m_brakeButton->setIconSize(QSize(100, 100));
-    m_brakeButton->setStyleSheet("border-radius: 50px; background-color: black;");
+    m_brakeButton->setStyleSheet("border: none; background-color: transparent;");
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
     m_brakeButton->setAutoRepeat(false);
 

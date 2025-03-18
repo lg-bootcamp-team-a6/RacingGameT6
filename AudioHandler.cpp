@@ -197,11 +197,6 @@ std::pair<QString, QString> AudioHandler::playNextTrack() {
 }
 
 void AudioHandler::loopAudio() {
-    // if (!isAudioOn()) {
-    //     qDebug() << __FUNCTION__ << " - Audio is disabled. Exiting loop.";
-    //     return;
-    // }
-
     setAudioStatus(true);
     QString currentTrack = getCurrentTrack();
     const QMap<QString, AudioData>& audioMap = getAudioMap();
@@ -224,10 +219,8 @@ void AudioHandler::loopAudio() {
         audioProcesses.erase(it);
     }
 
-    // 🎵 새롭게 오디오 재생
     playAudio();
 
-    // 🔄 일정 시간 후 다시 loopAudio() 호출 (반복 실행)
     loopTimer->start(durationMs);
     connect(loopTimer, &QTimer::timeout, this, &AudioHandler::loopAudio, Qt::UniqueConnection);
 
