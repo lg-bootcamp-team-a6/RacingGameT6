@@ -964,7 +964,7 @@ void GameScene::setMapIdx(int mapIdx)
         else if (mapIdx == 2)
         {
             m_game.car[0].x = 270 * m_game.gamescale;
-            m_game.car[0].y = 600 * m_game.gamescale;
+            m_game.car[0].y = 500 * m_game.gamescale;
         }
         else if (mapIdx == 3)
         {
