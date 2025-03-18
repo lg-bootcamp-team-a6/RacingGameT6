@@ -1009,7 +1009,7 @@ void GameScene::resetGame() {
 bool GameScene::checkStarCollision()
 {
     bool bReturn = false;
-    int i32Range = 150;
+    int i32Range = 100;
     int i32CarX = m_game.car[0].x;
     int i32CarY = m_game.car[0].y;
 

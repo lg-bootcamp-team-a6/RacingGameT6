@@ -19,6 +19,7 @@ View::View()
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
 
+    setupOverlay();
 }
 
 void View::setupOverlay()
