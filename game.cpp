@@ -171,9 +171,6 @@ Game::Game()
 { car_R = 22;
     speed = 0;
     angle = 0;
-    maxSpeed = 13;
-    acc = 2.0f;
-    dec = 2.0f;
     turnSpeed = 0.08;
     offsetX = 0;
     offsetY = 0;
@@ -204,6 +201,9 @@ void Game::resetGameData(int mapIdx)
     offsetX = 0;
     offsetY = 0;
     m_starScore = 0;
+    maxSpeed = 13;
+    acc = 1.0f;
+    dec = 1.0f;
 
     if(mapIdx == 0)
     {

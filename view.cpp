@@ -68,6 +68,16 @@ void View::setupOverlay()
     m_accelBackButton->setFocusPolicy(Qt::NoFocus);
     m_accelBackButton->setAutoRepeat(false);
 
+
+    // 오른쪽 버튼: Brake
+    m_boosterButton = new QPushButton("", m_overlay);
+    m_boosterButton->setFixedSize(100, 100);
+    m_boosterButton->setIcon(QIcon(":/images/accel_pedal.png"));
+    m_boosterButton->setIconSize(QSize(100, 100));
+    m_accelBackButton->setStyleSheet("border-radius: 50px; background-color: rgba(255, 0, 0, 150);");
+    m_boosterButton->setFocusPolicy(Qt::NoFocus);
+    m_boosterButton->setAutoRepeat(false);
+
     // 오른쪽 버튼: Brake
     m_brakeButton = new QPushButton("", m_overlay);
     m_brakeButton->setFixedSize(100, 100);
@@ -83,6 +93,8 @@ void View::setupOverlay()
     QHBoxLayout *HbuttonLayout2 = new QHBoxLayout();
 
     HbuttonLayout1->addWidget(m_accelForwardButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
+    HbuttonLayout2->addStretch();
+    HbuttonLayout1->addWidget(m_boosterButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
     HbuttonLayout2->addWidget(m_accelBackButton, 0, Qt::AlignLeft | Qt::AlignVCenter);
     HbuttonLayout2->addStretch();
     HbuttonLayout2->addWidget(m_brakeButton, 0, Qt::AlignRight | Qt::AlignVCenter);
@@ -99,27 +111,49 @@ void View::setupOverlay()
     // 버튼 이벤트 연결
     connect(m_accelForwardButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "UP pressed";
+        m_game.maxSpeed = 13;
+        m_game.acc = 1.f;
+        m_game.dec = 1.f;
         m_gameScene->setUpDirection(true);
         m_gameScene->setDownDirection(false);
         m_accelForwardButton->setEnabled(false);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
         m_brakeButton->setEnabled(true);  // Disable the button
+        m_boosterButton->setEnabled(true);  // Disable the button
     });
     connect(m_accelBackButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "DOWN pressed";
+        m_game.maxSpeed = 13;
+        m_game.acc = 1.f;
+        m_game.dec = 1.f;
         m_gameScene->setUpDirection(false);
         m_gameScene->setDownDirection(true);
         m_accelBackButton->setEnabled(false);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_brakeButton->setEnabled(true);  // Disable the button
+        m_boosterButton->setEnabled(true);  // Disable the button
     });
     connect(m_brakeButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "Brake pressed";
+        m_game.maxSpeed = 13;
+        m_game.acc = 1.f;
+        m_game.dec = 1.f;
         m_gameScene->setUpDirection(false);
         m_gameScene->setDownDirection(false);
         m_brakeButton->setEnabled(false);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
+        m_boosterButton->setEnabled(true);  // Disable the button
+    });
+    connect(m_boosterButton, &QPushButton::pressed, this, [this]() {
+        qDebug() << "Booster pressed";
+        m_game.maxSpeed = 20;
+        m_game.acc = 1.5f;
+        m_game.dec = 1.5f;
+        m_brakeButton->setEnabled(true);  // Disable the button
+        m_accelForwardButton->setEnabled(true);  // Disable the button
+        m_accelBackButton->setEnabled(true);  // Disable the button
+        m_boosterButton->setEnabled(false);  // Disable the button
     });
 }
 
