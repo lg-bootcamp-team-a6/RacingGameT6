@@ -180,9 +180,9 @@ void GameScene::FinishRace(bool win, char *pszTime) {
         recordText = pszTime;
 
         record->setPlainText(QString("%1").arg(recordText));
-        record->setDefaultTextColor(Qt::black);
-        record->setFont(QFont("D2Coding", 20, QFont::Bold));
-        record->setPos(450, 165); // col * row
+        record->setDefaultTextColor(Qt::white);
+        record->setFont(QFont("D2Coding", 30, QFont::ExtraBold));
+        record->setPos(385, 162); // col * row
         addItem(record);
         record->setVisible(true);
     } else {
@@ -203,8 +203,8 @@ void GameScene::FinishRace(bool win, char *pszTime) {
 
         record->setPlainText(QString("%1").arg(recordText));
         record->setDefaultTextColor(Qt::white);
-        record->setFont(QFont("D2Coding", 30, QFont::Bold));
-        record->setPos(450, 165); // col * row
+        record->setFont(QFont("D2Coding", 30, QFont::ExtraBold));
+        record->setPos(455, 162); // col * row
         addItem(record);
         record->setVisible(true);
 
@@ -1060,11 +1060,10 @@ void GameScene::Goal()
         }
     InputDeviceHandler::m_sbIsRetry = true;
     } else {
-        // FinishRace(false, "12:43"); // todo) remove this code
+        // FinishRace(false, "test:test"); // todo) remove this code
     }
     m_timer->stop();
 }
-
 
 /* Sound ON/OFF */
 void GameScene::toggleAudioStatus() {
