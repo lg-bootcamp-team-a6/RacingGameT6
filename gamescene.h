@@ -55,7 +55,7 @@ private:
 
     Game m_game;
     QTimer* m_timer;
-    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap;
+    QPixmap m_bgPixmap[4], m_carPixmap[5], m_starPixmap[4], m_readyPixmap[3], m_pausePixmap, m_finishPixmap, m_winPixmap, m_losePixmap;
     QGraphicsPixmapItem* m_bgItem[4], *m_carItem[5], *m_readyItem[3], * m_starItem[30];
     UdpSocketHandler *m_pUdpSocketHandler;
     
@@ -76,8 +76,11 @@ public:
     void Wait3Seconds();
     void resetGame();
     void parseRivalPosition(char* data);
+    void FinishRace(bool win);
     QGraphicsPixmapItem *m_pauseItem;
     QGraphicsPixmapItem *m_finishItem;
+    QGraphicsPixmapItem *m_winItem;
+    QGraphicsPixmapItem *m_loseItem;
     qint64 m_elapsedTime;
     int m_computeTime;
     bool m_bIsResume;

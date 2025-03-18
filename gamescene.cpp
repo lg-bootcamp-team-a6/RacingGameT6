@@ -123,6 +123,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
+            FinishRace(true);
             break;
         //cmd : loser, data : winner's time lap
         case LOSER:
@@ -130,6 +131,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_rivalScore = 0;
             m_carCnt = 1;
             m_bConnect = false;
+            FinishRace(false);
             break;
         default:
             break;
@@ -138,6 +140,56 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 
     if (pkt.data) {
         delete[] pkt.data;
+    }
+}
+
+void GameScene::FinishRace(bool win) {
+    if (win) {
+        qDebug() << "round finished (single mode: " << m_bSingle << ")";
+        QGraphicsPixmapItem *win = new QGraphicsPixmapItem(m_winPixmap);
+
+        if (nullptr != win) {
+            win->setScale(1.15);
+            win->setPos(-35, 0);
+            addItem(win);
+            win->setVisible(true);
+        }
+
+        QGraphicsTextItem* record = new QGraphicsTextItem();
+
+        QString recordText;
+        recordText = "You are winner";
+
+        record->setPlainText(QString("%1").arg(recordText));
+        record->setDefaultTextColor(Qt::black);
+        record->setFont(QFont("D2Coding", 20, QFont::Bold));
+        record->setPos(450, 165); // col * row
+        addItem(record);
+        record->setVisible(true);
+    } else {
+        qDebug() << "round finished (single mode: " << m_bSingle << ")";
+        QGraphicsPixmapItem *lose = new QGraphicsPixmapItem(m_losePixmap);
+
+        if (nullptr != lose) {
+            lose->setScale(1.15);
+            lose->setPos(-35, 0);
+            addItem(lose);
+            lose->setVisible(true);
+        }
+
+        QGraphicsTextItem* record = new QGraphicsTextItem();
+
+        QString recordText;
+        recordText = "12:34";
+
+        record->setPlainText(QString("%1").arg(recordText));
+        record->setDefaultTextColor(Qt::white);
+        record->setFont(QFont("D2Coding", 30, QFont::Bold));
+        record->setPos(450, 165); // col * row
+        addItem(record);
+        record->setVisible(true);
+
+        m_timer->stop();
     }
 }
 
@@ -329,6 +381,16 @@ void GameScene::loadPixmap()
     if(m_finishPixmap.load(m_game.PATH_TO_FINISH_PIXMAP))
     {
         qDebug() << "FinishPixmap is loaded successfully";
+    }
+
+    if(m_winPixmap.load(m_game.PATH_TO_WIN_PIXMAP))
+    {
+        qDebug() << "Winixmap is loaded successfully";
+    }
+
+    if(m_losePixmap.load(m_game.PATH_TO_LOSE_PIXMAP))
+    {
+        qDebug() << "LosePixmap is loaded successfully";
     }
 }
 
@@ -838,62 +900,57 @@ bool GameScene::checkStarCollision()
 
 void GameScene::Goal()
 {
-    int idx = m_mapIdx;
-
-    idx++;
-
-    idx = idx == m_mapCnt ? 0 : idx;
-
     m_game.m_rankRecord[m_mapIdx].append(m_elapsedTime);
     std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end());
-    //Send elapsedTime
     int seconds = m_elapsedTime / 100;
     int mseconds = m_elapsedTime % 100;
 
-    //qDebug() << "Goal 1 ! ";
     char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
     sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
-    //qDebug() << "Goal 2 ! ";
     qDebug() << "The elapsedTime is " << str;
     m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
 
     //Display Finish in solo play
-    QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
+    if (m_bSingle) {
+        qDebug() << "round finished (single mode: " << m_bSingle << ")";
+        QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
 
-    if (nullptr != fin) {
-        fin->setScale(0.7);
-        fin->setPos(-40, 15);
-        addItem(fin);
-        fin->setVisible(true);
+        if (nullptr != fin) {
+            fin->setScale(1.15);
+            fin->setPos(-35, 0);
+            addItem(fin);
+            fin->setVisible(true);
+            }
+
+        QStringList rankNames = {"1st", "2nd", "3rd", "4th", "5th"};
+        int tmpX = 0;
+        for(int i = 0; i < 5; i++)
+        {
+            QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
+
+            QString timeText;
+            if (i < m_game.m_rankRecord[m_mapIdx].size()) {
+                int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
+                int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
+                timeText = QString("%1.%2")
+                        .arg(seconds, 2, 10, QChar('0'))
+                        .arg(mseconds, 2, 10, QChar('0'));
+            } else {
+                timeText = "--.--";  // if no lap time
+            }
+
+            textItem3->setPlainText(QString("%1 : %2").arg(rankNames[i]).arg(timeText));
+            textItem3->setDefaultTextColor(Qt::white);
+            textItem3->setFont(QFont("D2Coding", 20, QFont::Bold));
+            textItem3->setPos(250, 133 + 40 * i); // col * row
+            addItem(textItem3);
+            textItem3->setVisible(true);
         }
-
-    QStringList rankNames = {"1st", "2nd", "3rd", "4th", "5th"};
-    int tmpX = 0;
-    for(int i = 0; i < 5; i++)
-    {
-        QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-
-        QString timeText;
-        if (i < m_game.m_rankRecord[m_mapIdx].size()) {
-            int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
-            int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
-            timeText = QString("%1.%2")
-                       .arg(seconds, 2, 10, QChar('0'))
-                       .arg(mseconds, 2, 10, QChar('0'));
-        } else {
-            timeText = "--.--";  // if no lap time
-        }
-
-        textItem3->setPlainText(QString("%1 : %2").arg(rankNames[i]).arg(timeText));
-        textItem3->setDefaultTextColor(Qt::white);
-        textItem3->setFont(QFont("D2Coding", 20, QFont::Bold));
-        textItem3->setPos(270, 100 + 40 * i); // col * row
-        addItem(textItem3);
-        textItem3->setVisible(true);
+        InputDeviceHandler::m_sbIsRetry = true;
+    } else {
+        // FinishRace(false); // todo) remove this code
     }
 
-    InputDeviceHandler::m_sbIsRetry = true;
-    
     m_timer->stop();
 }
 

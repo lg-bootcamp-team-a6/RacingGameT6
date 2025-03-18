@@ -28,5 +28,7 @@
         <file>images/walk.png</file>
         <file>images/finish.png</file>
         <file>images/start.png</file>
+        <file>images/lose.png</file>
+        <file>images/win.png</file>
     </qresource>
 </RCC>
