@@ -113,11 +113,13 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
                 verifyWinner(ip_str, data, sfd);
                 is_winner = 1;
             }
+            playMode = 0;
             break;
 		//which map
 		case MAP_STATUS:
 			printf("change map\n");
 			setMapInfo(ip_str, data);
+            playMode = 0;
             //reset winner information
             is_winner = 0;
 			break;

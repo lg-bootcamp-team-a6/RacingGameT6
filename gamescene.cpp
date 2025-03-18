@@ -239,8 +239,8 @@ void GameScene::togglePause(bool IsResume)
             qDebug() << "[GAME] Paused by an interrupt.";
             //SocketUDP();
             //SocketUDP();
-            //char* data = "PAUSE";
-            //m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
+            char* data = "PAUSE";
+            m_pUdpSocketHandler -> BtHsendMessage(GAME_STATUS, data);
         }
     } else {
         m_timer->start(m_game.ITERATION_VALUE);
