@@ -159,6 +159,7 @@ void View::setupOverlay()
         m_gameScene->m_game.acc = 2.f;
         m_gameScene->m_game.dec = 2.f;
         m_gameScene->setUpDirection(true);
+        m_gameScene->setDownDirection(false);
         m_gameScene->setBoosterOn(true);
         m_brakeButton->setEnabled(true);  // Disable the button
         m_accelForwardButton->setEnabled(true);  // Disable the button
