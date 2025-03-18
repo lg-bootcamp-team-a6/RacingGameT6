@@ -1,3 +1,4 @@
+# Wait for ethernet device to link
 for count in 1 2 3 4 5
 do
         link=`cat /sys/class/net/eth0/carrier`
@@ -7,15 +8,44 @@ do
 done
 
 mknod /dev/mydev c 120 0
-mount -t nfs -o nolock 192.168.10.2:/nfsroot /mnt/nfs
+telnetd
 
 # Racing2D Setting
 export QT_QPA_PLATFORM=linuxfb
 
+# Wait for NFS server 192.168.10.2 to become reachable
+for count in 1 2 3 4 5
+do
+    # Ping the NFS server to check if it is reachable
+    ping -c 1 192.168.10.2 > /dev/null 2>&1
+    if [ $? -eq 0 ]; then
+        echo "NFS server 192.168.10.2 is reachable."
+        break
+    fi
+    echo "Wait for NFS server 192.168.10.2 to become reachable - $count"
+    sleep 1
+done
+
+# If NFS server is reachable, attempt to mount
+if [ $? -eq 0 ]; then
+    mount -t nfs -o nolock 192.168.10.2:/nfsroot /mnt/nfs
+    if [ $? -eq 0 ]; then
+        echo "NFS server mounted successfully."
+    else
+        echo "Failed to mount NFS server."
+    fi
+else
+    echo "NFS server 192.168.10.2 is not reachable after 5 attempts."
+fi
+
+echo "Enable devtest.ko"
 cd /mnt/nfs
 insmod devtest.ko
 
-./Racing2D &
-
-# ALSA Setting
+echo "Enable ALSA"
 source /mnt/nfs/alsa.sh
+
+echo "Play game"
+/mnt/nfs/Racing2D &
+
+echo "Finish S50local"
