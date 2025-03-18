@@ -86,6 +86,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
     getIPv4Address(addr_client, ip_str);
     //printf("Received message: dest = %s, cmd = %d, data = %s\n", ip_str, cmd, data);
     //printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
+
     switch(cmd)
     {
         case GAME_STATUS:
@@ -169,7 +170,10 @@ int main(int argc, char **argv) {
         close(sfd);
         return EXIT_FAILURE;
     }
-    
+    loadRankingForMap(0);
+    loadRankingForMap(1);
+    loadRankingForMap(2);
+    loadRankingForMap(3);
     for (;;) {
         addr_client_len = sizeof(addr_client);
         len = recvfrom(sfd, buf, MAX_BUF - 1, 0, (struct sockaddr *)&addr_client, &addr_client_len);

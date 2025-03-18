@@ -152,16 +152,14 @@ void addRanking(char *ip_str, char *data)
     if (!strcmp(ip_str, BOARD_1))
     {
         update_ranking_for_map(board1.map_info, atof(data));
+        print_ranking_for_map(board1.map_info);
     }
     else if (!strcmp(ip_str, BOARD_2))
     {
         update_ranking_for_map(board2.map_info, atof(data));
+        print_ranking_for_map(board2.map_info);
     }
 
-    print_ranking_for_map(3);
-    // print_ranking_for_map(1);
-    // print_ranking_for_map(2);
-    // print_ranking_for_map(3);
 }
 
 void update_ranking_for_map(int mapIndex, double newScore)
@@ -203,6 +201,33 @@ void update_ranking_for_map(int mapIndex, double newScore)
     {
         r->count++;
     }
+
+    saveRankingForMap(mapIndex);
+}
+
+void saveRankingForMap(int mapIndex)
+{
+    if (mapIndex < 0 || mapIndex >= MAP_COUNT)
+        return;
+
+    Ranking *r = &rankingList[mapIndex];
+    char filename[64];
+    // 파일 이름은 "mapIndex.txt" 형태로 생성 (예: "0.txt")
+    snprintf(filename, sizeof(filename), "%d.txt", mapIndex);
+
+    FILE *fp = fopen(filename, "w");
+    if (fp == NULL) {
+        perror("fopen failed");
+        return;
+    }
+
+    // 파일에 랭킹 정보를 저장 (첫 줄에 맵 번호, 이후 각 순위 점수)
+    for (int i = 0; i < r->count; i++) {
+        fprintf(fp, "%f\n", r->scores[i]);
+    }
+
+    fclose(fp);
+    printf("Saved ranking for map %d to file %s\n", mapIndex, filename);
 }
 
 void print_ranking_for_map(int mapIndex)
@@ -418,6 +443,40 @@ void shareCheckpoint(char *ip, char *data, int sfd)
             printf("Success send message to board 1\n");
     }
     printf("changed state\n");
+}
+
+void loadRankingForMap(int mapIndex)
+{
+    if (mapIndex < 0 || mapIndex >= MAP_COUNT)
+        return;
+
+    char filename[64];
+    snprintf(filename, sizeof(filename), "%d.txt", mapIndex);
+
+    FILE *fp = fopen(filename, "r");
+    if (fp == NULL) {
+        perror("fopen failed");
+        return;
+    }
+
+    Ranking *r = &rankingList[mapIndex];
+    r->count = 0;
+
+    char line[256];
+
+    // 이후 각 줄에서 점수를 읽어 최대 TOP_N개만 로딩
+    int count = 0;
+    while (fgets(line, sizeof(line), fp) != NULL && count < TOP_N) {
+        float score;
+        if (sscanf(line, "%f", &score) == 1) {
+            r->scores[count] = score;
+            count++;
+        }
+    }
+    r->count = count;
+
+    fclose(fp);
+    printf("Loaded %d scores from file %s for map %d\n", r->count, filename, mapIndex);
 }
 
 void sendRanking(char* ip, char* data, int sfd)
