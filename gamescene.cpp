@@ -1089,7 +1089,7 @@ void GameScene::Goal()
         }
     InputDeviceHandler::m_sbIsRetry = true;
     } else {
-        FinishRace(false, "test:test"); // todo) remove this code
+        // FinishRace(false, "test:test"); // todo) remove this code
     }
     m_timer->stop();
 }
