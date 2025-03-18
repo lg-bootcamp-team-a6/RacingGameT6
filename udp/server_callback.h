@@ -33,4 +33,5 @@ void shareCheckpoint(char* ip, char* data,int sfd);
 
 void updatePosition(char* ip_str, char* data);
 void sendRivalPosition(char* ip_str, int sfd);
+void sendIpAddress(char *ip_str, char *data, int sfd);
 #endif // SERVER_CALLBACK_H

@@ -53,11 +53,6 @@ GameScene::GameScene(QObject *parent)
     m_audioHandler->playAudio("cookie.wav", true);
     m_timer->start(m_game.ITERATION_VALUE);
 
-    //Send map status
-    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
-    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
-    qDebug() << "Send map status" << str;
-    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
 
     // 여기서 receiveMessage() blocking 호출 대신, 별도의 worker를 사용합니다.
     // 먼저, receive_packet 타입을 Qt 메타 타입 시스템에 등록
@@ -80,6 +75,12 @@ GameScene::GameScene(QObject *parent)
     connect(receiverThread, &QThread::finished, receiverThread, &QObject::deleteLater);
 
     receiverThread->start();
+
+    //Send map status
+    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
+    qDebug() << "Send map status" << str;
+    m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
 
     update();
 }
@@ -133,6 +134,8 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
             m_bConnect = false;
             FinishRace(false);
             break;
+        case IP_ADDRESS:
+            parseMyIp(pkt.data);
         default:
             break;
     }
@@ -143,6 +146,7 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
     }
 }
 
+<<<<<<< Updated upstream
 void GameScene::FinishRace(bool win) {
     if (win) {
         qDebug() << "round finished (single mode: " << m_bSingle << ")";
@@ -191,6 +195,11 @@ void GameScene::FinishRace(bool win) {
 
         m_timer->stop();
     }
+=======
+void GameScene::parseMyIp(char* data)
+{
+    printf("%s\n", data);
+>>>>>>> Stashed changes
 }
 
 void GameScene::parseRivalPosition(char* data)

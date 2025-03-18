@@ -122,6 +122,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             playMode = 0;
             //reset winner information
             is_winner = 0;
+            sendIpAddress(ip_str, data, sfd);
 			break;
         default:
             break;

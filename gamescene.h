@@ -32,7 +32,7 @@ public:
     void setMapIdx(int mapIdx);
     bool checkStarCollision();
     void Goal();
-
+    void parseMyIp(char* data);
     int m_mapCnt = 4;
     int m_carCnt = 1;
     int m_mapIdx = 0;
