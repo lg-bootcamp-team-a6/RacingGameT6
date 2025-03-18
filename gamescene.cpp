@@ -202,6 +202,8 @@ void GameScene::parseMyIp(char* data)
     
     if(!strcmp(data,"192.168.10.4"))
     {
+        m_myIp = 4;
+        
         if(m_carPixmap[0].load(m_game.PATH_TO_CAR_PIXMAP[1]))
         {
             qDebug() << "CarPixmap[0] is loaded successfully";
@@ -869,6 +871,31 @@ void GameScene::setMapIdx(int mapIdx)
     m_bConnect = false;
     m_carCnt = 1;
     m_game.resetGameData(mapIdx);
+
+    if(m_myIp == 4)
+    {
+        if(mapIdx == 0)
+        {
+            car[0].x = 300 * gamescale;
+            car[0].y = 1500 * gamescale;
+        }
+        else if (mapIdx == 1)
+        {
+            car[0].x = 300 * gamescale;
+            car[0].y = 1300 * gamescale;
+        }
+        else if (mapIdx == 2)
+        {
+            car[0].x = 250 * gamescale;
+            car[0].y = 600 * gamescale;
+        }
+        else if (mapIdx == 3)
+        {
+            car[0].x = 190 * gamescale;
+            car[0].y = 2400 * gamescale;
+        }
+    }
+
     m_elapsedTime = 0;
     update();
     Wait3Seconds();

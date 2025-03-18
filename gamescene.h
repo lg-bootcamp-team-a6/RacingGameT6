@@ -37,6 +37,7 @@ public:
     int m_carCnt = 1;
     int m_mapIdx = 0;
     bool m_bConnect = false;
+    int m_myIp = 3;
 
 signals:
 
