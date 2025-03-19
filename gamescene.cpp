@@ -737,7 +737,7 @@ void GameScene::showText()
     addItem(my_score);
     my_score->setVisible(true);
 
-    if (m_rivalScore)
+    if (m_rivalScore && m_bConnect)
     {
         QGraphicsTextItem *my_score = new QGraphicsTextItem();
         QGraphicsTextItem *textItem4 = new QGraphicsTextItem();
