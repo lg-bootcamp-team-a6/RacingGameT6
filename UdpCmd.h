@@ -7,3 +7,4 @@
 #define LOSER 6
 #define IP_ADDRESS 7
 #define RANKING 8
+#define MODE 9

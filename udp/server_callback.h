@@ -13,6 +13,8 @@ extern struct board board2;
 extern int board1_pausing;
 extern int board2_pausing;
 
+extern int playMode;
+
 typedef struct {
     float scores[TOP_N];  // 내림차순 정렬 (scores[0]이 최고 점수)
     int count;          // 현재 저장된 점수 개수 (최대 TOP_N)

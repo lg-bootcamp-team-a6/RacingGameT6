@@ -63,15 +63,12 @@ void startDoublePlayer(int sfd)
     {
         perror("failed sendto message for board 1\n");
     }
-    else
-        printf("Success send message to board 1\n");
 
     if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board2.board_addr, sizeof(board2.board_addr)) < 0)
     {
         perror("failed sendto message for board 2\n");
     }
-    else
-        printf("Success send message to board 2\n");
+
     free(buffer_start); // 메모리 해제
 }
 
@@ -113,8 +110,6 @@ void sendIpAddress(char *ip_str, char *data, int sfd)
         {
             perror("failed sendto message for board 1\n");
         }
-        else
-            printf("Success send message to board 1\n");
 
         free(buffer_start); // 메모리 해제
     }
@@ -134,15 +129,14 @@ void sendIpAddress(char *ip_str, char *data, int sfd)
             perror("malloc failed for START message\n");
             return;
         }
-        memcpy(buffer_start, &cmd, sizeof(cmd));                           // cmd를 먼저 복사
+        memcpy(buffer_start, &cmd, sizeof(cmd));                                      // cmd를 먼저 복사
         memcpy(buffer_start + sizeof(cmd), message_start, strlen(message_start) + 1); // data를 그 뒤에 복사
 
         if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board2.board_addr, sizeof(board2.board_addr)) < 0)
         {
             perror("failed sendto message for board 2\n");
         }
-        else
-            printf("Success send message to board 2\n");
+
         free(buffer_start); // 메모리 해제
     }
 }
@@ -159,7 +153,6 @@ void addRanking(char *ip_str, char *data)
         update_ranking_for_map(board2.map_info, atof(data));
         print_ranking_for_map(board2.map_info);
     }
-
 }
 
 void update_ranking_for_map(int mapIndex, double newScore)
@@ -216,13 +209,15 @@ void saveRankingForMap(int mapIndex)
     snprintf(filename, sizeof(filename), "%d.txt", mapIndex);
 
     FILE *fp = fopen(filename, "w");
-    if (fp == NULL) {
+    if (fp == NULL)
+    {
         perror("fopen failed");
         return;
     }
 
     // 파일에 랭킹 정보를 저장 (첫 줄에 맵 번호, 이후 각 순위 점수)
-    for (int i = 0; i < r->count; i++) {
+    for (int i = 0; i < r->count; i++)
+    {
         fprintf(fp, "%f\n", r->scores[i]);
     }
 
@@ -372,8 +367,6 @@ void sendRivalPosition(char *ip_str, int sfd)
         {
             perror("failed sendto message for board 1\n");
         }
-        else
-            printf("Success send message to board 1\n");
     }
     else if (!strcmp(ip_str, BOARD_2))
     {
@@ -398,8 +391,6 @@ void sendRivalPosition(char *ip_str, int sfd)
         {
             perror("failed sendto message for board 2\n");
         }
-        else
-            printf("Success send message to board 2\n");
     }
 }
 
@@ -429,8 +420,6 @@ void shareCheckpoint(char *ip, char *data, int sfd)
         {
             perror("failed sendto message for board 2\n");
         }
-        else
-            printf("Success send message to board 2\n");
     }
     else if (!strcmp(ip, BOARD_2))
     {
@@ -439,8 +428,6 @@ void shareCheckpoint(char *ip, char *data, int sfd)
         {
             perror("failed sendto message for board 1\n");
         }
-        else
-            printf("Success send message to board 1\n");
     }
     printf("changed state\n");
 }
@@ -454,7 +441,8 @@ void loadRankingForMap(int mapIndex)
     snprintf(filename, sizeof(filename), "%d.txt", mapIndex);
 
     FILE *fp = fopen(filename, "r");
-    if (fp == NULL) {
+    if (fp == NULL)
+    {
         perror("fopen failed");
         return;
     }
@@ -466,9 +454,11 @@ void loadRankingForMap(int mapIndex)
 
     // 이후 각 줄에서 점수를 읽어 최대 TOP_N개만 로딩
     int count = 0;
-    while (fgets(line, sizeof(line), fp) != NULL && count < TOP_N) {
+    while (fgets(line, sizeof(line), fp) != NULL && count < TOP_N)
+    {
         float score;
-        if (sscanf(line, "%f", &score) == 1) {
+        if (sscanf(line, "%f", &score) == 1)
+        {
             r->scores[count] = score;
             count++;
         }
@@ -479,7 +469,7 @@ void loadRankingForMap(int mapIndex)
     printf("Loaded %d scores from file %s for map %d\n", r->count, filename, mapIndex);
 }
 
-void sendRanking(char* ip, char* data, int sfd)
+void sendRanking(char *ip, char *data, int sfd)
 {
     int16_t cmd = RANKING;
     char message[100];
@@ -487,7 +477,7 @@ void sendRanking(char* ip, char* data, int sfd)
     {
         int mapIndex = board1.map_info;
         Ranking *r = &rankingList[mapIndex];
-        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r-> scores[2], r-> scores[3], r-> scores[4]);
+        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r->scores[2], r->scores[3], r->scores[4]);
 
         size_t message_size_start = sizeof(cmd) + strlen(message) + 1; // cmd + data + NULL terminator
 
@@ -505,14 +495,12 @@ void sendRanking(char* ip, char* data, int sfd)
         {
             perror("failed sendto message for board 1\n");
         }
-        else
-            printf("Success send message to board 1\n");
     }
     else if (!strcmp(ip, BOARD_2))
     {
         int mapIndex = board2.map_info;
         Ranking *r = &rankingList[mapIndex];
-        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r-> scores[2], r-> scores[3], r-> scores[4]);
+        snprintf(message, sizeof(message), "%f,%f,%f,%f,%f\n", r->scores[0], r->scores[1], r->scores[2], r->scores[3], r->scores[4]);
 
         size_t message_size_start = sizeof(cmd) + strlen(message) + 1; // cmd + data + NULL terminator
 
@@ -530,7 +518,42 @@ void sendRanking(char* ip, char* data, int sfd)
         {
             perror("failed sendto message for board 2\n");
         }
-        else
-            printf("Success send message to board 2\n");
+    }
+}
+
+void sendMode(char *ip_str, char *data, int sfd)
+{
+    int16_t cmd = MODE;
+    char message[32];
+    if (playMode)
+        snprintf(message, sizeof(message), "DOUBLE");
+    else
+        snprintf(message, sizeof(message), "SINGLE");
+
+    size_t message_size_start = sizeof(cmd) + strlen(message) + 1; // cmd + data + NULL terminator
+
+    // Send msg to winner
+    char *buffer_start = malloc(message_size_start);
+    if (!buffer_start)
+    {
+        perror("malloc failed for START message\n");
+        return;
+    }
+    memcpy(buffer_start, &cmd, sizeof(cmd));                          // cmd를 먼저 복사
+    memcpy(buffer_start + sizeof(cmd), message, strlen(message) + 1); // data를 그 뒤에 복사
+
+    if (!strcmp(ip_str, BOARD_1))
+    {
+        if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board1.board_addr, sizeof(board1.board_addr)) < 0)
+        {
+            perror("failed sendto message for board 1\n");
+        }
+    }
+    else if (!strcmp(ip_str, BOARD_2))
+    {
+        if (sendto(sfd, buffer_start, message_size_start, 0, (struct sockaddr *)&board2.board_addr, sizeof(board2.board_addr)) < 0)
+        {
+            perror("failed sendto message for board 2\n");
+        }
     }
 }
