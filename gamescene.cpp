@@ -1057,8 +1057,6 @@ void GameScene::setMapIdx(int mapIdx)
     }
 
     m_elapsedTime = 0;
-    m_game.angle = 0;
-    m_game.turnSpeed = 0;
     update();
     Wait3Seconds();
     char str[20];                 // 문자열 크기 20 (64bit + NULL 종료자)
