@@ -257,7 +257,6 @@ void GameScene::FinishRace(bool win, char *pszTime) {
 
 void GameScene::setBoosterOn(bool boosterOn)
 {
-    m_game.turnSpeed = 0.06;
     m_boosterOn = boosterOn;
 }
 
@@ -561,12 +560,12 @@ void GameScene::carMovement()
 
     if (m_rightDir && m_game.speed!=0)
     {
-        m_game.angle += m_game.turnSpeed * m_game.speed/20;
+        m_game.angle += m_game.turnSpeed * 20/m_game.speed;
     }
 
     if (m_leftDir && m_game.speed!=0)
     {
-        m_game.angle -= m_game.turnSpeed * m_game.speed/20;
+        m_game.angle -= m_game.turnSpeed * 20/m_game.speed;
     }
 
 
@@ -941,7 +940,6 @@ bool GameScene::getDirectionChanged()
 
 void GameScene::setUpDirection(bool upDir)
 {
-    m_game.turnSpeed = 0.04;
     m_upDir = upDir;
 }
 
@@ -952,7 +950,6 @@ void GameScene::setRightDirection(bool rightDir)
 
 void GameScene::setDownDirection(bool downDir)
 {
-    m_game.turnSpeed = 0.04;
     m_downDir = downDir;
 }
 
