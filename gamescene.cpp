@@ -272,7 +272,6 @@ void GameScene::FinishRace(bool win, char *pszTime)
 
 void GameScene::setBoosterOn(bool boosterOn)
 {
-    m_game.turnSpeed = 0.05;
     m_boosterOn = boosterOn;
 }
 
@@ -968,7 +967,6 @@ bool GameScene::getDirectionChanged()
 
 void GameScene::setUpDirection(bool upDir)
 {
-    m_game.turnSpeed = 0.06;
     m_upDir = upDir;
 }
 
@@ -979,7 +977,6 @@ void GameScene::setRightDirection(bool rightDir)
 
 void GameScene::setDownDirection(bool downDir)
 {
-    m_game.turnSpeed = 0.06;
     m_downDir = downDir;
 }
 
