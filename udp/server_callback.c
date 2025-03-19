@@ -12,11 +12,13 @@ void setStatus(char *ip, char *data)
         {
             board1.status = STATUS_PAUSE;
             board1_pausing = 1;
+            printf("board1 pausing\n");
         }
         else if (!strcmp(data, "START"))
         {
             board1.status = STATUS_START;
             board1_pausing = 0;
+            printf("board1 start\n");
         }
     }
     else if (strcmp(ip, BOARD_2) == 0)
@@ -25,14 +27,15 @@ void setStatus(char *ip, char *data)
         {
             board2.status = STATUS_PAUSE;
             board2_pausing = 1;
+            printf("board2 pausing\n");
         }
         else if (!strcmp(data, "START"))
         {
             board2.status = STATUS_START;
             board2_pausing = 0;
+            printf("board2 start\n");
         }
     }
-    printf("changed state\n");
 }
 
 void startDoublePlayer(int sfd)

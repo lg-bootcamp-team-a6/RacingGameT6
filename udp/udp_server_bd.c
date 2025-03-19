@@ -93,10 +93,19 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
 			printf("case 0 : start or pause\n");
             printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
             setStatus(ip_str, data);
-            if (!playMode && board1_pausing && board2_pausing) {
+
+            if (!playMode && board1.status && board2.status && board1.map_info == board2.map_info) {
 				printf("double\n");
+                startDoublePlayer(sfd);
                 playMode = 1;
-                if(board1.map_info == board2.map_info) startDoublePlayer(sfd);
+                printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
+                sendMode(ip_str, data, sfd);
+                //playMode = 1;
+                //if(board1.map_info == board2.map_info){
+                    // startDoublePlayer(sfd);
+                    // playMode = 1;
+               // }
+                
             }
             break;
         case CHECKPOINT:
@@ -122,6 +131,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
                 is_winner = 1;
             }
             playMode = 0;
+            sendMode(ip_str, data, sfd);
             break;
 		//which map
 		case MAP_STATUS:

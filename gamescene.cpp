@@ -204,6 +204,7 @@ void GameScene::setPlaymode(char* data)
 
 void GameScene::FinishRace(bool win, char *pszTime) {
     printf("win : %d\n",win );
+    if(!m_bSingle){
     if (win) {
         qDebug() << "dual finished, lap time: " << pszTime << ")";
         QGraphicsPixmapItem *win = new QGraphicsPixmapItem(m_winPixmap);
@@ -251,7 +252,7 @@ void GameScene::FinishRace(bool win, char *pszTime) {
 
         m_timer->stop();
     }
-
+    }
     InputDeviceHandler::m_sbIsRetry = true;
 }
 
