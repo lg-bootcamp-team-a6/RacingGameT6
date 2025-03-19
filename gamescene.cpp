@@ -28,9 +28,11 @@ GameScene::GameScene(QObject *parent)
       m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false),
      m_audioHandler(AudioHandler::getInstance())
+
 {
     m_mapIdx =3;
     m_pUdpSocketHandler = new UdpSocketHandler(this);
+
     loadPixmap();
     int fontId = QFontDatabase::addApplicationFont(":/font/Chewy-Regular.ttf");
     if (fontId == -1) {
@@ -321,7 +323,8 @@ void GameScene::parseRivalPosition(char* data)
 void GameScene::togglePause(bool IsResume)
 {
     QGraphicsPixmapItem *pauseItem = new QGraphicsPixmapItem(m_pausePixmap);
-        QWidget *pauseWidget = new QWidget();
+    QWidget *pauseWidget = new QWidget();
+    const QMap<QString, AudioData>& audioMap = m_audioHandler->getAudioMap();
     pauseWidget->setFixedSize(609, 473);  // 위젯 크기 설정 (배경 이미지 크기)
     pauseWidget->setStyleSheet("background: transparent;");
     pauseWidget->setAttribute(Qt::WA_TranslucentBackground);
@@ -346,10 +349,19 @@ void GameScene::togglePause(bool IsResume)
     /* Audio Change Button */
     m_audioChangeButton = new QPushButton(pauseWidget);
     m_audioButton->setFixedSize(249, 59);
-    // 초기값 설정 (첫 번째 음악 재생되도록)
     QString currentTrack = m_audioHandler->getCurrentTrack();
-    qDebug() << __FUNCTION__ << "Initial Track: " << currentTrack;
-    m_audioChangeButton->setIcon(QIcon(":/images/cookie.png"));
+
+    // if currentTrack, display with current value
+    QString iconPath = ":/images/cookie.png";
+    if (currentTrack.isEmpty()) {
+        QString currentTrack = "cookie";
+        qDebug() << __FUNCTION__ << "Empty Track. Initialize Track: " << currentTrack;
+    } else {
+        qDebug() << __FUNCTION__ << "Track Exists: " << currentTrack;
+        iconPath = audioMap[currentTrack].iconPath;
+        qDebug() << __FUNCTION__ << "Exists Icon: " << iconPath;
+    }
+    m_audioChangeButton->setIcon(QIcon(iconPath));
     m_audioChangeButton->setIconSize(QSize(249, 59));
     m_audioChangeButton->setStyleSheet("border: none; background:transparent;");
     m_audioChangeButton->setFocusPolicy(Qt::NoFocus);
@@ -1133,8 +1145,9 @@ void GameScene::Goal()
 void GameScene::toggleAudioStatus() {
     // 현재 오디오 상태 및 재생 중인 트랙 확인
     bool isAudioOn = m_audioHandler->isAudioOn();
-    qDebug() << __FUNCTION__ << ": Audio status: " << isAudioOn;
     const QMap<QString, AudioData>& audioMap = m_audioHandler->getAudioMap();
+    qDebug() << __FUNCTION__ << ": Audio status: " << isAudioOn;
+    
 
     if (isAudioOn) {    // play -> stop
         m_audioHandler->stopAllAudio();
