@@ -941,7 +941,7 @@ bool GameScene::getDirectionChanged()
 
 void GameScene::setUpDirection(bool upDir)
 {
-    turnSpeed = 0.04;
+    m_game.turnSpeed = 0.04;
     m_upDir = upDir;
 }
 
@@ -952,7 +952,7 @@ void GameScene::setRightDirection(bool rightDir)
 
 void GameScene::setDownDirection(bool downDir)
 {
-    turnSpeed = 0.04;
+    m_game.turnSpeed = 0.04;
     m_downDir = downDir;
 }
 
