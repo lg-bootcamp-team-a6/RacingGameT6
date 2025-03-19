@@ -360,7 +360,9 @@ void GameScene::togglePause(bool IsResume)
             pauseWidgetProxy->setWidget(pauseWidget);
             addItem(pauseWidgetProxy);
 
+            disconnect(m_audioButton, &QPushButton::clicked, this, &GameScene::toggleAudioStatus);
             connect(m_audioButton, &QPushButton::clicked, this, &GameScene::toggleAudioStatus);
+            disconnect(m_audioChangeButton, &QPushButton::clicked, this, &GameScene::changeAudio);
             connect(m_audioChangeButton, &QPushButton::clicked, this, &GameScene::changeAudio);
 
             qDebug() << "[GAME] Paused by an interrupt.";
