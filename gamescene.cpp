@@ -257,7 +257,7 @@ void GameScene::FinishRace(bool win, char *pszTime) {
 
 void GameScene::setBoosterOn(bool boosterOn)
 {
-    turnSpeed = 0.06;
+    m_game.turnSpeed = 0.06;
     m_boosterOn = boosterOn;
 }
 
