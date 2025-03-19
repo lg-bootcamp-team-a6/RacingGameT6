@@ -161,7 +161,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
             if(idx == 3) idx = 1;
             if(idx == 1) idx = 2;
             if(idx == 2) idx = 0;
-            if(idx == 0) idx = 3;
+            if(idx == 0) idx = 3;s
 
             if(!m_gameScene->m_bReady)
                 m_gameScene->setMapIdx(idx);
