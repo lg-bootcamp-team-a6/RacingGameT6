@@ -113,8 +113,8 @@ void View::setupOverlay()
     connect(m_accelForwardButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "UP pressed";
 
-        if(m_gameScene->m_game.car[0].speed > 14)
-            m_gameScene->m_game.car[0].speed = 14;
+        if(m_gameScene->m_game.speed >= 14)
+            m_gameScene->m_game.speed = 13;
 
         m_gameScene->m_game.maxSpeed = 13;
         m_gameScene->m_game.acc = 1.f;
