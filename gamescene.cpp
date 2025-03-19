@@ -25,7 +25,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
+      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
       m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false),
       m_audioHandler(AudioHandler::getInstance())
 
@@ -992,11 +992,13 @@ void GameScene::setAngleDirection(double angle)
     if (abs(angle) < 200)
     {
         //qDebug()<<"##########[Staight]###########################";
+        qDebug()<<"straight : angle : " << angle;
         m_leftDir = false;
         m_rightDir = false;
     }
     else if (angle < 0)
-    {
+    {   
+        qDebug()<<"right : angle : " << angle;
         //qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
@@ -1004,6 +1006,7 @@ void GameScene::setAngleDirection(double angle)
     else
     {
         //qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
+        qDebug()<<"left : angle : " << angle;
         m_leftDir = true;
         m_rightDir = false;
     }
@@ -1057,6 +1060,8 @@ void GameScene::setMapIdx(int mapIdx)
     }
 
     m_elapsedTime = 0;
+    m_game.angle = 0;
+    m_game.turnSpeed = 0;
     update();
     Wait3Seconds();
     char str[20];                 // 문자열 크기 20 (64bit + NULL 종료자)
