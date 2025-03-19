@@ -23,7 +23,6 @@ View::View()
 }
 
 void View::resetBotton() {
-    m_gameScene->m_game.maxSpeed = 0;
     m_accelForwardButton->setEnabled(true);
     m_accelBackButton->setEnabled(true);
     m_brakeButton->setEnabled(true);
