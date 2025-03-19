@@ -1,4 +1,5 @@
 #include "game.h"
+#include "AudioHandler.h"
 
 #include <QDebug>
 
@@ -169,6 +170,7 @@ Game::Game()
       PATH_TO_WIN_PIXMAP(":/images/win.png"), PATH_TO_LOSE_PIXMAP(":/images/lose.png"),
       PATH_TO_BOOSTER_PIXMAP{QString(":/images/Booster.png"), QString(":/images/Booster1.png")},
       ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(13), acc(1.0f), dec(1.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
+      
 { car_R = 22;
     speed = 0;
     angle = 0;
@@ -205,6 +207,7 @@ void Game::resetGameData(int mapIdx)
     maxSpeed = 13;
     acc = 1.0f;
     dec = 1.0f;
+    AudioHandler::getInstance()->playNextTrack();
 
     if(mapIdx == 0)
     {
