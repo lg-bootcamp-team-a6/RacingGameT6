@@ -19,6 +19,7 @@ public:
     QPushButton *m_accelBackButton;
     QPushButton *m_boosterButton;
     QPushButton *m_brakeButton;
+    QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
 
     // 차량 진행 방향(도 단위) 업데이트를 위한 함수
     void updateDirectionArrow(double angle);
@@ -32,7 +33,6 @@ private:
     void resizeEvent(QResizeEvent *event) override;
 
     QWidget *m_overlay;
-    QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
 };
 
 #endif // VIEW_H
