@@ -169,12 +169,11 @@ Game::Game()
       PATH_TO_PAUSE_PIXMAP(":/images/pause.png"), PATH_TO_FINISH_PIXMAP(":/images/finish.png"), PATH_TO_START_PIXMAP(":/images/start.png"),
       PATH_TO_WIN_PIXMAP(":/images/win.png"), PATH_TO_LOSE_PIXMAP(":/images/lose.png"),
       PATH_TO_BOOSTER_PIXMAP{QString(":/images/Booster.png"), QString(":/images/Booster1.png")},
-      ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(13), acc(1.0f), dec(1.0f), turnSpeed(0.08), offsetX(0), offsetY(0)
+      ITERATION_VALUE(100), car_R(22), speed(0), angle(0), maxSpeed(13), acc(1.0f), dec(1.0f), turnSpeed(0.4), offsetX(0), offsetY(0)
       
 { car_R = 22;
     speed = 0;
     angle = 0;
-    turnSpeed = 0.08;
     offsetX = 0;
     offsetY = 0;
     car[0].x = 240 * gamescale;
@@ -200,7 +199,7 @@ void Game::resetGameData(int mapIdx)
     car_R = 22;
     speed = 0;
     angle = 0;
-    turnSpeed = 0.08;
+    turnSpeed = 0.04;
     offsetX = 0;
     offsetY = 0;
     m_starScore = 0;
