@@ -1091,50 +1091,64 @@ void GameScene::Goal()
     std::sort(m_game.m_rankRecord[m_mapIdx].begin(), m_game.m_rankRecord[m_mapIdx].end());
     int seconds = m_elapsedTime / 100;
     int mseconds = m_elapsedTime % 100;
-
-    char str[20]; // 문자열 크기 20 (64bit + NULL 종료자)
-    sprintf(str, "%d.%d", seconds,mseconds);  // 숫자를 문자열로 변환
+ 
+    char str[20];                             // 문자열 크기 20 (64bit + NULL 종료자)
+    sprintf(str, "%d.%d", seconds, mseconds); // 숫자를 문자열로 변환
     qDebug() << "The elapsedTime is " << str;
     m_audioHandler->playEffectSound("finish_sound.wav");
-    m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
+    m_pUdpSocketHandler->BtHsendMessage(FINISH, str);
     //sleep(0.3);
     //Display Finish in solo play
-    if (m_bSingle) {
+    if (m_bSingle)
+    {
         qDebug() << "round finished (single mode: " << m_bSingle << ")";
         QGraphicsPixmapItem *fin = new QGraphicsPixmapItem(m_finishPixmap);
-
-        if (nullptr != fin) {
+ 
+        if (nullptr != fin)
+        {
             fin->setScale(1.15);
             fin->setPos(-35, 0);
             addItem(fin);
             fin->setVisible(true);
-            }
-
+        }
+ 
         QStringList rankNames = {"1st", "2nd", "3rd", "4th", "5th"};
+        QGraphicsTextItem *my_time = new QGraphicsTextItem();
+        my_time -> setPlainText(QString("%1 : %2").arg(m_elapsedTime/100).arg(m_elapsedTime % 100));
+        my_time -> setDefaultTextColor(Qt::black);
+        my_time->setFont(QFont("D2Coding", 20, QFont::Bold));
+        my_time->setPos(370, 115); // col * row
+        addItem(my_time);
+        my_time->setVisible(true);
         for(int i = 0; i < 5; i++)
         {
-            QGraphicsTextItem* textItem3 = new QGraphicsTextItem();
-
+            QGraphicsTextItem *textItem3 = new QGraphicsTextItem();
+ 
             QString timeText;
-            if (i < m_game.m_rankRecord[m_mapIdx].size()) {
+            if (i < m_game.m_rankRecord[m_mapIdx].size())
+            {
                 int seconds = m_game.m_rankRecord[m_mapIdx][i] / 100;
                 int mseconds = m_game.m_rankRecord[m_mapIdx][i] % 100;
                 timeText = QString("%1.%2")
-                        .arg(seconds, 2, 10, QChar('0'))
-                        .arg(mseconds, 2, 10, QChar('0'));
-            } else {
-                timeText = "--.--";  // if no lap time
+                               .arg(seconds, 2, 10, QChar('0'))
+                               .arg(mseconds, 2, 10, QChar('0'));
             }
-
+            else
+            {
+                timeText = "--.--"; // if no lap time
+            }
+ 
             textItem3->setPlainText(QString("%1 : %2").arg(rankNames[i]).arg(timeText));
             textItem3->setDefaultTextColor(Qt::white);
             textItem3->setFont(QFont("D2Coding", 20, QFont::Bold));
-            textItem3->setPos(250, 133 + 40 * i); // col * row
+            textItem3->setPos(250, 135 + 40 * (i+1)); // col * row
             addItem(textItem3);
             textItem3->setVisible(true);
         }
     InputDeviceHandler::m_sbIsRetry = true;
-    } else {
+    }
+    else
+    {
         // FinishRace(false, "test:test"); // todo) remove this code
         printf("GOAL ELSE!!!!!\n");
     }
