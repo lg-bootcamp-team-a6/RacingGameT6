@@ -157,10 +157,11 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
     else if (ev.code == KEY1_CODE) {
         if (ev.value == 1) {
             int idx = m_gameScene->m_mapIdx;
-
-            idx++;
-
-            idx = idx == m_gameScene->m_mapCnt ? 0 : idx;
+            
+            if(idx == 3) idx = 1;
+            if(idx == 1) idx = 2;
+            if(idx == 2) idx = 0;
+            if(idx == 0) idx = 3;s
 
             if(!m_gameScene->m_bReady)
                 m_gameScene->setMapIdx(idx);
