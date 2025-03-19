@@ -560,12 +560,12 @@ void GameScene::carMovement()
 
     if (m_rightDir && m_game.speed!=0)
     {
-        m_game.angle += m_game.turnSpeed * 20/m_game.speed;
+        m_game.angle += m_game.turnSpeed * m_game.speed/20;
     }
 
     if (m_leftDir && m_game.speed!=0)
     {
-        m_game.angle -= m_game.turnSpeed * 20/m_game.speed;
+        m_game.angle -= m_game.turnSpeed * m_game.speed/20;
     }
 
 
