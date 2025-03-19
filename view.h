@@ -15,6 +15,10 @@ class View : public QGraphicsView
 public:
     explicit View();
     GameScene *m_gameScene;
+    QPushButton *m_accelForwardButton;
+    QPushButton *m_accelBackButton;
+    QPushButton *m_boosterButton;
+    QPushButton *m_brakeButton;
 
     // 차량 진행 방향(도 단위) 업데이트를 위한 함수
     void updateDirectionArrow(double angle);
@@ -27,10 +31,6 @@ private:
     void resizeEvent(QResizeEvent *event) override;
 
     QWidget *m_overlay;
-    QPushButton *m_accelForwardButton;
-    QPushButton *m_accelBackButton;
-    QPushButton *m_boosterButton;
-    QPushButton *m_brakeButton;
     QLabel *m_directionArrow; // 차량 진행 방향 화살표 표시용 QLabel
 };
 

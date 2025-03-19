@@ -570,15 +570,15 @@ void GameScene::carMovement()
      int green = qGreen(pixelValue);
      int blue = qBlue(pixelValue);
 
-    int newX = m_game.car[0].x + sin(m_game.car[0].angle) * m_game.car[0].speed;
-    int newY = m_game.car[0].y - cos(m_game.car[0].angle) * m_game.car[0].speed;
+    float newX = m_game.car[0].x + sin(m_game.car[0].angle) * m_game.car[0].speed;
+    float newY = m_game.car[0].y - cos(m_game.car[0].angle) * m_game.car[0].speed;
 
-    int pixelX = newX / m_game.gamescale;
-    int pixelY = newY / m_game.gamescale;
+    float pixelX = newX / m_game.gamescale;
+    float pixelY = newY / m_game.gamescale;
 
 
     // Get the pixel value at the car's position
-     pixelValue = bgImage.pixel(pixelX, pixelY);
+    pixelValue = bgImage.pixel(pixelX, pixelY);
 
     // Extract RGB components
      red = qRed(pixelValue);
@@ -590,7 +590,7 @@ void GameScene::carMovement()
         m_game.car[0].move();
     else
     {
-        int dx=0, dy=0;
+        float dx=0, dy=0;
         while (dx*dx + dy*dy < m_game.car_R*m_game.car_R)
         {
             m_game.car[0].x -= dx/10.0;

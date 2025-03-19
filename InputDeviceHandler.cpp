@@ -125,6 +125,10 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
             qDebug() << "m_bSingle to false";
         }
         m_gameScene->m_bStart = true;
+        m_View->m_accelBackButton->setVisible(true);
+        m_View->m_accelForwardButton->setVisible(true);
+        m_View->m_boosterButton->setVisible(true);
+        m_View->m_brakeButton->setVisible(true);
 
         return;
     }

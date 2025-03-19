@@ -45,6 +45,7 @@ void View::setupOverlay()
     m_directionArrow->setPixmap(rotated.scaled(50, 50, Qt::KeepAspectRatio, Qt::SmoothTransformation));
     m_directionArrow->setFixedSize(50, 50);
     m_directionArrow->setStyleSheet("background-color: transparent;");
+    m_directionArrow->setVisible(false);
     topLayout->addWidget(m_directionArrow, 0, Qt::AlignLeft | Qt::AlignVCenter);
 
     // 중간에 스트레치 (상단과 하단 사이 공간 확보)
@@ -58,6 +59,7 @@ void View::setupOverlay()
     m_accelForwardButton->setStyleSheet("border: none; background-color: transparent;");
     m_accelForwardButton->setFocusPolicy(Qt::NoFocus);
     m_accelForwardButton->setAutoRepeat(false);
+    m_accelForwardButton->setVisible(false);
 
     // 왼쪽 아래 버튼: Accel Back
     m_accelBackButton = new QPushButton("", m_overlay);
@@ -67,6 +69,7 @@ void View::setupOverlay()
     m_accelBackButton->setStyleSheet("border: none; background-color: transparent;");
     m_accelBackButton->setFocusPolicy(Qt::NoFocus);
     m_accelBackButton->setAutoRepeat(false);
+    m_accelBackButton->setVisible(false);
 
 
     // 오른쪽 버튼: Boost
@@ -77,6 +80,7 @@ void View::setupOverlay()
     m_boosterButton->setStyleSheet("border: none; background-color: transparent;");
     m_boosterButton->setFocusPolicy(Qt::NoFocus);
     m_boosterButton->setAutoRepeat(false);
+    m_boosterButton->setVisible(false);
 
     // 오른쪽 버튼: Brake
     m_brakeButton = new QPushButton("", m_overlay);
@@ -86,6 +90,7 @@ void View::setupOverlay()
     m_brakeButton->setStyleSheet("border: none; background-color: transparent;");
     m_brakeButton->setFocusPolicy(Qt::NoFocus);
     m_brakeButton->setAutoRepeat(false);
+    m_brakeButton->setVisible(false);
 
     
     // 하단 영역: 버튼들을 포함하는 수평 레이아웃 생성
@@ -108,7 +113,7 @@ void View::setupOverlay()
     repositionOverlay();
     m_overlay->raise();
     m_overlay->show();
-
+    
     // 버튼 이벤트 연결
     connect(m_accelForwardButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "UP pressed";
