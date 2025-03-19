@@ -40,4 +40,5 @@ void sendRanking(char* ip, char* data, int sfd);
 
 void saveRankingForMap(int mapIndex);
 void loadRankingForMap(int mapIndex);
+void sendMode(char *ip_str, char *data, int sfd);
 #endif // SERVER_CALLBACK_H
