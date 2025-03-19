@@ -197,6 +197,7 @@ void GameScene::setPlaymode(char* data)
         m_bSingle = false;
     }
     else printf("Invalid Play mode");
+    printf("m_bSingle : %d\n", m_bSingle);
 }
 
 void GameScene::FinishRace(bool win, char *pszTime) {
@@ -1084,7 +1085,7 @@ void GameScene::Goal()
     qDebug() << "The elapsedTime is " << str;
     m_audioHandler->playEffectSound("finish_sound.wav");
     m_pUdpSocketHandler -> BtHsendMessage(FINISH, str);
-
+    //sleep(0.3);
     //Display Finish in solo play
     if (m_bSingle) {
         qDebug() << "round finished (single mode: " << m_bSingle << ")";
@@ -1123,6 +1124,7 @@ void GameScene::Goal()
     InputDeviceHandler::m_sbIsRetry = true;
     } else {
         // FinishRace(false, "test:test"); // todo) remove this code
+        printf("GOAL ELSE!!!!!\n");
     }
     m_timer->stop();
 }

@@ -113,7 +113,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
 			printf("case 3: finish map\n");
             printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
 			addRanking(ip_str, data);
-            sendMode(ip_str, data, sfd);
+            //sendMode(ip_str, data, sfd);
             finished = 1;
             //printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
             if (playMode && !is_winner){
@@ -126,13 +126,14 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
 		//which map
 		case MAP_STATUS:
 			printf("change map\n");
-            printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
 			setMapInfo(ip_str, data);
             playMode = 0;
             //reset winner information
             is_winner = 0;
             sendIpAddress(ip_str, data, sfd);
             sendRanking(ip_str, data, sfd);
+            sendMode(ip_str, data, sfd);
+            printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
 			break;
         default:
             break;
