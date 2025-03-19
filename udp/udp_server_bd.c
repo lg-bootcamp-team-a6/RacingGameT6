@@ -94,7 +94,7 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
             printf("playMode : %d, is_winner : %d\n", playMode, is_winner);
             setStatus(ip_str, data);
 
-            if (!playMode && board1.status && board2.status && board1.map_info == board2.map_info) {
+            if (!playMode && board1.status == 1 && board2.status == 1 && board1.map_info == board2.map_info) {
 				printf("double\n");
                 startDoublePlayer(sfd);
                 playMode = 1;
