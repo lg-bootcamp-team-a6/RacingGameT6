@@ -78,6 +78,7 @@ public:
     void parseRivalPosition(char* data);
     void FinishRace(bool win, char *pszTime);
     void parseRanking(char* data);
+    void setPlaymode(char* data);
     void setBoosterOn(bool bBooster);
     QGraphicsPixmapItem *m_pauseItem;
     QGraphicsPixmapItem *m_finishItem;

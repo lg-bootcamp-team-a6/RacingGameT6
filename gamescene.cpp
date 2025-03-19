@@ -25,7 +25,7 @@
 
 GameScene::GameScene(QObject *parent)
     : QGraphicsScene{parent}, m_game(), m_timer(new QTimer(this)),
-      m_upDir(false), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
+      m_upDir(true), m_rightDir(false), m_downDir(false), m_leftDir(false), m_dirChanged(false),
      m_pauseItem(nullptr), m_elapsedTime(0), m_computeTime(0), m_bIsResume(false), m_bReady(false),
      m_audioHandler(AudioHandler::getInstance())
 {
@@ -148,6 +148,9 @@ void GameScene::handleUdpPacket(const receive_packet &pkt)
 
         case RANKING:
             parseRanking(pkt.data);
+
+        case MODE:
+            setPlaymode(pkt.data);
         default:
             break;
     }
@@ -178,6 +181,23 @@ void GameScene::parseRanking(char* data)
     }
 }
 
+
+void GameScene::setPlaymode(char* data)
+{
+    printf("%s\n", data);
+
+    if(!strcmp(data,"SINGLE"))
+    {
+        //set m_bSingle true
+        m_bSingle = true;
+    }
+    else if(!strcmp(data,"DUAL"))
+    {
+        //set m_bSingle false
+        m_bSingle = false;
+    }
+    else printf("Invalid Play mode");
+}
 
 void GameScene::FinishRace(bool win, char *pszTime) {
     printf("win : %d\n",win );
