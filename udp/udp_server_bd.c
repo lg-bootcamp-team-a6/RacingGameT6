@@ -105,7 +105,8 @@ void handleMessage(char *buf, int len, struct sockaddr_in *addr_client, socklen_
                     // startDoublePlayer(sfd);
                     // playMode = 1;
                // }
-                
+               board1.status = STATUS_START;
+               board2.status = STATUS_START;
             }
             break;
         case CHECKPOINT:
