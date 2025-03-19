@@ -22,6 +22,14 @@ View::View()
     setupOverlay();
 }
 
+void View::resetBotton() {
+    m_gameScene->m_game.maxSpeed = 0;
+    m_accelForwardButton->setEnabled(true);
+    m_accelBackButton->setEnabled(true);
+    m_brakeButton->setEnabled(true);
+    m_boosterButton->setEnabled(true);
+}
+
 void View::setupOverlay()
 {
     // viewport()의 자식으로 오버레이 위젯 생성

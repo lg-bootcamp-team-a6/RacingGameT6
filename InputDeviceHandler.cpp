@@ -137,6 +137,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
         if (ev.value == 1) {
             if (m_sbIsRetry) {
                 m_gameScene->resetGame();
+                m_View->resetBotton();
                 m_sbIsRetry = false;
                 return;
             }
@@ -162,6 +163,7 @@ void InputDeviceHandler::handleKeyEvent(const struct input_event &ev)
 
             if(!m_gameScene->m_bReady)
                 m_gameScene->setMapIdx(idx);
+                m_View->resetBotton();
         } else {
             //qDebug() << "[ACTION] SW3 deactivated";
         }

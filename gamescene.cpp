@@ -978,6 +978,7 @@ void GameScene::setAngleDirection(double angle)
 void GameScene::setMapIdx(int mapIdx)
 {
     bool bSend = true;
+    m_boosterOn = false;
 
     if(m_mapIdx == mapIdx)
         bSend = false;
@@ -1032,6 +1033,7 @@ void GameScene::resetGame() {
     sprintf(str, "%d", m_mapIdx);  // 숫자를 문자열로 변환
     qDebug() << "Send map status in changed mode" << str;
     m_pUdpSocketHandler -> BtHsendMessage(MAP_STATUS, str);
+    m_boosterOn = false;
     update();
     Wait3Seconds();
 }

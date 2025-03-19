@@ -22,6 +22,7 @@ public:
 
     // 차량 진행 방향(도 단위) 업데이트를 위한 함수
     void updateDirectionArrow(double angle);
+    void resetBotton();
 
 signals:
 
