@@ -630,7 +630,7 @@ void GameScene::carCollision()
     {
         for(int j=0; j < m_carCnt; j++)
         {
-            int dx=0, dy=0;
+            float dx=0, dy=0;
             while (dx*dx + dy*dy < 4* m_game.car_R*m_game.car_R)
              {
                m_game.car[i].x += dx/10.0;
