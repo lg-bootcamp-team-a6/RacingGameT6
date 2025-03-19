@@ -6,6 +6,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <QResizeEvent>
+#include "AudioHandler.h"
 
 class GameScene;
 
@@ -31,6 +32,7 @@ private:
     void setupOverlay();
     void repositionOverlay();
     void resizeEvent(QResizeEvent *event) override;
+    AudioHandler* m_audioHandler;
 
     QWidget *m_overlay;
 };

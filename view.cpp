@@ -12,7 +12,8 @@
 View::View()
     : QGraphicsView{},
       m_gameScene(new GameScene(this)),
-      m_directionArrow(nullptr)
+      m_directionArrow(nullptr),
+      m_audioHandler(AudioHandler::getInstance())
 {
     setScene(m_gameScene);
     resize(m_gameScene->sceneRect().width() + 2, m_gameScene->sceneRect().height() + 2);
@@ -167,6 +168,7 @@ void View::setupOverlay()
     });
     connect(m_boosterButton, &QPushButton::pressed, this, [this]() {
         qDebug() << "Booster pressed";
+        m_audioHandler->playEffectSound("boost_sound.wav");
         m_gameScene->m_game.maxSpeed = 20;
         m_gameScene->m_game.acc = 2.f;
         m_gameScene->m_game.dec = 2.f;
