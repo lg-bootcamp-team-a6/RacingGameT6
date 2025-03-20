@@ -180,6 +180,11 @@ void View::setupOverlay()
         m_accelForwardButton->setEnabled(true);  // Disable the button
         m_accelBackButton->setEnabled(true);  // Disable the button
         m_boosterButton->setEnabled(false);  // Disable the button
+
+        QTimer::singleShot(3000, this, [=]() {
+            m_boosterButton->setEnabled(true);
+            m_gameScene->setBoosterOn(false);
+        });
     });
 }
 
