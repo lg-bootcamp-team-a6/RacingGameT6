@@ -989,13 +989,13 @@ void GameScene::setAngleDirection(double angle)
     if (abs(angle) < 200)
     {
         //qDebug()<<"##########[Staight]###########################";
-        qDebug()<<"straight : angle : " << angle;
+        //qDebug()<<"straight : angle : " << angle;
         m_leftDir = false;
         m_rightDir = false;
     }
     else if (angle < 0)
     {   
-        qDebug()<<"right : angle : " << angle;
+        //qDebug()<<"right : angle : " << angle;
         //qDebug()<<"!!!!!!!!!!!!!!!!!!!![Right]!!!!!!!!!!!!!!!!!!!!";
         m_leftDir = false;
         m_rightDir = true;
@@ -1003,7 +1003,7 @@ void GameScene::setAngleDirection(double angle)
     else
     {
         //qDebug()<<"@@@@@@@@@@@@@@@@@@@@[LEFT]@@@@@@@@@@@@@@@@@";
-        qDebug()<<"left : angle : " << angle;
+        //qDebug()<<"left : angle : " << angle;
         m_leftDir = true;
         m_rightDir = false;
     }
